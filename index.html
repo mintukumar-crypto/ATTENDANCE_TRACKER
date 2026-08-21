@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARCOS - Attendance Portal</title>
+  <title>ARCOS - Staff Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
       --navy-bg: #0b1329;
@@ -22,215 +23,102 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
-    body { background: var(--body-bg); color: var(--text-dark); min-height: 100vh; }
+    body { background: var(--body-bg); color: var(--text-dark); min-height: 100vh; overflow-x: hidden; }
 
-    /* ================= 1. LOGIN PAGE UI ================= */
-    .login-container {
-      display: flex;
-      min-height: 100vh;
-      background: var(--navy-bg);
-    }
-    .login-left {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 60px;
-      color: #fff;
-      position: relative;
-    }
-    .brand-logo-text {
-      font-size: 32px;
-      font-weight: 800;
-      color: var(--yellow-accent);
-      letter-spacing: 1px;
-      margin-bottom: 40px;
-    }
-    .login-left h1 { font-size: 36px; font-weight: 800; line-height: 1.2; margin-bottom: 8px; text-transform: uppercase; }
-    .login-left p.subtitle { color: #94a3b8; font-size: 14px; font-weight: 500; margin-bottom: 30px; }
-    .illustration-box {
-      width: 100%;
-      max-width: 320px;
-      height: 220px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 64px;
-    }
-
-    .login-right {
-      width: 480px;
-      background: var(--navy-bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px;
-    }
-    .login-card {
-      background: #ffffff;
-      width: 100%;
-      padding: 40px 32px;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-    }
-    .login-card h2 { font-size: 22px; font-weight: 800; text-align: center; color: var(--text-dark); margin-bottom: 4px; }
-    .login-card p.card-sub { font-size: 12px; color: var(--text-muted); text-align: center; margin-bottom: 24px; }
-
-    .form-group { margin-bottom: 18px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
-    .input-wrapper { position: relative; }
-    .input-wrapper input {
-      width: 100%;
-      padding: 12px 14px 12px 38px;
-      border: 1.5px solid var(--border-color);
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 600;
-      outline: none;
-      transition: all 0.2s;
-    }
-    .input-wrapper input:focus { border-color: var(--yellow-accent); }
-    .input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; }
-
-    .btn-login {
-      width: 100%;
-      padding: 14px;
-      background: var(--yellow-accent);
-      color: var(--navy-bg);
-      border: none;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 800;
-      cursor: pointer;
-      transition: all 0.2s;
-      margin-top: 10px;
-    }
-    .btn-login:hover { background: var(--yellow-hover); }
-
-    .copyright { text-align: center; margin-top: 24px; font-size: 11px; color: var(--text-muted); font-weight: 600; }
-
-    /* ================= 2. DASHBOARD UI ================= */
-    .dashboard-layout { display: none; min-height: 100vh; flex-direction: row; }
+    /* ================= 1. LOGIN SCREEN ================= */
+    .login-container { display: flex; min-height: 100vh; background: var(--navy-bg); }
+    .login-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 60px; color: #fff; }
+    .brand-logo-text { font-size: 32px; font-weight: 800; color: var(--yellow-accent); letter-spacing: 1px; margin-bottom: 20px; }
+    .login-right { width: 450px; background: var(--navy-bg); display: flex; align-items: center; justify-content: center; padding: 30px; }
+    .login-card { background: #ffffff; width: 100%; padding: 35px 25px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+    .login-card h2 { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 4px; }
+    .login-card p { font-size: 12px; color: var(--text-muted); text-align: center; margin-bottom: 20px; }
     
-    /* Sidebar */
-    .sidebar {
-      width: 240px;
-      background: var(--navy-bg);
-      color: #fff;
-      padding: 24px 16px;
-      display: flex;
-      flex-direction: column;
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 12px; border: 1.5px solid var(--border-color); border-radius: 10px; font-size: 13px; font-weight: 600; outline: none;
     }
-    .sidebar-brand { font-size: 24px; font-weight: 800; color: var(--yellow-accent); margin-bottom: 30px; padding-left: 12px; }
+    .btn-action {
+      width: 100%; padding: 14px; background: var(--yellow-accent); color: var(--navy-bg); border: none; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; transition: 0.2s;
+    }
+    .btn-action:hover { background: var(--yellow-hover); }
+
+    /* ================= 2. MAIN LAYOUT ================= */
+    .dashboard-layout { display: none; min-height: 100vh; flex-direction: row; }
+
+    /* Fixed Sidebar */
+    .sidebar {
+      width: 250px; background: var(--navy-bg); color: #fff; padding: 24px 16px; display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0; z-index: 1000; transition: transform 0.3s ease;
+    }
+    .sidebar-brand { font-size: 24px; font-weight: 800; color: var(--yellow-accent); margin-bottom: 30px; padding-left: 10px; }
     .nav-menu { list-style: none; flex: 1; }
     .nav-item {
-      padding: 12px 16px;
-      border-radius: 10px;
-      font-size: 13px;
-      font-weight: 700;
-      color: #94a3b8;
-      cursor: pointer;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; color: #94a3b8; cursor: pointer; margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
     }
     .nav-item.active { background: var(--yellow-accent); color: var(--navy-bg); }
     .nav-item:hover:not(.active) { color: #fff; background: rgba(255,255,255,0.05); }
+    .sidebar-footer { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; margin-top: auto; }
 
-    /* Main Area */
-    .main-content { flex: 1; padding: 24px 32px; overflow-y: auto; }
+    /* Main Area Content */
+    .main-content { flex: 1; margin-left: 250px; padding: 24px 32px; min-height: 100vh; }
     .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .user-profile { display: flex; align-items: center; gap: 10px; }
-    .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--yellow-accent); display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--navy-bg); }
+    .mobile-nav-toggle { display: none; font-size: 24px; background: none; border: none; color: var(--navy-bg); cursor: pointer; }
 
-    /* Summary Metric Cards */
-    .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
-    .metric-card { background: var(--card-bg); padding: 18px; border-radius: 12px; border: 1px solid var(--border-color); }
+    .tab-section { display: none; }
+    .tab-section.active { display: block; }
+
+    /* ================= METRIC CARDS & CHARTS ================= */
+    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .metric-card { background: var(--card-bg); padding: 20px; border-radius: 14px; border: 1px solid var(--border-color); }
     .metric-card span { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-    .metric-card h3 { font-size: 26px; font-weight: 800; margin-top: 4px; }
+    .metric-card h3 { font-size: 28px; font-weight: 800; margin-top: 4px; }
 
-    /* Main Body Grid */
-    .dashboard-grid { display: grid; grid-template-columns: 2.2fr 1fr; gap: 20px; }
-    
-    /* Calendar Card */
-    .calendar-card { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); }
-    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
-    .cal-day-head { font-size: 11px; font-weight: 700; color: var(--text-muted); padding-bottom: 6px; }
-    
-    .cal-cell {
-      min-height: 52px;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 4px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 11px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .cal-cell.today-cell { border: 2px solid #2563eb; background: #eff6ff; }
-    .status-tag { font-size: 9px; font-weight: 800; padding: 1px 4px; border-radius: 4px; }
-    .tag-p { color: var(--success); }
-    .tag-a { color: var(--danger); }
-    .tag-l { color: var(--warning); }
+    .chart-container { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); width: 100%; max-width: 600px; margin-top: 20px; }
 
-    /* Right Action Panel */
-    .side-panel { display: flex; flex-direction: column; gap: 20px; }
-    .action-card { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); text-align: center; }
-    .btn-punch {
-      width: 100%;
-      padding: 14px;
-      background: var(--success);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-size: 14px;
-      font-weight: 800;
-      cursor: pointer;
-      margin-top: 14px;
-    }
+    /* ================= ATTENDANCE PUNCH SECTION ================= */
+    .punch-card { background: var(--card-bg); padding: 24px; border-radius: 16px; border: 1px solid var(--border-color); max-width: 500px; margin: 0 auto; text-align: center; }
+    .btn-punch { width: 100%; padding: 14px; font-size: 15px; font-weight: 800; border: none; border-radius: 10px; cursor: pointer; color: #fff; margin-top: 16px; }
+    .btn-punch-in { background: var(--success); }
     .btn-punch-out { background: var(--danger); }
+    .btn-disabled { background: #cbd5e1 !important; cursor: not-allowed !important; color: #64748b !important; }
 
-    /* Summary Box */
-    .summary-card { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); }
-    .summary-row { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; padding: 8px 0; border-bottom: 1px dashed var(--border-color); }
+    .punch-details-box { margin-top: 20px; border-top: 1px dashed var(--border-color); padding-top: 16px; display: flex; justify-content: space-around; gap: 10px; }
+    .punch-info-item { text-align: center; font-size: 12px; }
+    .punch-img-thumb { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; border: 2px solid var(--yellow-accent); margin-top: 6px; }
 
-    /* Camera Modal */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(11, 19, 41, 0.7);
-      backdrop-filter: blur(4px);
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-    }
-    .modal-box {
-      background: #fff;
-      padding: 24px;
-      border-radius: 20px;
-      width: 360px;
-      text-align: center;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-    }
-    #cameraBox { width: 160px; height: 160px; border-radius: 50%; overflow: hidden; margin: 16px auto; border: 4px solid var(--yellow-accent); position: relative; }
+    /* ================= CALENDAR ROASTER ================= */
+    .calendar-card { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; margin-top: 16px; }
+    .cal-day-head { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+    .cal-cell { min-height: 60px; border: 1px solid var(--border-color); border-radius: 8px; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; }
+    
+    .cal-cell.present { background: #dcfce7; border-color: #86efac; color: #15803d; }
+    .cal-cell.absent { background: #fee2e2; border-color: #fca5a5; color: #b91c1c; }
+    .cal-cell.future { background: #f1f5f9; border-color: #e2e8f0; color: #94a3b8; opacity: 0.6; cursor: not-allowed; }
+
+    /* ================= ESCALATION & QUERY TABLE ================= */
+    .request-card { background: var(--card-bg); padding: 24px; border-radius: 16px; border: 1px solid var(--border-color); max-width: 600px; margin-bottom: 24px; }
+
+    /* ================= CAMERA MODAL ================= */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 19, 41, 0.7); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 2000; }
+    .modal-box { background: #fff; padding: 24px; border-radius: 20px; width: 340px; text-align: center; }
+    #cameraBox { width: 140px; height: 140px; border-radius: 50%; overflow: hidden; margin: 16px auto; border: 4px solid var(--yellow-accent); position: relative; }
     video { width: 100%; height: 100%; object-fit: cover; }
-    #timer { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 40px; color: #fff; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+    #timer { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 36px; color: #fff; font-weight: 800; }
     canvas { display: none; }
 
-    /* Query & Details Window */
-    .detail-card { margin-top: 14px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; text-align: left; }
-    .detail-thumb { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--yellow-accent); }
-    .query-box-container { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-color); }
-    textarea { width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 11px; outline: none; margin-top: 6px; }
+    /* ================= MOBILE RESPONSIVE ================= */
+    @media (max-width: 768px) {
+      .login-container { flex-direction: column; }
+      .login-left { display: none; }
+      .login-right { width: 100%; }
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; padding: 16px; }
+      .mobile-nav-toggle { display: block; }
+      .cal-cell { min-height: 48px; font-size: 10px; }
+    }
   </style>
 </head>
 <body>
@@ -239,150 +127,133 @@
   <div class="login-container" id="loginScreen">
     <div class="login-left">
       <div class="brand-logo-text">ARCOS</div>
-      <h1>Attendance<br>Calendar App</h1>
-      <p class="subtitle">Track. Manage. Achieve.</p>
-      <div class="illustration-box">📅</div>
+      <h1 style="font-size:32px; font-weight:800;">Staff Attendance<br>Portal</h1>
     </div>
-    
     <div class="login-right">
       <div class="login-card">
         <h2>Welcome Back!</h2>
-        <p class="card-sub">Please login to your account</p>
-
+        <p>Please login to your account</p>
         <div class="form-group">
-          <label>Username</label>
-          <div class="input-wrapper">
-            <span class="input-icon">👤</span>
-            <input type="text" id="empId" placeholder="Enter your username">
-          </div>
+          <label>Username / Employee ID</label>
+          <input type="text" id="empId" placeholder="Enter ID">
         </div>
-
         <div class="form-group">
           <label>Password</label>
-          <div class="input-wrapper">
-            <span class="input-icon">🔒</span>
-            <input type="password" id="password" placeholder="Enter your password">
-          </div>
+          <input type="password" id="password" placeholder="Enter Password">
         </div>
-
-        <button class="btn-login" onclick="loginUser()">Login</button>
-        <p class="copyright">© 2026 Arcos. All rights reserved.</p>
+        <button class="btn-action" onclick="loginUser()">Login</button>
       </div>
     </div>
   </div>
 
-  <!-- 2. MAIN DASHBOARD SCREEN -->
+  <!-- 2. MAIN DASHBOARD LAYOUT -->
   <div class="dashboard-layout" id="dashboardScreen">
-    <!-- Sidebar -->
-    <div class="sidebar">
+    
+    <!-- FIXED SIDEBAR -->
+    <div class="sidebar" id="sidebar">
       <div class="sidebar-brand">ARCOS</div>
       <ul class="nav-menu">
-        <li class="nav-item active">📊 Dashboard</li>
-        <li class="nav-item">📅 Calendar</li>
-        <li class="nav-item">⏱️ Attendance</li>
-        <li class="nav-item">⚙️ Settings</li>
+        <li class="nav-item active" onclick="switchTab('dashboardTab', this)">📊 Dashboard</li>
+        <li class="nav-item" onclick="switchTab('attendanceTab', this)">⏱️ Attendance</li>
+        <li class="nav-item" onclick="switchTab('calendarTab', this)">📅 Calendar Roaster</li>
+        <li class="nav-item" onclick="switchTab('escalationTab', this)">🚨 Request / Query</li>
       </ul>
-      <div class="nav-item" onclick="logout()" style="color:#ef4444;">🚪 Logout</div>
+      
+      <!-- FOOTER LOGOUT -->
+      <div class="sidebar-footer">
+        <div class="nav-item" onclick="logout()" style="color:#ef4444;">🚪 Logout</div>
+      </div>
     </div>
 
-    <!-- Main Content -->
+    <!-- MAIN CONTENT AREA -->
     <div class="main-content">
       <div class="top-header">
+        <button class="mobile-nav-toggle" onclick="toggleSidebar()">☰</button>
         <div>
-          <h2 id="welcomeGreeting" style="font-size:20px; font-weight:800;">Good Morning! 👋</h2>
-          <p style="font-size:12px; color:var(--text-muted);">Here's your attendance overview for this month.</p>
-        </div>
-        <div class="user-profile">
-          <div class="user-avatar" id="userAvatar">U</div>
-          <span id="userName" style="font-size:13px; font-weight:700;">Employee Name</span>
+          <h2 id="userGreeting" style="font-size:20px; font-weight:800;">Welcome!</h2>
+          <p style="font-size:12px; color:var(--text-muted);">Staff Attendance & Activity Panel</p>
         </div>
       </div>
 
-      <!-- Top Metric Cards -->
-      <div class="metrics-grid">
-        <div class="metric-card"><span>Present Days</span><h3 id="mPresent" style="color:var(--success);">00</h3></div>
-        <div class="metric-card"><span>Absent Days</span><h3 id="mAbsent" style="color:var(--danger);">00</h3></div>
-        <div class="metric-card"><span>Late Days</span><h3 id="mLate" style="color:var(--warning);">00</h3></div>
-        <div class="metric-card"><span>Total Days</span><h3 id="mTotal">00</h3></div>
+      <!-- TAB 1: DASHBOARD -->
+      <div id="dashboardTab" class="tab-section active">
+        <div class="metrics-grid">
+          <div class="metric-card"><span>Present Days</span><h3 id="dPresent" style="color:var(--success);">00</h3></div>
+          <div class="metric-card"><span>Absent Days</span><h3 id="dAbsent" style="color:var(--danger);">00</h3></div>
+          <div class="metric-card"><span>Late Days</span><h3 id="dLate" style="color:var(--warning);">00</h3></div>
+          <div class="metric-card"><span>Total Days</span><h3 id="dTotal">00</h3></div>
+        </div>
+
+        <div class="chart-container">
+          <h4 style="font-size:14px; font-weight:800; margin-bottom:12px;">Monthly Summary Report</h4>
+          <canvas id="summaryChart"></canvas>
+        </div>
       </div>
 
-      <div class="dashboard-grid">
-        <!-- Calendar Section -->
-        <div class="calendar-card">
-          <div class="cal-header">
-            <h3 id="calMonthTitle" style="font-size:16px; font-weight:800;">Current Month</h3>
-            <span style="font-size:12px; font-weight:700; color:var(--text-muted);" id="liveClock">IST Time</span>
+      <!-- TAB 2: ATTENDANCE SECTION -->
+      <div id="attendanceTab" class="tab-section">
+        <div class="punch-card">
+          <h3 style="font-size:16px; font-weight:800;" id="todayDateStr">Date</h3>
+          <p style="font-size:12px; color:var(--text-muted); margin-top:4px;" id="todayTimeStr">Live Time</p>
+
+          <div id="punchActionBox">
+            <button id="btnPunchIn" class="btn-punch btn-punch-in" onclick="triggerPunch('punchIn')">📍 PUNCH IN</button>
+            <button id="btnPunchOut" class="btn-punch btn-punch-out" onclick="triggerPunch('punchOut')" style="display:none;">📍 PUNCH OUT</button>
+            <button id="btnPunchDisabled" class="btn-punch btn-disabled" style="display:none;" disabled>✅ TODAY'S PUNCH COMPLETED</button>
           </div>
+
+          <!-- Captured Details Output -->
+          <div class="punch-details-box" id="punchDetailsBox" style="display:none;">
+            <div class="punch-info-item" id="inInfoItem" style="display:none;">
+              <strong>PUNCH IN</strong>
+              <div id="inTimeTxt" style="color:var(--success); font-weight:800;">--:--</div>
+              <img id="inImg" class="punch-img-thumb" src="" alt="In Photo">
+            </div>
+            <div class="punch-info-item" id="outInfoItem" style="display:none;">
+              <strong>PUNCH OUT</strong>
+              <div id="outTimeTxt" style="color:var(--danger); font-weight:800;">--:--</div>
+              <img id="outImg" class="punch-img-thumb" src="" alt="Out Photo">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: CALENDAR ROASTER -->
+      <div id="calendarTab" class="tab-section">
+        <div class="calendar-card">
+          <h3 id="calMonthTitle" style="font-size:16px; font-weight:800;">Month Calendar</h3>
           <div class="cal-grid" id="calGrid"></div>
         </div>
+      </div>
 
-        <!-- Right Side Panel -->
-        <div class="side-panel">
-          <!-- Action Punch Card -->
-          <div class="action-card">
-            <h4 style="font-size:13px; font-weight:800;">Today's Attendance</h4>
-            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;" id="todayDateStr">21 May 2026</div>
-
-            <button id="btnPunchIn" class="btn-punch" onclick="handlePunch('punchIn')">📍 Punch In</button>
-            <button id="btnPunchOut" class="btn-punch btn-punch-out" onclick="handlePunch('punchOut')" style="display:none;">📍 Punch Out</button>
-            <div id="punchStatus" style="font-size:11px; font-weight:700; color:#2563eb; margin-top:8px;"></div>
+      <!-- TAB 4: REQUEST / ESCALATION -->
+      <div id="escalationTab" class="tab-section">
+        <div class="request-card">
+          <h3 style="font-size:16px; font-weight:800; margin-bottom:16px;">Raise Attendance Request / Query</h3>
+          <div class="form-group">
+            <label>Select Date</label>
+            <input type="date" id="reqDate">
           </div>
-
-          <!-- Attendance Summary -->
-          <div class="summary-card">
-            <h4 style="font-size:13px; font-weight:800; margin-bottom:12px;">Summary</h4>
-            <div class="summary-row"><span>🟢 Present</span><strong id="sPresent">0</strong></div>
-            <div class="summary-row"><span>🔴 Absent</span><strong id="sAbsent">0</strong></div>
-            <div class="summary-row"><span>🟠 Late</span><strong id="sLate">0</strong></div>
+          <div class="form-group">
+            <label>Issue Description</label>
+            <textarea id="reqIssue" rows="3" placeholder="Describe issue (e.g. Punch In missed, Network issue)"></textarea>
           </div>
+          <button class="btn-action" onclick="submitEscalationReq()">Submit Request To Admin</button>
         </div>
       </div>
+
     </div>
   </div>
 
-  <!-- CAMERA / GPS CAPTURE MODAL -->
+  <!-- CAMERA MODAL -->
   <div class="modal-overlay" id="cameraModal">
     <div class="modal-box">
-      <h3 id="modalTitle" style="font-size:16px; font-weight:800;">Location & Photo Capture</h3>
-      <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Capturing geo-location & verifying face...</p>
-
+      <h4 id="modalStatus" style="font-size:14px; font-weight:800;">Capturing Photo...</h4>
       <div id="cameraBox">
         <video id="webcam" autoplay playsinline></video>
         <div id="timer">3</div>
       </div>
       <canvas id="canvas" width="320" height="240"></canvas>
-
-      <div id="modalStatus" style="font-size:12px; font-weight:700; color:var(--navy-bg);">Please wait...</div>
-    </div>
-  </div>
-
-  <!-- CALENDAR DETAIL & QUERY MODAL -->
-  <div class="modal-overlay" id="detailModal">
-    <div class="modal-box" style="width:380px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-        <h3 id="selectedDateTitle" style="font-size:14px; font-weight:800;">Date Details</h3>
-        <span onclick="closeDetailModal()" style="cursor:pointer; font-weight:800;">✕</span>
-      </div>
-
-      <div class="detail-card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <div><strong>IN:</strong> <span id="dtInTime">--:--</span></div>
-          <div id="dtInImgBox"></div>
-        </div>
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div><strong>OUT:</strong> <span id="dtOutTime">--:--</span></div>
-          <div id="dtOutImgBox"></div>
-        </div>
-      </div>
-
-      <!-- Inline Query Form -->
-      <div class="query-box-container">
-        <button onclick="toggleQueryForm()" style="width:100%; padding:8px; border:1px solid var(--border-color); background:#fff; font-size:11px; font-weight:700; border-radius:6px; cursor:pointer;">🚨 Attendance Issue? Raise Query</button>
-        <div id="queryForm" style="display:none; margin-top:8px;">
-          <textarea id="queryText" rows="2" placeholder="Describe attendance issue..."></textarea>
-          <button onclick="submitAttendanceQuery()" style="width:100%; padding:8px; background:var(--navy-bg); color:#fff; border:none; font-size:11px; font-weight:700; border-radius:6px; margin-top:6px; cursor:pointer;">Submit Query</button>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -390,13 +261,24 @@
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmZTB0kT0aiMhu0ah1cICCo-MwWdrUS_CsRX6WGHIsLINWL3kkF6Bv7g4zsjiIqF-h/exec';
     let currentEmpId = '';
     let attendanceHistory = [];
-    let selectedDateForQuery = '';
+    let myChart = null;
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    function switchTab(tabId, elem) {
+      document.querySelectorAll('.tab-section').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      if (elem) elem.classList.add('active');
+      if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
+    }
 
     function updateClock() {
       const now = new Date();
-      const options = { timeZone: 'Asia/Kolkata', weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
-      const clockElem = document.getElementById('liveClock');
-      if (clockElem) clockElem.innerText = now.toLocaleString('en-IN', options);
+      document.getElementById('todayDateStr').innerText = now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
+      document.getElementById('todayTimeStr').innerText = now.toLocaleTimeString('en-IN');
     }
     setInterval(updateClock, 1000);
     updateClock();
@@ -404,7 +286,7 @@
     async function loginUser() {
       const empId = document.getElementById('empId').value.trim();
       const password = document.getElementById('password').value.trim();
-      if (!empId || !password) return alert('Please enter credentials!');
+      if (!empId || !password) return alert('Enter credentials!');
 
       const res = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'validateUser', empId, password }) });
       const data = await res.json();
@@ -413,25 +295,12 @@
         currentEmpId = empId;
         document.getElementById('loginScreen').style.display = 'none';
         document.getElementById('dashboardScreen').style.display = 'flex';
-        document.getElementById('userName').innerText = data.name;
-        document.getElementById('welcomeGreeting').innerText = `Good Morning, ${data.name}! 👋`;
-        document.getElementById('userAvatar').innerText = data.name.charAt(0);
-        loadMyRecords();
+        document.getElementById('userGreeting').innerText = `Hello, ${data.name}! 👋`;
+        loadStaffData();
       } else { alert(data.message); }
     }
 
     function logout() { location.reload(); }
-
-    function getAccurateLocation() {
-      return new Promise((resolve) => {
-        if (!navigator.geolocation) { alert("GPS Not Available!"); return resolve(null); }
-        navigator.geolocation.getCurrentPosition(
-          (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-          (err) => { alert("Location Access Denied!"); resolve(null); },
-          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-        );
-      });
-    }
 
     async function capturePhoto() {
       const video = document.getElementById('webcam'), timer = document.getElementById('timer'), canvas = document.getElementById('canvas');
@@ -452,165 +321,170 @@
             }
           }, 1000);
         });
-      } catch (err) { alert('Camera Permission Required!'); return ''; }
+      } catch (err) { alert('Camera access required!'); return ''; }
     }
 
-    async function handlePunch(type) {
-      const modal = document.getElementById('cameraModal'), status = document.getElementById('modalStatus');
+    async function triggerPunch(type) {
+      const modal = document.getElementById('cameraModal');
       modal.style.display = 'flex';
-      status.innerText = "Fetching GPS Location...";
 
-      const coords = await getAccurateLocation();
-      if (!coords) { modal.style.display = 'none'; return; }
-
-      status.innerText = "Capturing Photo...";
       const photoBase64 = await capturePhoto();
-      if (!photoBase64) { modal.style.display = 'none'; return; }
+      modal.style.display = 'none';
+      if (!photoBase64) return;
 
-      status.innerText = "Saving Attendance...";
-      const mapRoute = `https://www.google.com/maps?q=${coords.lat},${coords.lng}`;
-
-      const res = await fetch(GOOGLE_SCRIPT_URL, { 
-        method: 'POST', 
-        body: JSON.stringify({ action: type, empId: currentEmpId, photoUrl: photoBase64, mapRoute: mapRoute, lat: coords.lat, lng: coords.lng }) 
+      const res = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: type, empId: currentEmpId, photoUrl: photoBase64 })
       });
       const data = await res.json();
-      modal.style.display = 'none';
 
       if (data.success) {
-        alert(type === 'punchIn' ? 'Punched In Successfully!' : 'Punched Out Successfully!');
-        loadMyRecords();
+        alert(type === 'punchIn' ? 'Punched In!' : 'Punched Out!');
+        loadStaffData();
       } else { alert(data.message); }
     }
 
-    async function loadMyRecords() {
+    async function loadStaffData() {
       const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAttendanceRecords&empId=${currentEmpId}`);
       const data = await res.json();
 
-      if (data.success && data.records) {
-        attendanceHistory = data.records;
-        renderDashboard();
+      if (data.success) {
+        attendanceHistory = data.records || [];
+        renderAttendanceTab();
+        renderDashboardTab();
+        renderCalendarTab();
       }
     }
 
-    function renderDashboard() {
+    function renderAttendanceTab() {
+      const todayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+      const record = attendanceHistory.find(r => r.date === todayStr);
+
+      const btnIn = document.getElementById('btnPunchIn');
+      const btnOut = document.getElementById('btnPunchOut');
+      const btnDis = document.getElementById('btnPunchDisabled');
+      const detailsBox = document.getElementById('punchDetailsBox');
+      const inInfo = document.getElementById('inInfoItem');
+      const outInfo = document.getElementById('outInfoItem');
+
+      btnIn.style.display = 'none';
+      btnOut.style.display = 'none';
+      btnDis.style.display = 'none';
+      detailsBox.style.display = 'none';
+      inInfo.style.display = 'none';
+      outInfo.style.display = 'none';
+
+      if (!record || !record.inTime) {
+        btnIn.style.display = 'block';
+      } else if (record.inTime && !record.outTime) {
+        btnOut.style.display = 'block';
+        detailsBox.style.display = 'flex';
+        inInfo.style.display = 'block';
+        document.getElementById('inTimeTxt').innerText = record.inTime;
+        document.getElementById('inImg').src = record.inPhoto || record.inPhotoUrl || record.photoUrl;
+      } else if (record.inTime && record.outTime) {
+        btnDis.style.display = 'block';
+        detailsBox.style.display = 'flex';
+        inInfo.style.display = 'block';
+        outInfo.style.display = 'block';
+        document.getElementById('inTimeTxt').innerText = record.inTime;
+        document.getElementById('inImg').src = record.inPhoto || record.inPhotoUrl || record.photoUrl;
+        document.getElementById('outTimeTxt').innerText = record.outTime;
+        document.getElementById('outImg').src = record.outPhoto || record.outPhotoUrl;
+      }
+    }
+
+    function renderDashboardTab() {
+      const now = new Date();
+      const totalDays = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+      let present = 0, absent = 0, late = 0;
+
+      attendanceHistory.forEach(r => {
+        if (r.inTime) present++;
+        else absent++;
+      });
+
+      document.getElementById('dPresent').innerText = String(present).padStart(2, '0');
+      document.getElementById('dAbsent').innerText = String(absent).padStart(2, '0');
+      document.getElementById('dLate').innerText = String(late).padStart(2, '0');
+      document.getElementById('dTotal').innerText = String(totalDays).padStart(2, '0');
+
+      // Render Summary Chart
+      const ctx = document.getElementById('summaryChart').getContext('2d');
+      if (myChart) myChart.destroy();
+      myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Present', 'Absent', 'Late'],
+          datasets: [{
+            data: [present, absent, late],
+            backgroundColor: ['#10b981', '#ef4444', '#f59e0b']
+          }]
+        }
+      });
+    }
+
+    function renderCalendarTab() {
       const now = new Date();
       const year = now.getFullYear();
       const month = now.getMonth();
       const todayStr = now.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
 
       document.getElementById('calMonthTitle').innerText = now.toLocaleString('en-IN', { month: 'long', year: 'numeric' });
-      document.getElementById('todayDateStr').innerText = now.toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 
-      // Calendar Setup
       const calGrid = document.getElementById('calGrid');
       calGrid.innerHTML = '';
 
-      const daysHeader = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      daysHeader.forEach(d => { calGrid.innerHTML += `<div class="cal-day-head">${d}</div>`; });
+      ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(d => {
+        calGrid.innerHTML += `<div class="cal-day-head">${d}</div>`;
+      });
 
       const firstDay = new Date(year, month, 1).getDay();
       const totalDays = new Date(year, month + 1, 0).getDate();
 
       for (let i = 0; i < firstDay; i++) { calGrid.innerHTML += `<div></div>`; }
 
-      let presentCount = 0, absentCount = 0, lateCount = 0;
-
       for (let day = 1; day <= totalDays; day++) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         const record = attendanceHistory.find(r => r.date === dateStr);
         const isFuture = dateStr > todayStr;
-        const isToday = dateStr === todayStr;
 
-        let badgeHtml = '';
-        if (!isFuture) {
-          if (record && record.inTime) {
-            presentCount++;
-            badgeHtml = `<span class="status-tag tag-p">P</span>`;
-          } else {
-            absentCount++;
-            badgeHtml = `<span class="status-tag tag-a">A</span>`;
-          }
+        let statusClass = 'absent';
+        let statusText = 'A';
+
+        if (isFuture) {
+          statusClass = 'future';
+          statusText = '-';
+        } else if (record && record.inTime) {
+          statusClass = 'present';
+          statusText = 'P';
         }
 
-        let onClickAttr = !isFuture ? `onclick="openDetailModal('${dateStr}')"` : '';
         calGrid.innerHTML += `
-          <div class="cal-cell ${isToday ? 'today-cell' : ''}" ${onClickAttr}>
+          <div class="cal-cell ${statusClass}">
             <span>${day}</span>
-            ${badgeHtml}
+            <span>${statusText}</span>
           </div>
         `;
       }
-
-      // Update Metrics
-      document.getElementById('mPresent').innerText = String(presentCount).padStart(2, '0');
-      document.getElementById('mAbsent').innerText = String(absentCount).padStart(2, '0');
-      document.getElementById('mLate').innerText = String(lateCount).padStart(2, '0');
-      document.getElementById('mTotal').innerText = String(totalDays).padStart(2, '0');
-
-      document.getElementById('sPresent').innerText = presentCount;
-      document.getElementById('sAbsent').innerText = absentCount;
-      document.getElementById('sLate').innerText = lateCount;
-
-      // Update Punch Buttons State
-      const todayRecord = attendanceHistory.find(r => r.date === todayStr);
-      const btnIn = document.getElementById('btnPunchIn');
-      const btnOut = document.getElementById('btnPunchOut');
-
-      if (todayRecord && todayRecord.inTime && !todayRecord.outTime) {
-        btnIn.style.display = 'none';
-        btnOut.style.display = 'block';
-      } else {
-        btnIn.style.display = 'block';
-        btnOut.style.display = 'none';
-      }
     }
 
-    function openDetailModal(dateStr) {
-      selectedDateForQuery = dateStr;
-      const record = attendanceHistory.find(r => r.date === dateStr);
-      document.getElementById('selectedDateTitle').innerText = 'Date: ' + dateStr;
-      document.getElementById('queryForm').style.display = 'none';
+    async function submitEscalationReq() {
+      const date = document.getElementById('reqDate').value;
+      const issue = document.getElementById('reqIssue').value.trim();
 
-      if (record && record.inTime) {
-        document.getElementById('dtInTime').innerText = record.inTime || '--:--';
-        document.getElementById('dtOutTime').innerText = record.outTime || '--:--';
-        
-        const inPhotoSrc = record.inPhoto || record.inPhotoUrl || record.photoUrl;
-        const outPhotoSrc = record.outPhoto || record.outPhotoUrl;
-
-        document.getElementById('dtInImgBox').innerHTML = inPhotoSrc ? `<img src="${inPhotoSrc}" class="detail-thumb">` : 'N/A';
-        document.getElementById('dtOutImgBox').innerHTML = outPhotoSrc ? `<img src="${outPhotoSrc}" class="detail-thumb">` : 'N/A';
-      } else {
-        document.getElementById('dtInTime').innerText = 'ABSENT';
-        document.getElementById('dtOutTime').innerText = 'ABSENT';
-        document.getElementById('dtInImgBox').innerHTML = '';
-        document.getElementById('dtOutImgBox').innerHTML = '';
-      }
-
-      document.getElementById('detailModal').style.display = 'flex';
-    }
-
-    function closeDetailModal() { document.getElementById('detailModal').style.display = 'none'; }
-    function toggleQueryForm() {
-      const qf = document.getElementById('queryForm');
-      qf.style.display = qf.style.display === 'block' ? 'none' : 'block';
-    }
-
-    async function submitAttendanceQuery() {
-      const issue = document.getElementById('queryText').value.trim();
-      if (!issue) return alert('Please describe your issue!');
+      if (!date || !issue) return alert('Select Date and enter Issue!');
 
       const res = await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
-        body: JSON.stringify({ action: 'raiseQuery', empId: currentEmpId, date: selectedDateForQuery, issue: issue })
+        body: JSON.stringify({ action: 'raiseQuery', empId: currentEmpId, date: date, issue: issue })
       });
       const data = await res.json();
 
       if (data.success) {
-        alert(`Query Submitted! Ticket ID: ${data.ticketId}`);
-        closeDetailModal();
-      } else { alert("Submission failed!"); }
+        alert('Request Sent To Admin Successfully!');
+        document.getElementById('reqIssue').value = '';
+      } else { alert('Submission Failed!'); }
     }
   </script>
 </body>
