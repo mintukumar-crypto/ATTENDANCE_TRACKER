@@ -39,7 +39,7 @@
     
     <div class="app-body">
       <div id="loginBox">
-        <input type="text" id="empId" placeholder="Employee ID">
+        <input type="text" id="empId" placeholder="Employee ID (e.g. ARS115437)">
         <input type="password" id="password" placeholder="Password">
         <button onclick="loginUser()">Sign In</button>
       </div>
@@ -82,15 +82,18 @@
   </div>
 
   <script>
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyXtBaxacajp-ETxTvgx6UgtMeqwnWWtNmUvL78xQ6TziRjpiOsL6zyVqOsBRdzR2vn/exec';
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmZTB0kT0aiMhu0ah1cICCo-MwWdrUS_CsRX6WGHIsLINWL3kkF6Bv7g4zsjiIqF-h/exec';
     let currentEmpId = '', userLocation = { lat: '', lng: '' };
 
-    function fetchCurrentLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => { 
-          userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude }; 
-        }, err => {}, { enableHighAccuracy: true });
-      }
+    function getLocationPromise() {
+      return new Promise((resolve) => {
+        if (!navigator.geolocation) return resolve({ lat: '', lng: '' });
+        navigator.geolocation.getCurrentPosition(
+          pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+          err => resolve({ lat: '', lng: '' }),
+          { enableHighAccuracy: true, timeout: 5000 }
+        );
+      });
     }
 
     async function loginUser() {
@@ -107,7 +110,7 @@
         document.getElementById('actionBox').style.display = 'block';
         document.getElementById('welcomeUser').innerText = 'Welcome, ' + data.name;
         
-        fetchCurrentLocation();
+        userLocation = await getLocationPromise();
         loadMyRecords();
       } else { alert(data.message); }
     }
@@ -142,11 +145,12 @@
     }
 
     async function handlePunch(type) {
-      fetchCurrentLocation();
+      userLocation = await getLocationPromise();
       const photoBase64 = await capturePhoto();
       if (!photoBase64) return alert("Photo missing!");
 
       const mapRoute = userLocation.lat ? `https://www.google.com/maps?q=${userLocation.lat},${userLocation.lng}` : '';
+      
       const res = await fetch(GOOGLE_SCRIPT_URL, { 
         method: 'POST', 
         body: JSON.stringify({ 
