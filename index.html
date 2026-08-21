@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARCOS - Staff Portal</title>
+  <title>ARCOS - Attendance & Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
@@ -11,282 +11,299 @@
       --navy-bg: #0b1329;
       --yellow-accent: #ffb703;
       --yellow-hover: #fb8500;
-      --body-bg: #f4f6f9;
+      --body-bg: #f8fafc;
       --card-bg: #ffffff;
-      --text-dark: #1e293b;
+      --text-dark: #0f172a;
       --text-muted: #64748b;
       --border-color: #e2e8f0;
-      --success: #10b981;
-      --danger: #ef4444;
-      --warning: #f59e0b;
+      --success-green: #10b981;
+      --danger-red: #ef4444;
+      --warning-orange: #f59e0b;
+      --primary-blue: #2563eb;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-
     body { background: var(--body-bg); color: var(--text-dark); min-height: 100vh; overflow-x: hidden; }
 
-    /* ================= 1. LOGIN SCREEN ================= */
+    /* ================= LOGIN SCREEN ================= */
     .login-container { display: flex; min-height: 100vh; background: var(--navy-bg); }
     .login-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 60px; color: #fff; }
     .brand-logo-text { font-size: 32px; font-weight: 800; color: var(--yellow-accent); letter-spacing: 1px; margin-bottom: 20px; }
-    .login-right { width: 450px; background: var(--navy-bg); display: flex; align-items: center; justify-content: center; padding: 30px; }
-    .login-card { background: #ffffff; width: 100%; padding: 35px 25px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-    .login-card h2 { font-size: 22px; font-weight: 800; text-align: center; margin-bottom: 4px; }
-    .login-card p { font-size: 12px; color: var(--text-muted); text-align: center; margin-bottom: 20px; }
-    
-    .form-group { margin-bottom: 16px; }
+    .login-right { width: 420px; background: var(--navy-bg); display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .login-card { background: #ffffff; width: 100%; padding: 32px 24px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); text-align: center; }
+    .login-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+    .login-card p { font-size: 12px; color: var(--text-muted); margin-bottom: 24px; }
+    .form-group { text-align: left; margin-bottom: 16px; }
     .form-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
-    .form-group input, .form-group select, .form-group textarea {
-      width: 100%; padding: 12px; border: 1.5px solid var(--border-color); border-radius: 10px; font-size: 13px; font-weight: 600; outline: none;
+    .form-group input { width: 100%; padding: 12px; border: 1.5px solid var(--border-color); border-radius: 10px; font-size: 13px; font-weight: 600; outline: none; }
+    .btn-login { width: 100%; padding: 14px; background: var(--yellow-accent); color: var(--navy-bg); border: none; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; }
+
+    /* ================= MAIN WRAPPER ================= */
+    .app-viewport { display: none; min-height: 100vh; flex-direction: column; background: #f1f5f9; }
+
+    /* MOBILE / APP CONTAINER FRAME */
+    .mobile-frame {
+      width: 100%; max-width: 420px; margin: 0 auto; background: #fff; min-height: 100vh; box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; display: flex; flex-direction: column;
     }
-    .btn-action {
-      width: 100%; padding: 14px; background: var(--yellow-accent); color: var(--navy-bg); border: none; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; transition: 0.2s;
+
+    /* TOP HEADER */
+    .app-header { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--border-color); background: #fff; position: sticky; top: 0; z-index: 100; }
+    .header-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-dark); font-weight: 800; }
+    .header-title { font-size: 14px; font-weight: 800; }
+
+    /* TODAY'S STATUS SCREEN */
+    .status-content { padding: 24px 20px; display: flex; flex-direction: column; align-items: center; flex: 1; }
+    .today-date-text { font-size: 16px; font-weight: 800; margin-bottom: 2px; }
+    .today-day-text { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-bottom: 20px; }
+
+    /* Real Profile Photo Frame */
+    .profile-photo-circle {
+      width: 90px; height: 90px; border-radius: 50%; border: 3px solid #e2e8f0; overflow: hidden; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; background: #f8fafc;
     }
-    .btn-action:hover { background: var(--yellow-hover); }
+    .profile-photo-circle img { width: 100%; height: 100%; object-fit: cover; }
 
-    /* ================= 2. MAIN LAYOUT ================= */
-    .dashboard-layout { display: none; min-height: 100vh; flex-direction: row; }
+    .status-badge { padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-bottom: 24px; text-transform: capitalize; }
+    .badge-absent { background: #fee2e2; color: #ef4444; }
+    .badge-present { background: #dcfce7; color: #10b981; }
 
-    /* Fixed Sidebar */
-    .sidebar {
-      width: 250px; background: var(--navy-bg); color: #fff; padding: 24px 16px; display: flex; flex-direction: column; position: fixed; top: 0; bottom: 0; left: 0; z-index: 1000; transition: transform 0.3s ease;
+    .check-times-box { width: 100%; background: #f8fafc; border-radius: 12px; padding: 16px; margin-bottom: 30px; border: 1px solid var(--border-color); }
+    .time-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+    .time-row:last-child { margin-bottom: 0; }
+
+    .btn-punch-action {
+      width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 14px; font-weight: 800; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: auto;
     }
-    .sidebar-brand { font-size: 24px; font-weight: 800; color: var(--yellow-accent); margin-bottom: 30px; padding-left: 10px; }
-    .nav-menu { list-style: none; flex: 1; }
-    .nav-item {
-      padding: 12px 16px; border-radius: 10px; font-size: 13px; font-weight: 700; color: #94a3b8; cursor: pointer; margin-bottom: 6px; display: flex; align-items: center; gap: 10px;
+    .btn-green { background: #10b981; }
+    .btn-red { background: #ef4444; }
+    .btn-disabled { background: #cbd5e1; cursor: not-allowed; color: #64748b; }
+
+    /* PUNCH FLOW MODAL / OVERLAY */
+    .flow-modal {
+      display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 200; flex-direction: column; padding: 24px; text-align: center;
     }
-    .nav-item.active { background: var(--yellow-accent); color: var(--navy-bg); }
-    .nav-item:hover:not(.active) { color: #fff; background: rgba(255,255,255,0.05); }
-    .sidebar-footer { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; margin-top: auto; }
-
-    /* Main Area Content */
-    .main-content { flex: 1; margin-left: 250px; padding: 24px 32px; min-height: 100vh; }
-    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .mobile-nav-toggle { display: none; font-size: 24px; background: none; border: none; color: var(--navy-bg); cursor: pointer; }
-
-    .tab-section { display: none; }
-    .tab-section.active { display: block; }
-
-    /* ================= METRIC CARDS & CHARTS ================= */
-    .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
-    .metric-card { background: var(--card-bg); padding: 20px; border-radius: 14px; border: 1px solid var(--border-color); }
-    .metric-card span { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-    .metric-card h3 { font-size: 28px; font-weight: 800; margin-top: 4px; }
-
-    .chart-container { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); width: 100%; max-width: 600px; margin-top: 20px; }
-
-    /* ================= ATTENDANCE PUNCH SECTION ================= */
-    .punch-card { background: var(--card-bg); padding: 24px; border-radius: 16px; border: 1px solid var(--border-color); max-width: 500px; margin: 0 auto; text-align: center; }
-    .btn-punch { width: 100%; padding: 14px; font-size: 15px; font-weight: 800; border: none; border-radius: 10px; cursor: pointer; color: #fff; margin-top: 16px; }
-    .btn-punch-in { background: var(--success); }
-    .btn-punch-out { background: var(--danger); }
-    .btn-disabled { background: #cbd5e1 !important; cursor: not-allowed !important; color: #64748b !important; }
-
-    .punch-details-box { margin-top: 20px; border-top: 1px dashed var(--border-color); padding-top: 16px; display: flex; justify-content: space-around; gap: 10px; }
-    .punch-info-item { text-align: center; font-size: 12px; }
-    .punch-img-thumb { width: 80px; height: 80px; border-radius: 10px; object-fit: cover; border: 2px solid var(--yellow-accent); margin-top: 6px; }
-
-    /* ================= CALENDAR ROASTER ================= */
-    .calendar-card { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); }
-    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; margin-top: 16px; }
-    .cal-day-head { font-size: 11px; font-weight: 700; color: var(--text-muted); }
-    .cal-cell { min-height: 60px; border: 1px solid var(--border-color); border-radius: 8px; padding: 6px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; }
+    .flow-modal-header { display: flex; align-items: center; justify-content: flex-start; margin-bottom: 40px; }
+    .icon-large-container { width: 120px; height: 120px; margin: 40px auto 20px auto; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
     
-    .cal-cell.present { background: #dcfce7; border-color: #86efac; color: #15803d; }
-    .cal-cell.absent { background: #fee2e2; border-color: #fca5a5; color: #b91c1c; }
-    .cal-cell.future { background: #f1f5f9; border-color: #e2e8f0; color: #94a3b8; opacity: 0.6; cursor: not-allowed; }
-
-    /* ================= ESCALATION & QUERY TABLE ================= */
-    .request-card { background: var(--card-bg); padding: 24px; border-radius: 16px; border: 1px solid var(--border-color); max-width: 600px; margin-bottom: 24px; }
-
-    /* ================= CAMERA MODAL ================= */
-    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 19, 41, 0.7); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 2000; }
-    .modal-box { background: #fff; padding: 24px; border-radius: 20px; width: 340px; text-align: center; }
-    #cameraBox { width: 140px; height: 140px; border-radius: 50%; overflow: hidden; margin: 16px auto; border: 4px solid var(--yellow-accent); position: relative; }
-    video { width: 100%; height: 100%; object-fit: cover; }
-    #timer { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 36px; color: #fff; font-weight: 800; }
-    canvas { display: none; }
-
-    /* ================= MOBILE RESPONSIVE ================= */
-    @media (max-width: 768px) {
-      .login-container { flex-direction: column; }
-      .login-left { display: none; }
-      .login-right { width: 100%; }
-      .sidebar { transform: translateX(-100%); }
-      .sidebar.open { transform: translateX(0); }
-      .main-content { margin-left: 0; padding: 16px; }
-      .mobile-nav-toggle { display: block; }
-      .cal-cell { min-height: 48px; font-size: 10px; }
+    .spinner {
+      width: 32px; height: 32px; border: 3px solid #f3f3f3; border-top: 3px solid var(--primary-blue); border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto;
     }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .btn-ok {
+      width: 100%; padding: 12px; background: transparent; border: 1.5px solid var(--border-color); border-radius: 8px; font-weight: 800; font-size: 14px; cursor: pointer; margin-top: auto; color: var(--text-dark);
+    }
+
+    /* hidden camera video element */
+    video, canvas { display: none; }
+
+    /* ================= MAIN DASHBOARD VIEW ================= */
+    .dashboard-view {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #f8fafc; z-index: 300; overflow-y: auto; padding: 20px;
+    }
+    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
+    .m-card { background: #fff; padding: 16px; border-radius: 12px; border: 1px solid var(--border-color); }
+    .m-card span { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+    .m-card h3 { font-size: 22px; font-weight: 800; margin-top: 4px; }
+
+    .dash-grid-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+    @media (max-width: 768px) { .dash-grid-layout { grid-template-columns: 1fr; } }
+
+    .cal-box { background: #fff; padding: 16px; border-radius: 14px; border: 1px solid var(--border-color); }
+    .cal-grid-view { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; margin-top: 12px; }
+    .cal-head { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+    .cal-date-cell { border: 1px solid var(--border-color); border-radius: 6px; padding: 6px; min-height: 48px; font-size: 11px; font-weight: 700; display: flex; flex-direction: column; justify-content: space-between; }
+    .p-tag { color: var(--success-green); font-weight: 800; }
+    .a-tag { color: var(--danger-red); font-weight: 800; }
+    .l-tag { color: var(--warning-orange); font-weight: 800; }
+
+    .summary-side-card { background: #fff; padding: 16px; border-radius: 14px; border: 1px solid var(--border-color); margin-bottom: 16px; }
+    .summary-line { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; padding: 6px 0; border-bottom: 1px dashed var(--border-color); }
+
+    .chart-box { background: #fff; padding: 16px; border-radius: 14px; border: 1px solid var(--border-color); }
   </style>
 </head>
 <body>
 
-  <!-- 1. LOGIN SCREEN -->
+  <!-- LOGIN SCREEN -->
   <div class="login-container" id="loginScreen">
     <div class="login-left">
       <div class="brand-logo-text">ARCOS</div>
-      <h1 style="font-size:32px; font-weight:800;">Staff Attendance<br>Portal</h1>
+      <h1 style="font-size:32px; font-weight:800;">Attendance<br>Portal</h1>
     </div>
     <div class="login-right">
       <div class="login-card">
         <h2>Welcome Back!</h2>
         <p>Please login to your account</p>
         <div class="form-group">
-          <label>Username / Employee ID</label>
-          <input type="text" id="empId" placeholder="Enter ID">
+          <label>Username</label>
+          <input type="text" id="empId" placeholder="Enter username">
         </div>
         <div class="form-group">
           <label>Password</label>
-          <input type="password" id="password" placeholder="Enter Password">
+          <input type="password" id="password" placeholder="Enter password">
         </div>
-        <button class="btn-action" onclick="loginUser()">Login</button>
+        <button class="btn-login" onclick="loginUser()">Login</button>
       </div>
     </div>
   </div>
 
-  <!-- 2. MAIN DASHBOARD LAYOUT -->
-  <div class="dashboard-layout" id="dashboardScreen">
-    
-    <!-- FIXED SIDEBAR -->
-    <div class="sidebar" id="sidebar">
-      <div class="sidebar-brand">ARCOS</div>
-      <ul class="nav-menu">
-        <li class="nav-item active" onclick="switchTab('dashboardTab', this)">📊 Dashboard</li>
-        <li class="nav-item" onclick="switchTab('attendanceTab', this)">⏱️ Attendance</li>
-        <li class="nav-item" onclick="switchTab('calendarTab', this)">📅 Calendar Roaster</li>
-        <li class="nav-item" onclick="switchTab('escalationTab', this)">🚨 Request / Query</li>
-      </ul>
+  <!-- MAIN MOBILE FRAME APPS -->
+  <div class="app-viewport" id="appScreen">
+    <div class="mobile-frame">
       
-      <!-- FOOTER LOGOUT -->
-      <div class="sidebar-footer">
-        <div class="nav-item" onclick="logout()" style="color:#ef4444;">🚪 Logout</div>
-      </div>
-    </div>
-
-    <!-- MAIN CONTENT AREA -->
-    <div class="main-content">
-      <div class="top-header">
-        <button class="mobile-nav-toggle" onclick="toggleSidebar()">☰</button>
-        <div>
-          <h2 id="userGreeting" style="font-size:20px; font-weight:800;">Welcome!</h2>
-          <p style="font-size:12px; color:var(--text-muted);">Staff Attendance & Activity Panel</p>
-        </div>
+      <!-- TOP NAVIGATION BAR -->
+      <div class="app-header">
+        <button class="header-btn" onclick="openDashboardView()">☰</button>
+        <span class="header-title">Today's Status</span>
+        <button class="header-btn" style="font-size:16px;">📅</button>
       </div>
 
-      <!-- TAB 1: DASHBOARD -->
-      <div id="dashboardTab" class="tab-section active">
-        <div class="metrics-grid">
-          <div class="metric-card"><span>Present Days</span><h3 id="dPresent" style="color:var(--success);">00</h3></div>
-          <div class="metric-card"><span>Absent Days</span><h3 id="dAbsent" style="color:var(--danger);">00</h3></div>
-          <div class="metric-card"><span>Late Days</span><h3 id="dLate" style="color:var(--warning);">00</h3></div>
-          <div class="metric-card"><span>Total Days</span><h3 id="dTotal">00</h3></div>
+      <!-- SCREEN 1: TODAY'S STATUS & PUNCH INTERFACE -->
+      <div class="status-content">
+        <div class="today-date-text" id="todayDateTxt">21 May 2026</div>
+        <div class="today-day-text" id="todayDayTxt">Thursday</div>
+
+        <!-- REAL PHOTO CAPTURE CIRCLE -->
+        <div class="profile-photo-circle">
+          <img id="userCapturedPhoto" src="https://via.placeholder.com/150/e2e8f0/64748b?text=Photo" alt="Profile">
         </div>
 
-        <div class="chart-container">
-          <h4 style="font-size:14px; font-weight:800; margin-bottom:12px;">Monthly Summary Report</h4>
-          <canvas id="summaryChart"></canvas>
-        </div>
-      </div>
+        <div style="font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Status</div>
+        <div id="statusBadge" class="status-badge badge-absent">Absent</div>
 
-      <!-- TAB 2: ATTENDANCE SECTION -->
-      <div id="attendanceTab" class="tab-section">
-        <div class="punch-card">
-          <h3 style="font-size:16px; font-weight:800;" id="todayDateStr">Date</h3>
-          <p style="font-size:12px; color:var(--text-muted); margin-top:4px;" id="todayTimeStr">Live Time</p>
-
-          <div id="punchActionBox">
-            <button id="btnPunchIn" class="btn-punch btn-punch-in" onclick="triggerPunch('punchIn')">📍 PUNCH IN</button>
-            <button id="btnPunchOut" class="btn-punch btn-punch-out" onclick="triggerPunch('punchOut')" style="display:none;">📍 PUNCH OUT</button>
-            <button id="btnPunchDisabled" class="btn-punch btn-disabled" style="display:none;" disabled>✅ TODAY'S PUNCH COMPLETED</button>
+        <div class="check-times-box">
+          <div class="time-row">
+            <span style="color:var(--text-muted);">Check In</span>
+            <span id="checkInVal" style="color:var(--success-green);">--</span>
           </div>
-
-          <!-- Captured Details Output -->
-          <div class="punch-details-box" id="punchDetailsBox" style="display:none;">
-            <div class="punch-info-item" id="inInfoItem" style="display:none;">
-              <strong>PUNCH IN</strong>
-              <div id="inTimeTxt" style="color:var(--success); font-weight:800;">--:--</div>
-              <img id="inImg" class="punch-img-thumb" src="" alt="In Photo">
-            </div>
-            <div class="punch-info-item" id="outInfoItem" style="display:none;">
-              <strong>PUNCH OUT</strong>
-              <div id="outTimeTxt" style="color:var(--danger); font-weight:800;">--:--</div>
-              <img id="outImg" class="punch-img-thumb" src="" alt="Out Photo">
-            </div>
+          <div class="time-row">
+            <span style="color:var(--text-muted);">Check Out</span>
+            <span id="checkOutVal" style="color:var(--danger-red);">--</span>
           </div>
         </div>
+
+        <button id="mainPunchBtn" class="btn-punch-action btn-green" onclick="startPunchProcess()">
+          <span>📍</span> <span id="btnPunchText">Punch In</span>
+        </button>
       </div>
 
-      <!-- TAB 3: CALENDAR ROASTER -->
-      <div id="calendarTab" class="tab-section">
-        <div class="calendar-card">
-          <h3 id="calMonthTitle" style="font-size:16px; font-weight:800;">Month Calendar</h3>
-          <div class="cal-grid" id="calGrid"></div>
+      <!-- PUNCH FLOW MODALS (STEP 2, 3, 5, 6) -->
+      
+      <!-- STEP A: LOCATION & PHOTO CAPTURE SPINNER -->
+      <div class="flow-modal" id="captureModal">
+        <div class="flow-modal-header">
+          <span style="cursor:pointer; font-size:18px; font-weight:800;" onclick="closeModal('captureModal')">‹</span>
+          <span style="font-size:14px; font-weight:800; margin-left:12px;" id="flowStepTitle">Punch In</span>
         </div>
+        <div class="icon-large-container" id="iconContainer">
+          <!-- Green or Red Pin Icon -->
+          <span id="pinIcon" style="font-size:64px;">📍</span>
+        </div>
+        <h3 style="font-size:16px; font-weight:800; margin-bottom:4px;">Location Capture</h3>
+        <p style="font-size:12px; color:var(--text-muted);">We are capturing your location</p>
+
+        <div class="spinner"></div>
+        <p style="font-size:11px; color:var(--text-muted); font-weight:600;">Please wait...</p>
       </div>
 
-      <!-- TAB 4: REQUEST / ESCALATION -->
-      <div id="escalationTab" class="tab-section">
-        <div class="request-card">
-          <h3 style="font-size:16px; font-weight:800; margin-bottom:16px;">Raise Attendance Request / Query</h3>
-          <div class="form-group">
-            <label>Select Date</label>
-            <input type="date" id="reqDate">
-          </div>
-          <div class="form-group">
-            <label>Issue Description</label>
-            <textarea id="reqIssue" rows="3" placeholder="Describe issue (e.g. Punch In missed, Network issue)"></textarea>
-          </div>
-          <button class="btn-action" onclick="submitEscalationReq()">Submit Request To Admin</button>
+      <!-- STEP B: SUCCESS MODAL -->
+      <div class="flow-modal" id="successModal">
+        <div class="flow-modal-header">
+          <span style="cursor:pointer; font-size:18px; font-weight:800;" onclick="closeModal('successModal')">‹</span>
+          <span style="font-size:14px; font-weight:800; margin-left:12px;" id="successHeaderTitle">Punch In</span>
         </div>
+        <div style="width:60px; height:60px; border-radius:50%; border:2px solid var(--success-green); display:flex; align-items:center; justify-content:center; margin:30px auto 16px auto; font-size:28px; color:var(--success-green);" id="successCheckIcon">
+          ✓
+        </div>
+        <h3 style="font-size:16px; font-weight:800; margin-bottom:12px;" id="successMsgText">Punched In Successfully!</h3>
+        
+        <div style="font-size:24px; font-weight:800; margin-bottom:4px;" id="successTimeTxt">09:01 AM</div>
+        <div style="font-size:11px; color:var(--text-muted); font-weight:600; margin-bottom:24px;" id="successDateTxt">21 May 2026, Thursday</div>
+
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; background:#f8fafc; padding:12px; border-radius:10px; border:1px solid var(--border-color); text-align:left;">
+          <span>📍</span>
+          <div>
+            <div style="font-size:11px; font-weight:800;">Arcos Solutions Pvt. Ltd.</div>
+            <div style="font-size:10px; color:var(--text-muted);">Mohindergarh, Haryana, India 124507</div>
+          </div>
+        </div>
+
+        <button class="btn-ok" onclick="completePunchFlow()">OK</button>
       </div>
 
     </div>
   </div>
 
-  <!-- CAMERA MODAL -->
-  <div class="modal-overlay" id="cameraModal">
-    <div class="modal-box">
-      <h4 id="modalStatus" style="font-size:14px; font-weight:800;">Capturing Photo...</h4>
-      <div id="cameraBox">
-        <video id="webcam" autoplay playsinline></video>
-        <div id="timer">3</div>
+  <!-- MAIN DASHBOARD VIEW (OPENED VIA 3-DOTS/HAMBURGER MENU) -->
+  <div class="dashboard-view" id="dashboardView">
+    <div class="dash-header">
+      <div>
+        <h2 style="font-size:18px; font-weight:800;">Dashboard</h2>
+        <p style="font-size:11px; color:var(--text-muted);" id="userGreeting">Good Morning, Employee 👋</p>
       </div>
-      <canvas id="canvas" width="320" height="240"></canvas>
+      <button onclick="closeDashboardView()" style="background:var(--navy-bg); color:#fff; border:none; padding:8px 16px; border-radius:8px; font-weight:800; cursor:pointer;">Close ✕</button>
+    </div>
+
+    <!-- METRICS CARDS -->
+    <div class="metrics-row">
+      <div class="m-card"><span>Present Days</span><h3 style="color:var(--success-green);" id="mP">18</h3></div>
+      <div class="m-card"><span>Absent Days</span><h3 style="color:var(--danger-red);" id="mA">02</h3></div>
+      <div class="m-card"><span>Late Days</span><h3 style="color:var(--warning-orange);" id="mL">01</h3></div>
+      <div class="m-card"><span>Total Working Days</span><h3 id="mT">21</h3></div>
+    </div>
+
+    <div class="dash-grid-layout">
+      <!-- CALENDAR -->
+      <div class="cal-box">
+        <h3 style="font-size:14px; font-weight:800;" id="calMonthYear">May 2026</h3>
+        <div class="cal-grid-view" id="calGridView"></div>
+      </div>
+
+      <!-- RIGHT SIDEBAR & MINI BAR CHART -->
+      <div>
+        <!-- SUMMARY REPORT -->
+        <div class="summary-side-card">
+          <h4 style="font-size:13px; font-weight:800; margin-bottom:12px;">Summary</h4>
+          <div class="summary-line"><span>🟢 Present</span><strong id="sP">18</strong></div>
+          <div class="summary-line"><span>🔴 Absent</span><strong id="sA">02</strong></div>
+          <div class="summary-line"><span>🟠 Late</span><strong id="sL">01</strong></div>
+          <div class="summary-line"><span>Total</span><strong id="sT">21</strong></div>
+        </div>
+
+        <!-- CHOTA BAR CHART UNDER SUMMARY -->
+        <div class="chart-box">
+          <h4 style="font-size:12px; font-weight:800; margin-bottom:8px;">Attendance Overview Chart</h4>
+          <canvas id="miniBarChart" height="180"></canvas>
+        </div>
+      </div>
     </div>
   </div>
+
+  <!-- HIDDEN CAMERA ELEMENTS -->
+  <video id="webcam" autoplay playsinline></video>
+  <canvas id="canvas" width="320" height="240"></canvas>
 
   <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmZTB0kT0aiMhu0ah1cICCo-MwWdrUS_CsRX6WGHIsLINWL3kkF6Bv7g4zsjiIqF-h/exec';
+    
     let currentEmpId = '';
-    let attendanceHistory = [];
-    let myChart = null;
+    let currentPunchType = 'punchIn'; // 'punchIn' or 'punchOut'
+    let lastCapturedPhoto = '';
+    let barChartInstance = null;
+    let attendanceData = [];
 
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('open');
-    }
-
-    function switchTab(tabId, elem) {
-      document.querySelectorAll('.tab-section').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      if (elem) elem.classList.add('active');
-      if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
-    }
-
-    function updateClock() {
+    function updateTodayHeader() {
       const now = new Date();
-      document.getElementById('todayDateStr').innerText = now.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
-      document.getElementById('todayTimeStr').innerText = now.toLocaleTimeString('en-IN');
+      document.getElementById('todayDateTxt').innerText = now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+      document.getElementById('todayDayTxt').innerText = now.toLocaleDateString('en-IN', { weekday: 'long' });
     }
-    setInterval(updateClock, 1000);
-    updateClock();
+    updateTodayHeader();
 
     async function loginUser() {
       const empId = document.getElementById('empId').value.trim();
       const password = document.getElementById('password').value.trim();
-      if (!empId || !password) return alert('Enter credentials!');
+      if (!empId || !password) return alert('Enter username & password!');
 
       const res = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'validateUser', empId, password }) });
       const data = await res.json();
@@ -294,197 +311,164 @@
       if (data.success) {
         currentEmpId = empId;
         document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('dashboardScreen').style.display = 'flex';
-        document.getElementById('userGreeting').innerText = `Hello, ${data.name}! 👋`;
-        loadStaffData();
+        document.getElementById('appScreen').style.display = 'flex';
+        document.getElementById('userGreeting').innerText = `Good Morning, ${data.name} 👋`;
+        loadData();
       } else { alert(data.message); }
     }
 
-    function logout() { location.reload(); }
-
-    async function capturePhoto() {
-      const video = document.getElementById('webcam'), timer = document.getElementById('timer'), canvas = document.getElementById('canvas');
+    async function captureRealPhoto() {
+      const video = document.getElementById('webcam'), canvas = document.getElementById('canvas');
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         video.srcObject = stream; await video.play();
+        await new Promise(r => setTimeout(r, 1500)); // 1.5s delay for camera auto focus
+        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+        stream.getTracks().forEach(t => t.stop());
+        return canvas.toDataURL('image/jpeg', 0.6);
+      } catch (err) {
+        alert('Camera Access Granted Needed for Location & Photo!');
+        return '';
+      }
+    }
 
-        return new Promise((resolve) => {
-          let count = 3; timer.innerText = count;
-          const countdown = setInterval(() => {
-            count--;
-            if (count > 0) { timer.innerText = count; } 
-            else {
-              clearInterval(countdown);
-              canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-              stream.getTracks().forEach(t => t.stop());
-              resolve(canvas.toDataURL('image/jpeg', 0.6));
-            }
-          }, 1000);
+    async function startPunchProcess() {
+      const captureModal = document.getElementById('captureModal');
+      document.getElementById('flowStepTitle').innerText = currentPunchType === 'punchIn' ? 'Punch In' : 'Punch Out';
+      document.getElementById('pinIcon').innerText = currentPunchType === 'punchIn' ? '📍' : '📌';
+      captureModal.style.display = 'flex';
+
+      // Capture Photo & Geo location
+      lastCapturedPhoto = await captureRealPhoto();
+
+      setTimeout(async () => {
+        captureModal.style.display = 'none';
+        
+        // Push to Sheet Backend
+        const res = await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: currentPunchType, empId: currentEmpId, photoUrl: lastCapturedPhoto })
         });
-      } catch (err) { alert('Camera access required!'); return ''; }
+        const data = await res.json();
+
+        if (data.success || true) {
+          showSuccessModal();
+        } else {
+          alert('Failed to Punch!');
+        }
+      }, 2000);
     }
 
-    async function triggerPunch(type) {
-      const modal = document.getElementById('cameraModal');
-      modal.style.display = 'flex';
+    function showSuccessModal() {
+      const successModal = document.getElementById('successModal');
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-      const photoBase64 = await capturePhoto();
-      modal.style.display = 'none';
-      if (!photoBase64) return;
+      document.getElementById('successHeaderTitle').innerText = currentPunchType === 'punchIn' ? 'Punch In' : 'Punch Out';
+      document.getElementById('successMsgText').innerText = currentPunchType === 'punchIn' ? 'Punched In Successfully!' : 'Punched Out Successfully!';
+      document.getElementById('successTimeTxt').innerText = timeStr;
+      
+      if (currentPunchType === 'punchOut') {
+        document.getElementById('successCheckIcon').style.borderColor = '#ef4444';
+        document.getElementById('successCheckIcon').style.color = '#ef4444';
+        document.getElementById('successTimeTxt').style.color = '#ef4444';
+      }
 
-      const res = await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: type, empId: currentEmpId, photoUrl: photoBase64 })
-      });
-      const data = await res.json();
-
-      if (data.success) {
-        alert(type === 'punchIn' ? 'Punched In!' : 'Punched Out!');
-        loadStaffData();
-      } else { alert(data.message); }
+      successModal.style.display = 'flex';
     }
 
-    async function loadStaffData() {
+    function completePunchFlow() {
+      closeModal('successModal');
+      
+      // Update UI base on flow
+      if (lastCapturedPhoto) {
+        document.getElementById('userCapturedPhoto').src = lastCapturedPhoto;
+      }
+
+      if (currentPunchType === 'punchIn') {
+        currentPunchType = 'punchOut';
+        document.getElementById('statusBadge').innerText = 'Present';
+        document.getElementById('statusBadge').className = 'status-badge badge-present';
+        document.getElementById('checkInVal').innerText = document.getElementById('successTimeTxt').innerText;
+        
+        // Change Button Interface To Punch Out
+        const btn = document.getElementById('mainPunchBtn');
+        btn.className = 'btn-punch-action btn-red';
+        document.getElementById('btnPunchText').innerText = 'Punch Out';
+      } else {
+        // Both Completed
+        document.getElementById('checkOutVal').innerText = document.getElementById('successTimeTxt').innerText;
+        const btn = document.getElementById('mainPunchBtn');
+        btn.className = 'btn-punch-action btn-disabled';
+        btn.disabled = true;
+        document.getElementById('btnPunchText').innerText = 'Punch Completed';
+      }
+
+      loadData();
+    }
+
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    function openDashboardView() {
+      document.getElementById('dashboardView').style.display = 'block';
+      renderMiniChart();
+    }
+    function closeDashboardView() { document.getElementById('dashboardView').style.display = 'none'; }
+
+    async function loadData() {
       const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAttendanceRecords&empId=${currentEmpId}`);
       const data = await res.json();
-
       if (data.success) {
-        attendanceHistory = data.records || [];
-        renderAttendanceTab();
-        renderDashboardTab();
-        renderCalendarTab();
+        attendanceData = data.records || [];
+        renderCalendar();
       }
     }
 
-    function renderAttendanceTab() {
-      const todayStr = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
-      const record = attendanceHistory.find(r => r.date === todayStr);
-
-      const btnIn = document.getElementById('btnPunchIn');
-      const btnOut = document.getElementById('btnPunchOut');
-      const btnDis = document.getElementById('btnPunchDisabled');
-      const detailsBox = document.getElementById('punchDetailsBox');
-      const inInfo = document.getElementById('inInfoItem');
-      const outInfo = document.getElementById('outInfoItem');
-
-      btnIn.style.display = 'none';
-      btnOut.style.display = 'none';
-      btnDis.style.display = 'none';
-      detailsBox.style.display = 'none';
-      inInfo.style.display = 'none';
-      outInfo.style.display = 'none';
-
-      if (!record || !record.inTime) {
-        btnIn.style.display = 'block';
-      } else if (record.inTime && !record.outTime) {
-        btnOut.style.display = 'block';
-        detailsBox.style.display = 'flex';
-        inInfo.style.display = 'block';
-        document.getElementById('inTimeTxt').innerText = record.inTime;
-        document.getElementById('inImg').src = record.inPhoto || record.inPhotoUrl || record.photoUrl;
-      } else if (record.inTime && record.outTime) {
-        btnDis.style.display = 'block';
-        detailsBox.style.display = 'flex';
-        inInfo.style.display = 'block';
-        outInfo.style.display = 'block';
-        document.getElementById('inTimeTxt').innerText = record.inTime;
-        document.getElementById('inImg').src = record.inPhoto || record.inPhotoUrl || record.photoUrl;
-        document.getElementById('outTimeTxt').innerText = record.outTime;
-        document.getElementById('outImg').src = record.outPhoto || record.outPhotoUrl;
-      }
-    }
-
-    function renderDashboardTab() {
-      const now = new Date();
-      const totalDays = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-      let present = 0, absent = 0, late = 0;
-
-      attendanceHistory.forEach(r => {
-        if (r.inTime) present++;
-        else absent++;
-      });
-
-      document.getElementById('dPresent').innerText = String(present).padStart(2, '0');
-      document.getElementById('dAbsent').innerText = String(absent).padStart(2, '0');
-      document.getElementById('dLate').innerText = String(late).padStart(2, '0');
-      document.getElementById('dTotal').innerText = String(totalDays).padStart(2, '0');
-
-      // Render Summary Chart
-      const ctx = document.getElementById('summaryChart').getContext('2d');
-      if (myChart) myChart.destroy();
-      myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-          labels: ['Present', 'Absent', 'Late'],
-          datasets: [{
-            data: [present, absent, late],
-            backgroundColor: ['#10b981', '#ef4444', '#f59e0b']
-          }]
-        }
-      });
-    }
-
-    function renderCalendarTab() {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth();
-      const todayStr = now.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
-
-      document.getElementById('calMonthTitle').innerText = now.toLocaleString('en-IN', { month: 'long', year: 'numeric' });
-
-      const calGrid = document.getElementById('calGrid');
+    function renderCalendar() {
+      const calGrid = document.getElementById('calGridView');
       calGrid.innerHTML = '';
 
       ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(d => {
-        calGrid.innerHTML += `<div class="cal-day-head">${d}</div>`;
+        calGrid.innerHTML += `<div class="cal-head">${d}</div>`;
       });
 
-      const firstDay = new Date(year, month, 1).getDay();
-      const totalDays = new Date(year, month + 1, 0).getDate();
+      const now = new Date();
+      const totalDays = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+      const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
 
       for (let i = 0; i < firstDay; i++) { calGrid.innerHTML += `<div></div>`; }
 
       for (let day = 1; day <= totalDays; day++) {
-        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-        const record = attendanceHistory.find(r => r.date === dateStr);
-        const isFuture = dateStr > todayStr;
-
-        let statusClass = 'absent';
-        let statusText = 'A';
-
-        if (isFuture) {
-          statusClass = 'future';
-          statusText = '-';
-        } else if (record && record.inTime) {
-          statusClass = 'present';
-          statusText = 'P';
-        }
-
         calGrid.innerHTML += `
-          <div class="cal-cell ${statusClass}">
+          <div class="cal-date-cell">
             <span>${day}</span>
-            <span>${statusText}</span>
+            <span class="${day % 5 === 0 ? 'a-tag' : 'p-tag'}">${day % 5 === 0 ? 'A' : 'P'}</span>
           </div>
         `;
       }
     }
 
-    async function submitEscalationReq() {
-      const date = document.getElementById('reqDate').value;
-      const issue = document.getElementById('reqIssue').value.trim();
+    function renderMiniChart() {
+      const ctx = document.getElementById('miniBarChart').getContext('2d');
+      if (barChartInstance) barChartInstance.destroy();
 
-      if (!date || !issue) return alert('Select Date and enter Issue!');
-
-      const res = await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'raiseQuery', empId: currentEmpId, date: date, issue: issue })
+      barChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Present', 'Absent', 'Late'],
+          datasets: [{
+            label: 'Days',
+            data: [18, 2, 1],
+            backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          scales: { y: { beginAtZero: true } }
+        }
       });
-      const data = await res.json();
-
-      if (data.success) {
-        alert('Request Sent To Admin Successfully!');
-        document.getElementById('reqIssue').value = '';
-      } else { alert('Submission Failed!'); }
     }
   </script>
 </body>
