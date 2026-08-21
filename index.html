@@ -3,82 +3,329 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Staff Portal - Attendance</title>
+  <title>ARCOS Staff Attendance</title>
+  <!-- Google Font: Montserrat & Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-    body { background: #f0f3f8; color: #1e293b; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 15px; }
-    .app-card { background: #ffffff; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.06); width: 100%; max-width: 460px; overflow: hidden; border: 1px solid #e2e8f0; }
-    .app-header { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 25px; text-align: center; }
-    .app-header h2 { font-size: 20px; font-weight: 700; }
-    .app-body { padding: 20px; }
-    input { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 14px; outline: none; }
-    button { width: 100%; padding: 14px; border: none; border-radius: 12px; background: #2563eb; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-    button:hover { background: #1d4ed8; }
-    button:disabled { background: #94a3b8; cursor: not-allowed; }
-    .btn-out { background: #dc2626; display: none; margin-top: 10px; }
-    .btn-out:hover { background: #b91c1c; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
     
-    #cameraBox { display: none; margin: 15px 0; background: #000; border-radius: 16px; overflow: hidden; position: relative; }
-    video { width: 100%; height: 220px; object-fit: cover; }
-    #timer { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 52px; color: white; font-weight: 800; text-shadow: 0 0 12px rgba(0,0,0,0.8); }
+    body { 
+      background: #f8fafc; 
+      color: #0f172a; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh; 
+      padding: 15px; 
+    }
+
+    /* Main Container with Dark Yellow Border */
+    .app-card { 
+      background: #ffffff; 
+      border-radius: 24px; 
+      box-shadow: 0 15px 35px rgba(234, 179, 8, 0.2); 
+      width: 100%; 
+      max-width: 460px; 
+      overflow: hidden; 
+      border: 3px solid #eab308; 
+    }
+
+    /* Header with Dark Yellow Background & Black Bold Font */
+    .app-header { 
+      background: #eab308; 
+      color: #000000; 
+      padding: 22px 15px; 
+      text-align: center; 
+      border-bottom: 2px solid #ca8a04;
+    }
+    
+    .app-header h2 { 
+      font-family: 'Montserrat', sans-serif; 
+      font-size: 19px; 
+      font-weight: 900; 
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-transform: uppercase;
+    }
+
+    .app-body { padding: 22px; }
+
+    /* Inputs */
+    input { 
+      width: 100%; 
+      padding: 14px; 
+      margin-bottom: 14px; 
+      border: 2px solid #e2e8f0; 
+      border-radius: 12px; 
+      font-size: 14px; 
+      outline: none; 
+      transition: 0.3s;
+    }
+    input:focus { border-color: #eab308; }
+
+    /* Primary Action Buttons */
+    .btn-action { 
+      width: 100%; 
+      padding: 15px; 
+      border: none; 
+      border-radius: 14px; 
+      background: #2563eb; 
+      color: #fff; 
+      font-size: 16px; 
+      font-weight: 700; 
+      cursor: pointer; 
+      transition: 0.2s; 
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+    .btn-action:hover { background: #1d4ed8; }
+    .btn-action:disabled { background: #94a3b8; cursor: not-allowed; }
+    
+    .btn-out { background: #dc2626; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2); }
+    .btn-out:hover { background: #b91c1c; }
+
+    /* CIRCULAR CAMERA STYLE */
+    #cameraBox { 
+      display: none; 
+      margin: 20px auto; 
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      overflow: hidden; 
+      position: relative; 
+      border: 4px solid #eab308;
+      box-shadow: 0 0 20px rgba(0,0,0,0.15);
+    }
+    video { width: 100%; height: 100%; object-fit: cover; }
+    #timer { 
+      position: absolute; 
+      top: 50%; 
+      left: 50%; 
+      transform: translate(-50%,-50%); 
+      font-size: 56px; 
+      color: #eab308; 
+      font-weight: 900; 
+      text-shadow: 0 0 10px rgba(0,0,0,0.8); 
+    }
     canvas { display: none; }
 
-    .history-section { margin-top: 25px; border-top: 1px dashed #e2e8f0; padding-top: 20px; }
-    .history-title { font-weight: 700; font-size: 15px; color: #0f172a; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
-    .history-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    .history-table th { background: #f8fafc; color: #64748b; font-size: 11px; text-transform: uppercase; padding: 10px 8px; text-align: left; }
-    .history-table td { padding: 10px 8px; font-size: 12px; border-bottom: 1px solid #f1f5f9; color: #334155; }
-    .thumb-img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; border: 1px solid #2563eb; display: block; margin-top: 4px; }
+    /* Live Time Display */
+    .clock-box {
+      text-align: center;
+      background: #fefce8;
+      border: 1px solid #fef08a;
+      padding: 10px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      font-weight: 600;
+      color: #854d0e;
+      font-size: 13px;
+    }
+
+    /* Today Punch Status Box */
+    .today-status-card {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 12px;
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-around;
+      text-align: center;
+    }
+    .status-item span { display: block; font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; }
+    .status-item strong { font-size: 14px; color: #0f172a; font-weight: 700; }
+
+    /* Daily Roster Dropdown Button */
+    .btn-roster {
+      width: 100%;
+      padding: 12px;
+      background: #eab308;
+      color: #000000;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 14px;
+      border: none;
+      border-radius: 12px;
+      margin-top: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 10px rgba(234, 179, 8, 0.3);
+      transition: 0.2s;
+    }
+    .btn-roster:hover { background: #ca8a04; }
+
+    /* Footer */
+    .app-footer {
+      background: #fef9c3;
+      border-top: 2px solid #eab308;
+      padding: 12px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: #854d0e;
+    }
+
+    /* Calendar Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(3px);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      padding: 15px;
+    }
+    .modal-content {
+      background: #fff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      border: 3px solid #eab308;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 2px solid #fef08a;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+    .modal-header h3 { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; }
+    .close-btn { font-size: 20px; font-weight: bold; cursor: pointer; color: #dc2626; }
+
+    /* Calendar Grid */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      text-align: center;
+    }
+    .cal-day-head { font-size: 11px; font-weight: 700; color: #64748b; padding: 4px; }
+    .cal-date {
+      padding: 10px 0;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      background: #f1f5f9;
+      cursor: pointer;
+    }
+    .cal-date:hover { background: #fef08a; }
+    .cal-date.active-entry { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+
+    /* Details Popup */
+    .date-details-box {
+      margin-top: 15px;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+    }
+    .punch-detail-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+    .detail-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #eab308; }
     #statusMsg { font-size: 12px; color: #2563eb; font-weight: 600; text-align: center; margin-top: 8px; }
   </style>
 </head>
 <body>
 
   <div class="app-card">
+    <!-- Dark Yellow Header -->
     <div class="app-header">
-      <h2>Attendance Portal</h2>
+      <h2>🏢 ARCOS STAFF ATTENDANCE</h2>
     </div>
     
     <div class="app-body">
+      <!-- Login View -->
       <div id="loginBox">
         <input type="text" id="empId" placeholder="Employee ID">
         <input type="password" id="password" placeholder="Password">
-        <button onclick="loginUser()">Sign In</button>
+        <button class="btn-action" onclick="loginUser()">Sign In</button>
       </div>
 
+      <!-- Main Portal View -->
       <div id="actionBox" style="display:none;">
+        <div class="clock-box" id="liveClock">Loading Indian Standard Time...</div>
+
         <h3 id="welcomeUser" style="color:#0f172a; font-size: 16px; font-weight:700;">Welcome</h3>
         <p style="color:#64748b; font-size:12px; margin-bottom:15px;">Mark your daily attendance below</p>
 
+        <!-- Circular Camera Box -->
         <div id="cameraBox">
           <video id="webcam" autoplay playsinline></video>
           <div id="timer">3</div>
         </div>
         <canvas id="canvas" width="320" height="240"></canvas>
 
-        <button id="btnIn" onclick="handlePunch('punchIn')">Punch IN</button>
-        <button id="btnOut" class="btn-out" onclick="handlePunch('punchOut')">Punch OUT</button>
+        <button id="btnIn" class="btn-action" onclick="handlePunch('punchIn')">Punch IN</button>
+        <button id="btnOut" class="btn-action btn-out" onclick="handlePunch('punchOut')" style="display:none;">Punch OUT</button>
         <div id="statusMsg"></div>
 
-        <div class="history-section">
-          <div class="history-title">
-            <span>My Attendance Records</span>
-            <button onclick="loadMyRecords()" style="width:auto; padding:6px 12px; font-size:11px; background:#f1f5f9; color:#334155;">Refresh</button>
+        <!-- Today Status Below Punch Button -->
+        <div class="today-status-card">
+          <div class="status-item">
+            <span>Today's IN</span>
+            <strong id="todayInTime">--:--</strong>
           </div>
-          <div style="overflow-x:auto;">
-            <table class="history-table">
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>In</th>
-                  <th>Out</th>
-                </tr>
-              </thead>
-              <tbody id="myHistoryBody">
-                <tr><td colspan="3" style="text-align:center;">Loading logs...</td></tr>
-              </tbody>
-            </table>
+          <div class="status-item">
+            <span>Today's OUT</span>
+            <strong id="todayOutTime">--:--</strong>
           </div>
+        </div>
+
+        <!-- Dark Yellow Roster Button -->
+        <button class="btn-roster" onclick="openRosterModal()">
+          ▼ DAILY ROSTER ▼
+        </button>
+      </div>
+    </div>
+
+    <!-- Dark Yellow Theme Footer -->
+    <div class="app-footer">
+      ARCOS STAFF PORTAL • POWERED BY GOOGLE SHEETS
+    </div>
+  </div>
+
+  <!-- Calendar Roster Modal -->
+  <div class="modal" id="rosterModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="calendarMonthTitle">Monthly Roster</h3>
+        <span class="close-btn" onclick="closeRosterModal()">&times;</span>
+      </div>
+
+      <div class="calendar-grid" id="calendarGrid"></div>
+
+      <div class="date-details-box" id="dateDetailsBox" style="display:none;">
+        <h4 id="selectedDateTitle" style="font-size:13px; font-weight:700; margin-bottom:10px; text-align:center;">Detailed Record</h4>
+        
+        <div class="punch-detail-row">
+          <div>
+            <strong>PUNCH IN:</strong> <span id="dtInTime">N/A</span>
+          </div>
+          <div id="dtInImgBox"></div>
+        </div>
+
+        <div class="punch-detail-row" style="margin-bottom:0;">
+          <div>
+            <strong>PUNCH OUT:</strong> <span id="dtOutTime">N/A</span>
+          </div>
+          <div id="dtOutImgBox"></div>
         </div>
       </div>
     </div>
@@ -87,8 +334,18 @@
   <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmZTB0kT0aiMhu0ah1cICCo-MwWdrUS_CsRX6WGHIsLINWL3kkF6Bv7g4zsjiIqF-h/exec';
     let currentEmpId = '';
+    let attendanceHistory = [];
 
-    // Accurate & Mandatory GPS Fetch
+    // Live Clock IST India Format
+    function updateClock() {
+      const now = new Date();
+      const options = { timeZone: 'Asia/Kolkata', weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
+      const clockElem = document.getElementById('liveClock');
+      if (clockElem) clockElem.innerText = '🇮🇳 ' + now.toLocaleString('en-IN', options);
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
     function getAccurateLocation() {
       return new Promise((resolve) => {
         if (!navigator.geolocation) {
@@ -96,14 +353,9 @@
           return resolve(null);
         }
         navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            resolve({
-              lat: pos.coords.latitude,
-              lng: pos.coords.longitude
-            });
-          },
+          (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
           (err) => {
-            alert("Location Permission Denied! Mobile/Browser Settings se Location Access Allow karein.");
+            alert("Location Access Required!");
             resolve(null);
           },
           { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
@@ -158,32 +410,21 @@
     }
 
     async function handlePunch(type) {
-      const btnIn = document.getElementById('btnIn');
-      const btnOut = document.getElementById('btnOut');
-      const statusMsg = document.getElementById('statusMsg');
-
-      btnIn.disabled = true;
-      btnOut.disabled = true;
+      const btnIn = document.getElementById('btnIn'), btnOut = document.getElementById('btnOut'), statusMsg = document.getElementById('statusMsg');
+      btnIn.disabled = true; btnOut.disabled = true;
       statusMsg.innerText = "Fetching GPS Location...";
 
-      // Fetch GPS first and wait for response
       const coords = await getAccurateLocation();
-      
       if (!coords) {
-        statusMsg.innerText = "";
-        btnIn.disabled = false;
-        btnOut.disabled = false;
-        return alert("GPS Location mandatory hai attendance ke liye!");
+        statusMsg.innerText = ""; btnIn.disabled = false; btnOut.disabled = false;
+        return;
       }
 
-      statusMsg.innerText = "Capturing Photo...";
+      statusMsg.innerText = "Capturing Selfie...";
       const photoBase64 = await capturePhoto();
-      
       if (!photoBase64) {
-        statusMsg.innerText = "";
-        btnIn.disabled = false;
-        btnOut.disabled = false;
-        return alert("Photo capture failed!");
+        statusMsg.innerText = ""; btnIn.disabled = false; btnOut.disabled = false;
+        return;
       }
 
       statusMsg.innerText = "Saving Attendance...";
@@ -192,53 +433,116 @@
       const res = await fetch(GOOGLE_SCRIPT_URL, { 
         method: 'POST', 
         body: JSON.stringify({ 
-          action: type, 
-          empId: currentEmpId, 
-          photoUrl: photoBase64, 
-          mapRoute: mapRoute,
-          lat: coords.lat,
-          lng: coords.lng
+          action: type, empId: currentEmpId, photoUrl: photoBase64, mapRoute: mapRoute, lat: coords.lat, lng: coords.lng
         }) 
       });
       const data = await res.json();
 
-      statusMsg.innerText = "";
-      btnIn.disabled = false;
-      btnOut.disabled = false;
+      statusMsg.innerText = ""; btnIn.disabled = false; btnOut.disabled = false;
 
       if (data.success) {
-        if (type === 'punchIn') {
-          btnIn.style.display = 'none';
-          btnOut.style.display = 'block';
-          alert('Punched IN Successfully!');
-        } else {
-          btnOut.style.display = 'none';
-          alert('Punched OUT Successfully!');
-        }
+        alert(type === 'punchIn' ? 'Punched IN Successfully!' : 'Punched OUT Successfully!');
         loadMyRecords();
       } else { alert(data.message); }
     }
 
     async function loadMyRecords() {
-      const tbody = document.getElementById('myHistoryBody');
       const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAttendanceRecords&empId=${currentEmpId}`);
       const data = await res.json();
 
-      if (data.success && data.records.length > 0) {
-        tbody.innerHTML = '';
-        data.records.forEach(r => {
-          let inImg = r.inPhoto && r.inPhoto.startsWith('http') ? `<br><a href="${r.inPhoto}" target="_blank"><img src="${r.inPhoto}" class="thumb-img"></a>` : '';
-          let outImg = r.outPhoto && r.outPhoto.startsWith('http') ? `<br><a href="${r.outPhoto}" target="_blank"><img src="${r.outPhoto}" class="thumb-img"></a>` : '';
+      if (data.success && data.records) {
+        attendanceHistory = data.records;
+        updateTodayStatus();
+      }
+    }
 
-          tbody.innerHTML += `
-            <tr>
-              <td><b>${r.date}</b></td>
-              <td>${r.inTime || '-'}${inImg}</td>
-              <td>${r.outTime || '-'}${outImg}</td>
-            </tr>
-          `;
-        });
-      } else { tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No records found.</td></tr>'; }
+    function updateTodayStatus() {
+      const todayIST = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
+      const todayRecord = attendanceHistory.find(r => r.date === todayIST);
+
+      const btnIn = document.getElementById('btnIn');
+      const btnOut = document.getElementById('btnOut');
+
+      if (todayRecord) {
+        document.getElementById('todayInTime').innerText = todayRecord.inTime || '--:--';
+        document.getElementById('todayOutTime').innerText = todayRecord.outTime || '--:--';
+
+        if (todayRecord.inTime && !todayRecord.outTime) {
+          btnIn.style.display = 'none';
+          btnOut.style.display = 'block';
+        } else {
+          btnIn.style.display = 'block';
+          btnOut.style.display = 'none';
+        }
+      } else {
+        document.getElementById('todayInTime').innerText = '--:--';
+        document.getElementById('todayOutTime').innerText = '--:--';
+        btnIn.style.display = 'block';
+        btnOut.style.display = 'none';
+      }
+    }
+
+    /* Modal & Calendar Functions */
+    function openRosterModal() {
+      document.getElementById('rosterModal').style.display = 'flex';
+      renderCalendar();
+    }
+
+    function closeRosterModal() {
+      document.getElementById('rosterModal').style.display = 'none';
+      document.getElementById('dateDetailsBox').style.display = 'none';
+    }
+
+    function renderCalendar() {
+      const grid = document.getElementById('calendarGrid');
+      grid.innerHTML = '';
+      const now = new Date();
+      
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      
+      document.getElementById('calendarMonthTitle').innerText = now.toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+
+      const daysHeader = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      daysHeader.forEach(d => {
+        grid.innerHTML += `<div class="cal-day-head">${d}</div>`;
+      });
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const totalDays = new Date(year, month + 1, 0).getDate();
+
+      for (let i = 0; i < firstDay; i++) {
+        grid.innerHTML += `<div></div>`;
+      }
+
+      for (let day = 1; day <= totalDays; day++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const record = attendanceHistory.find(r => r.date === dateStr);
+
+        let activeClass = record ? 'active-entry' : '';
+        grid.innerHTML += `<div class="cal-date ${activeClass}" onclick="showDateDetail('${dateStr}')">${day}</div>`;
+      }
+    }
+
+    function showDateDetail(dateStr) {
+      const record = attendanceHistory.find(r => r.date === dateStr);
+      const detailBox = document.getElementById('dateDetailsBox');
+      document.getElementById('selectedDateTitle').innerText = 'Date: ' + dateStr;
+
+      if (record) {
+        document.getElementById('dtInTime').innerText = record.inTime || 'N/A';
+        document.getElementById('dtOutTime').innerText = record.outTime || 'N/A';
+
+        document.getElementById('dtInImgBox').innerHTML = record.inPhoto ? `<img src="${record.inPhoto}" class="detail-img">` : '';
+        document.getElementById('dtOutImgBox').innerHTML = record.outPhoto ? `<img src="${record.outPhoto}" class="detail-img">` : '';
+        detailBox.style.display = 'block';
+      } else {
+        document.getElementById('dtInTime').innerText = 'No Record';
+        document.getElementById('dtOutTime').innerText = 'No Record';
+        document.getElementById('dtInImgBox').innerHTML = '';
+        document.getElementById('dtOutImgBox').innerHTML = '';
+        detailBox.style.display = 'block';
+      }
     }
   </script>
 </body>
