@@ -53,9 +53,32 @@
     .badge-status.active { background: var(--badge-active-bg); color: var(--badge-active-color); }
     .badge-status.inactive { background: var(--badge-inactive-bg); color: var(--badge-inactive-color); }
 
+    /* CALENDAR STYLES */
+    .search-box { display: flex; gap: 12px; margin-bottom: 24px; background: #fff; padding: 16px; border-radius: 16px; border: 1.5px solid var(--border-color); }
+    .search-box input, .search-box select { padding: 12px; border: 1.5px solid var(--border-color); border-radius: 8px; font-weight: 700; outline: none; }
+
+    .stats-summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .stat-card { background: #fff; padding: 16px; border-radius: 12px; border: 1.5px solid var(--border-color); text-align: center; }
+    .stat-card h4 { font-size: 12px; color: var(--text-sub); margin-bottom: 4px; }
+    .stat-card p { font-size: 24px; font-weight: 900; }
+
+    .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; background: #fff; padding: 20px; border-radius: 16px; border: 1.5px solid var(--border-color); }
+    .cal-day-header { text-align: center; font-weight: 900; color: var(--text-sub); padding-bottom: 10px; }
+    .cal-day { height: 90px; border: 1.5px solid var(--border-color); border-radius: 12px; padding: 8px; cursor: pointer; transition: 0.2s; position: relative; }
+    .cal-day:hover { border-color: var(--accent-yellow); background: #fefce8; }
+    .cal-day.empty { border: none; background: transparent; cursor: default; }
+    .cal-date { font-weight: 900; font-size: 14px; }
+    .status-tag { margin-top: 10px; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; text-align: center; }
+    .status-tag.present { background: #dcfce7; color: #15803d; }
+    .status-tag.absent { background: #fee2e2; color: #b91c1c; }
+
+    /* MODAL POPUP */
+    .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; }
+    .modal-box { background: #fff; padding: 24px; border-radius: 16px; width: 420px; max-width: 90%; }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .photo-preview { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 6px; }
+
     #routeMap { width: 100%; height: 500px; border-radius: 16px; border: 1.5px solid var(--border-color); margin-top: 16px; }
-    .map-filters { display: flex; gap: 12px; background: #fff; padding: 16px; border-radius: 12px; border: 1.5px solid var(--border-color); }
-    .map-filters input { padding: 10px 14px; border: 1.5px solid var(--border-color); border-radius: 8px; font-weight: 700; outline: none; }
   </style>
 </head>
 <body>
@@ -65,6 +88,7 @@
     <ul class="menu">
       <li class="menu-item" onclick="switchTab('dashboardTab', this)">📊 Dashboard</li>
       <li class="menu-item active" onclick="switchTab('employeesTab', this)">👥 Employees</li>
+      <li class="menu-item" onclick="switchTab('attendanceTab', this)">📅 Attendance</li>
       <li class="menu-item" onclick="switchTab('trackerTab', this)">🗺️ Route Tracker</li>
       <li class="menu-item" onclick="switchTab('queriesTab', this)">❓ Queries</li>
     </ul>
@@ -78,51 +102,83 @@
 
     <div class="content-area">
 
+      <!-- DASHBOARD TAB -->
       <section id="dashboardTab" class="tab-content">
-        <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 16px;">System Overview</h3>
-        <p style="font-weight: 700; color: var(--text-sub);">Google Sheets Backend Connected Live ✅</p>
+        <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 20px;">System Overview</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+          <div class="stat-card"><h4>TOTAL EMPLOYEES</h4><p id="cardTotalEmp">--</p></div>
+          <div class="stat-card"><h4>TODAY PRESENT</h4><p id="cardTodayPresent" style="color: #16a34a;">--</p></div>
+          <div class="stat-card"><h4>SHIFT A (MORNING)</h4><p id="cardShiftA" style="color: #2563eb;">--</p></div>
+          <div class="stat-card"><h4>SHIFT B (EVENING)</h4><p id="cardShiftB" style="color: #d97706;">--</p></div>
+          <div class="stat-card"><h4>SHIFT C (NIGHT)</h4><p id="cardShiftC" style="color: #9333ea;">--</p></div>
+        </div>
       </section>
 
+      <!-- EMPLOYEES TAB -->
       <section id="employeesTab" class="tab-content active">
         <div class="action-bar">
-          <h3 style="font-size: 22px; font-weight: 900;">Employees</h3>
+          <h3 style="font-size: 22px; font-weight: 900;">Employees List</h3>
           <button class="btn-primary" onclick="handleManualAddEmployee()">+ Add Employee</button>
         </div>
-
         <div class="table-container">
           <table>
             <thead>
-              <tr>
-                <th>Employee id</th>
-                <th>Password</th>
-                <th>Employee Name</th>
-                <th>Status</th>
-              </tr>
+              <tr><th>Employee id</th><th>Password</th><th>Employee Name</th><th>Status</th></tr>
             </thead>
-            <tbody id="employeesTableBody">
-              <tr><td colspan="4">Loading employee list from Google Sheet...</td></tr>
-            </tbody>
+            <tbody id="employeesTableBody"><tr><td colspan="4">Loading...</td></tr></tbody>
           </table>
         </div>
       </section>
 
+      <!-- ATTENDANCE CALENDAR TAB -->
+      <section id="attendanceTab" class="tab-content">
+        <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 20px;">Employee Attendance Calendar</h3>
+        
+        <div class="search-box">
+          <input type="text" id="attSearchEmpId" placeholder="Enter Employee ID (e.g. ARS115437)" style="flex:1;">
+          <select id="attMonth">
+            <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+            <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+            <option value="7">July</option><option value="8" selected>August</option><option value="9">September</option>
+            <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+          </select>
+          <select id="attYear">
+            <option value="2026" selected>2026</option><option value="2025">2025</option>
+          </select>
+          <button class="btn-primary" onclick="searchMonthlyAttendance()">Search 🔍</button>
+        </div>
+
+        <div class="stats-summary">
+          <div class="stat-card"><h4>TOTAL DAYS</h4><p id="calTotalDays">0</p></div>
+          <div class="stat-card"><h4>PRESENT DAYS</h4><p id="calPresentDays" style="color: #16a34a;">0</p></div>
+          <div class="stat-card"><h4>ABSENT DAYS</h4><p id="calAbsentDays" style="color: #b91c1c;">0</p></div>
+        </div>
+
+        <div class="calendar-grid" id="calendarGrid">
+          <div class="cal-day-header">Sun</div><div class="cal-day-header">Mon</div>
+          <div class="cal-day-header">Tue</div><div class="cal-day-header">Wed</div>
+          <div class="cal-day-header">Thu</div><div class="cal-day-header">Fri</div>
+          <div class="cal-day-header">Sat</div>
+        </div>
+      </section>
+
+      <!-- ROUTE TRACKER TAB -->
       <section id="trackerTab" class="tab-content">
         <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 16px;">Live Route Tracker</h3>
-        <div class="map-filters">
-          <input type="text" id="mapEmpId" placeholder="Employee ID (e.g. ARS115437)">
-          <input type="date" id="mapDate">
-          <button class="btn-primary" onclick="loadMapRoute()">View Route Path 📍</button>
+        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+          <input type="text" id="mapEmpId" placeholder="Employee ID" style="padding:10px; border-radius:8px; border:1px solid #ccc;">
+          <input type="date" id="mapDate" style="padding:10px; border-radius:8px; border:1px solid #ccc;">
+          <button class="btn-primary" onclick="loadMapRoute()">View Path 📍</button>
         </div>
         <div id="routeMap"></div>
       </section>
 
+      <!-- QUERIES TAB -->
       <section id="queriesTab" class="tab-content">
         <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 16px;">Queries Raised</h3>
         <div class="table-container">
           <table>
-            <thead>
-              <tr><th>Ticket ID</th><th>Emp ID</th><th>Date</th><th>Issue Description</th><th>Status</th></tr>
-            </thead>
+            <thead><tr><th>Ticket ID</th><th>Emp ID</th><th>Date</th><th>Issue</th><th>Status</th></tr></thead>
             <tbody id="queriesTableBody"></tbody>
           </table>
         </div>
@@ -131,12 +187,21 @@
     </div>
   </main>
 
-  <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzT9b29FfkWgSrF-8GRUQ4H2FKBi-IczVE_BXl_YnrnfoxEhLFuMuMo1r3wfo8XKq7i/exec";
+  <!-- DETAIL MODAL POPUP -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalDateTitle" style="font-size:18px; font-weight:900;">Attendance Detail</h3>
+        <button onclick="closeModal()" style="border:none; background:none; font-size:20px; cursor:pointer;">✖</button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
 
-    let map = null;
-    let mapPolyline = null;
-    let mapMarkers = [];
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzrbf6OvIqYjUgYDlM_Ok0lo9KqB5ihYLongF9r0LzSF1H2c6aXIi3eIvukZRO7tUg1/exec";
+
+    let monthlyDataStore = {};
 
     function switchTab(tabId, el) {
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
@@ -144,137 +209,122 @@
       document.getElementById(tabId).classList.add('active');
       el.classList.add('active');
 
+      if (tabId === 'dashboardTab') loadDashboardStats();
       if (tabId === 'employeesTab') loadEmployeesFromSheet();
-      if (tabId === 'trackerTab') initOrResizeMap();
-      if (tabId === 'queriesTab') loadAdminQueries();
     }
 
-    // JSONP FUNCTION TO BYPASS CORS COMPLETELY
     function loadEmployeesFromSheet() {
       const tbody = document.getElementById('employeesTableBody');
-      tbody.innerHTML = `<tr><td colspan="4">Loading data from Google Sheet...</td></tr>`;
-
       window.handleEmpResponse = function(data) {
-        if (data.success && data.employees && data.employees.length > 0) {
+        if (data.success && data.employees) {
           tbody.innerHTML = '';
           data.employees.forEach(emp => {
-            let statusUpper = (emp.status || 'ACTIVE').toUpperCase();
-            let badgeClass = statusUpper === 'ACTIVE' ? 'badge-status active' : 'badge-status inactive';
-            
-            tbody.innerHTML += `
-              <tr>
-                <td><b>${emp.empId}</b></td>
-                <td>${emp.password}</td>
-                <td>${emp.name}</td>
-                <td><span class="${badgeClass}">${statusUpper}</span></td>
-              </tr>
-            `;
+            let badgeClass = emp.status === 'ACTIVE' ? 'badge-status active' : 'badge-status inactive';
+            tbody.innerHTML += `<tr><td><b>${emp.empId}</b></td><td>${emp.password}</td><td>${emp.name}</td><td><span class="${badgeClass}">${emp.status}</span></td></tr>`;
           });
-        } else {
-          tbody.innerHTML = `<tr><td colspan="4">No employees found in sheet.</td></tr>`;
         }
       };
-
       const script = document.createElement('script');
       script.src = `${SCRIPT_URL}?action=getEmployees&callback=handleEmpResponse&_=${new Date().getTime()}`;
-      script.onerror = function() {
-        tbody.innerHTML = `<tr><td colspan="4">Connection Failed! Check Script Web App Access Settings.</td></tr>`;
-      };
       document.body.appendChild(script);
     }
 
-    function handleManualAddEmployee() {
-      let empId = prompt("Enter Employee ID (e.g. ARS123456):");
-      if (!empId) return;
-
-      let name = prompt("Enter Employee Name:");
-      if (!name) return;
-
-      let password = prompt("Enter Password:", "ARCOS123");
-      let status = prompt("Enter Status (ACTIVE or INACTIVE):", "ACTIVE");
-
-      let payload = {
-        action: "addEmployee",
-        empId: empId,
-        name: name,
-        password: password,
-        status: status.toUpperCase()
+    function loadDashboardStats() {
+      window.handleDashboardResponse = function(data) {
+        if (data.success && data.stats) {
+          document.getElementById('cardTotalEmp').innerText = data.stats.totalEmployees;
+          document.getElementById('cardTodayPresent').innerText = data.stats.todayPresent;
+          document.getElementById('cardShiftA').innerText = data.stats.shiftA;
+          document.getElementById('cardShiftB').innerText = data.stats.shiftB;
+          document.getElementById('cardShiftC').innerText = data.stats.shiftC;
+        }
       };
-
-      fetch(SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(result => {
-        alert("Employee added successfully!");
-        loadEmployeesFromSheet();
-      })
-      .catch(() => {
-        alert("Request sent! Reloading list...");
-        setTimeout(loadEmployeesFromSheet, 1500);
-      });
-    }
-
-    function initOrResizeMap() {
-      if (!map) {
-        map = L.map('routeMap').setView([28.4449, 76.8249], 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
-      }
-      setTimeout(() => map.invalidateSize(), 300);
-    }
-
-    function loadMapRoute() {
-      let empId = document.getElementById('mapEmpId').value.trim();
-      let date = document.getElementById('mapDate').value;
-
-      if (!empId) return alert('Enter Employee ID');
-
-      window.handleMapResponse = function(data) {
-        if (!data.points || data.points.length === 0) return alert('No location history found');
-
-        if (mapPolyline) map.removeLayer(mapPolyline);
-        mapMarkers.forEach(m => map.removeLayer(m));
-        mapMarkers = [];
-
-        let coords = [];
-        data.points.forEach((pt) => {
-          let latLng = [pt.lat, pt.lng];
-          coords.push(latLng);
-
-          let marker = L.marker(latLng).addTo(map).bindPopup(`<b>${pt.empId}</b><br>Time: ${pt.timeStamp}`);
-          mapMarkers.push(marker);
-        });
-
-        mapPolyline = L.polyline(coords, { color: '#0052cc', weight: 5, opacity: 0.8 }).addTo(map);
-        map.fitBounds(mapPolyline.getBounds());
-      };
-
       const script = document.createElement('script');
-      script.src = `${SCRIPT_URL}?action=getLocationHistory&empId=${empId}&date=${date}&callback=handleMapResponse&_=${new Date().getTime()}`;
+      script.src = `${SCRIPT_URL}?action=getDashboardStats&callback=handleDashboardResponse&_=${new Date().getTime()}`;
       document.body.appendChild(script);
     }
 
-    function loadAdminQueries() {
-      window.handleQueriesResponse = function(data) {
-        let tbody = document.getElementById('queriesTableBody');
-        tbody.innerHTML = '';
-        if (data.queries) {
-          data.queries.forEach(q => {
-            tbody.innerHTML += `<tr>
-              <td>${q.ticketId}</td>
-              <td>${q.empId}</td>
-              <td>${q.date}</td>
-              <td>${q.issue}</td>
-              <td><b>${q.status}</b></td>
-            </tr>`;
-          });
+    function searchMonthlyAttendance() {
+      let empId = document.getElementById('attSearchEmpId').value.trim();
+      let month = document.getElementById('attMonth').value;
+      let year = document.getElementById('attYear').value;
+
+      if (!empId) return alert("Please enter Employee ID!");
+
+      window.handleMonthlyResponse = function(data) {
+        if (data.success) {
+          monthlyDataStore = data.records || {};
+          renderCalendar(parseInt(month), parseInt(year));
         }
       };
 
       const script = document.createElement('script');
-      script.src = `${SCRIPT_URL}?action=getAdminQueries&callback=handleQueriesResponse&_=${new Date().getTime()}`;
+      script.src = `${SCRIPT_URL}?action=getMonthlyAttendance&empId=${empId}&month=${month}&year=${year}&callback=handleMonthlyResponse&_=${new Date().getTime()}`;
       document.body.appendChild(script);
+    }
+
+    function renderCalendar(month, year) {
+      const grid = document.getElementById('calendarGrid');
+      grid.innerHTML = `
+        <div class="cal-day-header">Sun</div><div class="cal-day-header">Mon</div>
+        <div class="cal-day-header">Tue</div><div class="cal-day-header">Wed</div>
+        <div class="cal-day-header">Thu</div><div class="cal-day-header">Fri</div>
+        <div class="cal-day-header">Sat</div>
+      `;
+
+      let firstDay = new Date(year, month - 1, 1).getDay();
+      let daysInMonth = new Date(year, month, 0).getDate();
+
+      let presentCount = 0;
+
+      for (let i = 0; i < firstDay; i++) {
+        grid.innerHTML += `<div class="cal-day empty"></div>`;
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        let rec = monthlyDataStore[day];
+        let isPresent = !!rec;
+        if (isPresent) presentCount++;
+
+        let tag = isPresent 
+          ? `<div class="status-tag present">PUNCHED</div>` 
+          : `<div class="status-tag absent">ABSENT</div>`;
+
+        grid.innerHTML += `
+          <div class="cal-day" onclick="openDayDetail(${day})">
+            <div class="cal-date">${day}</div>
+            ${tag}
+          </div>
+        `;
+      }
+
+      document.getElementById('calTotalDays').innerText = daysInMonth;
+      document.getElementById('calPresentDays').innerText = presentCount;
+      document.getElementById('calAbsentDays').innerText = daysInMonth - presentCount;
+    }
+
+    function openDayDetail(day) {
+      let rec = monthlyDataStore[day];
+      let modal = document.getElementById('detailModal');
+      let body = document.getElementById('modalBody');
+      document.getElementById('modalDateTitle').innerText = `Attendance Log: Date ${day}`;
+
+      if (!rec) {
+        body.innerHTML = `<p style="font-weight:700; color:#b91c1c;">No attendance record found (Absent).</p>`;
+      } else {
+        body.innerHTML = `
+          <p style="margin-bottom:8px;"><b>Punch In:</b> ${rec.inTime || 'N/A'}</p>
+          ${rec.inPhoto ? `<img src="${rec.inPhoto}" class="photo-preview">` : ''}
+          <hr style="margin:12px 0; border:none; border-top:1px solid #ccc;">
+          <p style="margin-bottom:8px;"><b>Punch Out:</b> ${rec.outTime || 'N/A'}</p>
+          ${rec.outPhoto ? `<img src="${rec.outPhoto}" class="photo-preview">` : ''}
+        `;
+      }
+      modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('detailModal').style.display = 'none';
     }
 
     document.addEventListener("DOMContentLoaded", () => {
