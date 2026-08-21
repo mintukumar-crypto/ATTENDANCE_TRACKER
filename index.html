@@ -3,431 +3,384 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARCOS Staff Portal - Attendance</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
+  <title>ARCOS - Attendance Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-yellow: #f59e0b;
-      --dark-yellow: #d97706;
-      --bg-light: #ffffff;
+      --navy-bg: #0b1329;
+      --yellow-accent: #ffb703;
+      --yellow-hover: #fb8500;
+      --body-bg: #f4f6f9;
       --card-bg: #ffffff;
       --text-dark: #1e293b;
       --text-muted: #64748b;
-      --danger: #ef4444;
-      --success: #10b981;
       --border-color: #e2e8f0;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #f59e0b;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
-    body {
-      background: #f8fafc;
-      color: var(--text-dark);
+    body { background: var(--body-bg); color: var(--text-dark); min-height: 100vh; }
+
+    /* ================= 1. LOGIN PAGE UI ================= */
+    .login-container {
       display: flex;
-      justify-content: center;
-      align-items: center;
       min-height: 100vh;
-      padding: 15px;
+      background: var(--navy-bg);
     }
-
-    .app-card {
-      background: var(--card-bg);
-      border-radius: 20px;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+    .login-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 60px;
+      color: #fff;
+      position: relative;
+    }
+    .brand-logo-text {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--yellow-accent);
+      letter-spacing: 1px;
+      margin-bottom: 40px;
+    }
+    .login-left h1 { font-size: 36px; font-weight: 800; line-height: 1.2; margin-bottom: 8px; text-transform: uppercase; }
+    .login-left p.subtitle { color: #94a3b8; font-size: 14px; font-weight: 500; margin-bottom: 30px; }
+    .illustration-box {
       width: 100%;
-      max-width: 420px;
-      overflow: hidden;
-      border: 2px solid var(--primary-yellow);
-    }
-
-    /* Header Design */
-    .app-header {
-      background: var(--primary-yellow);
-      padding: 20px;
-      text-align: center;
-      color: #0f172a;
-    }
-
-    .brand-logo-container {
+      max-width: 320px;
+      height: 220px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      margin-bottom: 4px;
+      font-size: 64px;
     }
 
-    .arcos-svg-logo {
-      width: 32px;
-      height: 32px;
+    .login-right {
+      width: 480px;
+      background: var(--navy-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
     }
-
-    .app-header h2 {
-      font-size: 20px;
-      font-weight: 800;
-      color: #0f172a;
-    }
-
-    .app-header p {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      color: #451a03;
-      text-transform: uppercase;
-    }
-
-    .app-body { padding: 20px; }
-
-    /* Inputs */
-    .input-group { margin-bottom: 14px; }
-    .input-group label { 
-      display: block; 
-      font-size: 11px; 
-      font-weight: 700; 
-      color: var(--text-muted); 
-      margin-bottom: 5px; 
-      text-transform: uppercase; 
-    }
-    input, textarea {
-      width: 100%;
-      padding: 12px 14px;
+    .login-card {
       background: #ffffff;
+      width: 100%;
+      padding: 40px 32px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    .login-card h2 { font-size: 22px; font-weight: 800; text-align: center; color: var(--text-dark); margin-bottom: 4px; }
+    .login-card p.card-sub { font-size: 12px; color: var(--text-muted); text-align: center; margin-bottom: 24px; }
+
+    .form-group { margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-dark); margin-bottom: 6px; }
+    .input-wrapper { position: relative; }
+    .input-wrapper input {
+      width: 100%;
+      padding: 12px 14px 12px 38px;
       border: 1.5px solid var(--border-color);
       border-radius: 10px;
       font-size: 13px;
       font-weight: 600;
-      color: var(--text-dark);
       outline: none;
       transition: all 0.2s;
     }
-    input:focus, textarea:focus { border-color: var(--primary-yellow); }
+    .input-wrapper input:focus { border-color: var(--yellow-accent); }
+    .input-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; }
 
-    /* Buttons */
-    .btn-action {
+    .btn-login {
       width: 100%;
       padding: 14px;
+      background: var(--yellow-accent);
+      color: var(--navy-bg);
       border: none;
       border-radius: 10px;
-      background: var(--primary-yellow);
-      color: #000;
       font-size: 14px;
       font-weight: 800;
       cursor: pointer;
-      text-transform: uppercase;
       transition: all 0.2s;
+      margin-top: 10px;
     }
-    .btn-action:hover { background: var(--dark-yellow); }
-    .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-login:hover { background: var(--yellow-hover); }
 
-    .btn-out { background: var(--danger); color: #fff; }
+    .copyright { text-align: center; margin-top: 24px; font-size: 11px; color: var(--text-muted); font-weight: 600; }
 
-    /* Live Clock */
-    .clock-badge {
-      background: #fef3c7;
-      border: 1px solid #fde68a;
-      color: #78350f;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 700;
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    /* CIRCULAR CAMERA */
-    #cameraBox {
-      display: none;
-      margin: 15px auto 20px;
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      overflow: hidden;
-      position: relative;
-      border: 4px solid var(--primary-yellow);
-    }
-    video { width: 100%; height: 100%; object-fit: cover; }
-    #timer {
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%,-50%);
-      font-size: 50px;
+    /* ================= 2. DASHBOARD UI ================= */
+    .dashboard-layout { display: none; min-height: 100vh; flex-direction: row; }
+    
+    /* Sidebar */
+    .sidebar {
+      width: 240px;
+      background: var(--navy-bg);
       color: #fff;
-      font-weight: 800;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
     }
-    canvas { display: none; }
-
-    /* Today Summary Box */
-    .today-card {
-      background: #f8fafc;
-      border: 1px solid var(--border-color);
+    .sidebar-brand { font-size: 24px; font-weight: 800; color: var(--yellow-accent); margin-bottom: 30px; padding-left: 12px; }
+    .nav-menu { list-style: none; flex: 1; }
+    .nav-item {
+      padding: 12px 16px;
       border-radius: 10px;
-      padding: 14px;
-      margin-top: 16px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+      cursor: pointer;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
       gap: 10px;
     }
-    .today-stat { text-align: center; }
-    .today-stat span { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
-    .today-stat strong { display: block; font-size: 15px; font-weight: 800; color: var(--text-dark); margin-top: 2px; }
+    .nav-item.active { background: var(--yellow-accent); color: var(--navy-bg); }
+    .nav-item:hover:not(.active) { color: #fff; background: rgba(255,255,255,0.05); }
 
-    /* Roster Trigger Button */
-    .btn-roster {
-      width: 100%;
-      padding: 12px;
-      background: #fff;
-      border: 1.5px solid var(--primary-yellow);
-      color: #000;
-      font-weight: 800;
-      font-size: 12px;
-      border-radius: 10px;
-      margin-top: 14px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      text-transform: uppercase;
-    }
-    .btn-roster:hover { background: #fef3c7; }
+    /* Main Area */
+    .main-content { flex: 1; padding: 24px 32px; overflow-y: auto; }
+    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .user-profile { display: flex; align-items: center; gap: 10px; }
+    .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--yellow-accent); display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--navy-bg); }
 
-    /* Footer */
-    .app-footer {
-      background: #fef3c7;
-      border-top: 1px solid #fde68a;
-      padding: 10px;
-      text-align: center;
-      font-size: 10px;
-      font-weight: 800;
-      color: #78350f;
-    }
+    /* Summary Metric Cards */
+    .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .metric-card { background: var(--card-bg); padding: 18px; border-radius: 12px; border: 1px solid var(--border-color); }
+    .metric-card span { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+    .metric-card h3 { font-size: 26px; font-weight: 800; margin-top: 4px; }
 
-    /* Modal / Calendar Styling */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(3px);
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      padding: 16px;
-    }
-    .modal-content {
-      background: #ffffff;
-      border-radius: 16px;
-      width: 100%;
-      max-width: 400px;
-      padding: 18px;
-      border: 2px solid var(--primary-yellow);
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1.5px solid var(--border-color);
-      padding-bottom: 10px;
-      margin-bottom: 14px;
-    }
-    .modal-header h3 { font-size: 15px; font-weight: 800; color: #0f172a; }
-    .close-btn { font-size: 22px; font-weight: 800; cursor: pointer; color: var(--danger); }
-
-    /* Calendar Grid */
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-    }
-    .cal-head { text-align: center; font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; padding: 2px; }
+    /* Main Body Grid */
+    .dashboard-grid { display: grid; grid-template-columns: 2.2fr 1fr; gap: 20px; }
     
-    .cal-day {
-      background: #f8fafc;
+    /* Calendar Card */
+    .calendar-card { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); }
+    .cal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align: center; }
+    .cal-day-head { font-size: 11px; font-weight: 700; color: var(--text-muted); padding-bottom: 6px; }
+    
+    .cal-cell {
+      min-height: 52px;
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      min-height: 48px;
       padding: 4px;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       font-size: 11px;
       font-weight: 700;
-    }
-    
-    /* Status Badges */
-    .cal-day.present { background: #ecfdf5; border-color: #a7f3d0; cursor: pointer; }
-    .cal-day.absent { background: #fef2f2; border-color: #fecaca; }
-    .cal-day.disabled { opacity: 0.4; cursor: not-allowed; background: #f1f5f9; }
-
-    .badge-status {
-      font-size: 8px;
-      padding: 2px 4px;
-      border-radius: 4px;
-      font-weight: 800;
-      text-transform: uppercase;
-      width: 100%;
-      text-align: center;
-    }
-    .badge-p { background: #10b981; color: #fff; }
-    .badge-a { background: #ef4444; color: #fff; }
-
-    /* Detail Card & Query Box */
-    .detail-card {
-      margin-top: 14px;
-      background: #f8fafc;
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 12px;
-    }
-    .detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; }
-    .detail-thumb { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-yellow); background: #e2e8f0; }
-
-    /* Inline Query Submission Form */
-    .query-box-container {
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 1px dashed var(--border-color);
-    }
-    .btn-query-toggle {
-      width: 100%;
-      padding: 8px;
-      background: #fef3c7;
-      border: 1px solid var(--primary-yellow);
-      color: #92400e;
-      font-size: 11px;
-      font-weight: 700;
-      border-radius: 6px;
       cursor: pointer;
     }
-    .query-form {
-      display: none;
-      margin-top: 8px;
-    }
-    .btn-submit-query {
+    .cal-cell.today-cell { border: 2px solid #2563eb; background: #eff6ff; }
+    .status-tag { font-size: 9px; font-weight: 800; padding: 1px 4px; border-radius: 4px; }
+    .tag-p { color: var(--success); }
+    .tag-a { color: var(--danger); }
+    .tag-l { color: var(--warning); }
+
+    /* Right Action Panel */
+    .side-panel { display: flex; flex-direction: column; gap: 20px; }
+    .action-card { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); text-align: center; }
+    .btn-punch {
       width: 100%;
-      padding: 8px;
-      background: #0f172a;
+      padding: 14px;
+      background: var(--success);
       color: #fff;
-      font-size: 11px;
-      font-weight: 700;
       border: none;
-      border-radius: 6px;
-      margin-top: 6px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 800;
       cursor: pointer;
+      margin-top: 14px;
     }
+    .btn-punch-out { background: var(--danger); }
+
+    /* Summary Box */
+    .summary-card { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); }
+    .summary-row { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; padding: 8px 0; border-bottom: 1px dashed var(--border-color); }
+
+    /* Camera Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(11, 19, 41, 0.7);
+      backdrop-filter: blur(4px);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .modal-box {
+      background: #fff;
+      padding: 24px;
+      border-radius: 20px;
+      width: 360px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    #cameraBox { width: 160px; height: 160px; border-radius: 50%; overflow: hidden; margin: 16px auto; border: 4px solid var(--yellow-accent); position: relative; }
+    video { width: 100%; height: 100%; object-fit: cover; }
+    #timer { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 40px; color: #fff; font-weight: 800; text-shadow: 0 2px 8px rgba(0,0,0,0.8); }
+    canvas { display: none; }
+
+    /* Query & Details Window */
+    .detail-card { margin-top: 14px; background: #f8fafc; border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; text-align: left; }
+    .detail-thumb { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--yellow-accent); }
+    .query-box-container { margin-top: 10px; padding-top: 10px; border-top: 1px dashed var(--border-color); }
+    textarea { width: 100%; padding: 8px; border: 1px solid var(--border-color); border-radius: 6px; font-size: 11px; outline: none; margin-top: 6px; }
   </style>
 </head>
 <body>
 
-  <div class="app-card">
-    <!-- Corporate Header -->
-    <div class="app-header">
-      <div class="brand-logo-container">
-        <svg class="arcos-svg-logo" viewBox="0 0 100 100" fill="none">
-          <path d="M50 15 C30 15 20 35 20 50 C20 70 35 85 50 85 C65 85 80 70 80 50" stroke="#0f172a" stroke-width="12" stroke-linecap="round"/>
-          <path d="M15 75 C35 90 75 80 85 45 C95 10 65 5 45 25" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
-          <circle cx="50" cy="50" r="8" fill="#0f172a"/>
-        </svg>
-        <h2>ARCOS</h2>
-      </div>
-      <p>Warehouse of Workforce</p>
+  <!-- 1. LOGIN SCREEN -->
+  <div class="login-container" id="loginScreen">
+    <div class="login-left">
+      <div class="brand-logo-text">ARCOS</div>
+      <h1>Attendance<br>Calendar App</h1>
+      <p class="subtitle">Track. Manage. Achieve.</p>
+      <div class="illustration-box">📅</div>
     </div>
+    
+    <div class="login-right">
+      <div class="login-card">
+        <h2>Welcome Back!</h2>
+        <p class="card-sub">Please login to your account</p>
 
-    <div class="app-body">
-      <!-- Login Box -->
-      <div id="loginBox">
-        <div class="input-group">
-          <label>Employee Identifier</label>
-          <input type="text" id="empId" placeholder="e.g. ARS300248">
-        </div>
-        <div class="input-group">
-          <label>Security Password</label>
-          <input type="password" id="password" placeholder="••••••••">
-        </div>
-        <button class="btn-action" onclick="loginUser()">Sign In to Portal</button>
-      </div>
-
-      <!-- Main Action Portal -->
-      <div id="actionBox" style="display:none;">
-        <div class="clock-badge" id="liveClock">IST Time Synchronizing...</div>
-
-        <h3 id="welcomeUser" style="font-size: 16px; font-weight:800; color:#0f172a;">Welcome</h3>
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Mark your geo-attendance below</p>
-
-        <!-- Circular Camera Box -->
-        <div id="cameraBox">
-          <video id="webcam" autoplay playsinline></video>
-          <div id="timer">3</div>
-        </div>
-        <canvas id="canvas" width="320" height="240"></canvas>
-
-        <button id="btnIn" class="btn-action" onclick="handlePunch('punchIn')">PUNCH IN NOW</button>
-        <button id="btnOut" class="btn-action btn-out" onclick="handlePunch('punchOut')" style="display:none;">PUNCH OUT NOW</button>
-        <div id="statusMsg" style="text-align:center; font-size:12px; font-weight:700; color:#2563eb; margin-top:8px;"></div>
-
-        <!-- Today Summary Card -->
-        <div class="today-card">
-          <div class="today-stat">
-            <span>Today IN</span>
-            <strong id="todayInTime">--:--</strong>
-          </div>
-          <div class="today-stat">
-            <span>Today OUT</span>
-            <strong id="todayOutTime">--:--</strong>
+        <div class="form-group">
+          <label>Username</label>
+          <div class="input-wrapper">
+            <span class="input-icon">👤</span>
+            <input type="text" id="empId" placeholder="Enter your username">
           </div>
         </div>
 
-        <!-- Roster Calendar Trigger -->
-        <button class="btn-roster" onclick="openRosterModal()">
-          ▼ VIEW MONTHLY ROSTER & CALENDAR ▼
-        </button>
-      </div>
-    </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrapper">
+            <span class="input-icon">🔒</span>
+            <input type="password" id="password" placeholder="Enter your password">
+          </div>
+        </div>
 
-    <!-- Corporate Footer -->
-    <div class="app-footer">
-      <span>POWERED BY ARCOS WORKFORCE MANAGEMENT SYSTEM</span>
+        <button class="btn-login" onclick="loginUser()">Login</button>
+        <p class="copyright">© 2026 Arcos. All rights reserved.</p>
+      </div>
     </div>
   </div>
 
-  <!-- Calendar Roster Modal -->
-  <div class="modal" id="rosterModal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h3 id="calendarMonthTitle">Monthly Roster</h3>
-        <span class="close-btn" onclick="closeRosterModal()">&times;</span>
+  <!-- 2. MAIN DASHBOARD SCREEN -->
+  <div class="dashboard-layout" id="dashboardScreen">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-brand">ARCOS</div>
+      <ul class="nav-menu">
+        <li class="nav-item active">📊 Dashboard</li>
+        <li class="nav-item">📅 Calendar</li>
+        <li class="nav-item">⏱️ Attendance</li>
+        <li class="nav-item">⚙️ Settings</li>
+      </ul>
+      <div class="nav-item" onclick="logout()" style="color:#ef4444;">🚪 Logout</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="top-header">
+        <div>
+          <h2 id="welcomeGreeting" style="font-size:20px; font-weight:800;">Good Morning! 👋</h2>
+          <p style="font-size:12px; color:var(--text-muted);">Here's your attendance overview for this month.</p>
+        </div>
+        <div class="user-profile">
+          <div class="user-avatar" id="userAvatar">U</div>
+          <span id="userName" style="font-size:13px; font-weight:700;">Employee Name</span>
+        </div>
       </div>
 
-      <div class="calendar-grid" id="calendarGrid"></div>
+      <!-- Top Metric Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card"><span>Present Days</span><h3 id="mPresent" style="color:var(--success);">00</h3></div>
+        <div class="metric-card"><span>Absent Days</span><h3 id="mAbsent" style="color:var(--danger);">00</h3></div>
+        <div class="metric-card"><span>Late Days</span><h3 id="mLate" style="color:var(--warning);">00</h3></div>
+        <div class="metric-card"><span>Total Days</span><h3 id="mTotal">00</h3></div>
+      </div>
 
-      <!-- Date Record Detail Popup -->
-      <div class="detail-card" id="dateDetailsBox" style="display:none;">
-        <h4 id="selectedDateTitle" style="font-size:12px; font-weight:800; text-align:center; margin-bottom:8px; text-transform:uppercase;">Record Details</h4>
-        
-        <div class="detail-row">
-          <div>
-            <strong>IN:</strong> <span id="dtInTime">N/A</span>
+      <div class="dashboard-grid">
+        <!-- Calendar Section -->
+        <div class="calendar-card">
+          <div class="cal-header">
+            <h3 id="calMonthTitle" style="font-size:16px; font-weight:800;">Current Month</h3>
+            <span style="font-size:12px; font-weight:700; color:var(--text-muted);" id="liveClock">IST Time</span>
           </div>
+          <div class="cal-grid" id="calGrid"></div>
+        </div>
+
+        <!-- Right Side Panel -->
+        <div class="side-panel">
+          <!-- Action Punch Card -->
+          <div class="action-card">
+            <h4 style="font-size:13px; font-weight:800;">Today's Attendance</h4>
+            <div style="font-size:11px; color:var(--text-muted); margin-top:4px;" id="todayDateStr">21 May 2026</div>
+
+            <button id="btnPunchIn" class="btn-punch" onclick="handlePunch('punchIn')">📍 Punch In</button>
+            <button id="btnPunchOut" class="btn-punch btn-punch-out" onclick="handlePunch('punchOut')" style="display:none;">📍 Punch Out</button>
+            <div id="punchStatus" style="font-size:11px; font-weight:700; color:#2563eb; margin-top:8px;"></div>
+          </div>
+
+          <!-- Attendance Summary -->
+          <div class="summary-card">
+            <h4 style="font-size:13px; font-weight:800; margin-bottom:12px;">Summary</h4>
+            <div class="summary-row"><span>🟢 Present</span><strong id="sPresent">0</strong></div>
+            <div class="summary-row"><span>🔴 Absent</span><strong id="sAbsent">0</strong></div>
+            <div class="summary-row"><span>🟠 Late</span><strong id="sLate">0</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMERA / GPS CAPTURE MODAL -->
+  <div class="modal-overlay" id="cameraModal">
+    <div class="modal-box">
+      <h3 id="modalTitle" style="font-size:16px; font-weight:800;">Location & Photo Capture</h3>
+      <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Capturing geo-location & verifying face...</p>
+
+      <div id="cameraBox">
+        <video id="webcam" autoplay playsinline></video>
+        <div id="timer">3</div>
+      </div>
+      <canvas id="canvas" width="320" height="240"></canvas>
+
+      <div id="modalStatus" style="font-size:12px; font-weight:700; color:var(--navy-bg);">Please wait...</div>
+    </div>
+  </div>
+
+  <!-- CALENDAR DETAIL & QUERY MODAL -->
+  <div class="modal-overlay" id="detailModal">
+    <div class="modal-box" style="width:380px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <h3 id="selectedDateTitle" style="font-size:14px; font-weight:800;">Date Details</h3>
+        <span onclick="closeDetailModal()" style="cursor:pointer; font-weight:800;">✕</span>
+      </div>
+
+      <div class="detail-card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div><strong>IN:</strong> <span id="dtInTime">--:--</span></div>
           <div id="dtInImgBox"></div>
         </div>
-
-        <div class="detail-row">
-          <div>
-            <strong>OUT:</strong> <span id="dtOutTime">N/A</span>
-          </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <div><strong>OUT:</strong> <span id="dtOutTime">--:--</span></div>
           <div id="dtOutImgBox"></div>
         </div>
+      </div>
 
-        <!-- Inline Query Window Below Details -->
-        <div class="query-box-container">
-          <button class="btn-query-toggle" onclick="toggleQueryForm()">🚨 Attendance Issue? Raise Query</button>
-          <div class="query-form" id="queryForm">
-            <textarea id="queryText" rows="2" placeholder="Describe issue in detail..."></textarea>
-            <button class="btn-submit-query" onclick="submitAttendanceQuery()">Submit Query to Admin</button>
-          </div>
+      <!-- Inline Query Form -->
+      <div class="query-box-container">
+        <button onclick="toggleQueryForm()" style="width:100%; padding:8px; border:1px solid var(--border-color); background:#fff; font-size:11px; font-weight:700; border-radius:6px; cursor:pointer;">🚨 Attendance Issue? Raise Query</button>
+        <div id="queryForm" style="display:none; margin-top:8px;">
+          <textarea id="queryText" rows="2" placeholder="Describe attendance issue..."></textarea>
+          <button onclick="submitAttendanceQuery()" style="width:100%; padding:8px; background:var(--navy-bg); color:#fff; border:none; font-size:11px; font-weight:700; border-radius:6px; margin-top:6px; cursor:pointer;">Submit Query</button>
         </div>
       </div>
     </div>
@@ -443,24 +396,10 @@
       const now = new Date();
       const options = { timeZone: 'Asia/Kolkata', weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
       const clockElem = document.getElementById('liveClock');
-      if (clockElem) clockElem.innerText = '🇮🇳 ' + now.toLocaleString('en-IN', options);
+      if (clockElem) clockElem.innerText = now.toLocaleString('en-IN', options);
     }
     setInterval(updateClock, 1000);
     updateClock();
-
-    function getAccurateLocation() {
-      return new Promise((resolve) => {
-        if (!navigator.geolocation) {
-          alert("GPS Support Not Available!");
-          return resolve(null);
-        }
-        navigator.geolocation.getCurrentPosition(
-          (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-          (err) => { alert("Location Permission Denied!"); resolve(null); },
-          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-        );
-      });
-    }
 
     async function loginUser() {
       const empId = document.getElementById('empId').value.trim();
@@ -472,17 +411,30 @@
 
       if (data.success) {
         currentEmpId = empId;
-        document.getElementById('loginBox').style.display = 'none';
-        document.getElementById('actionBox').style.display = 'block';
-        document.getElementById('welcomeUser').innerText = 'Welcome, ' + data.name;
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('dashboardScreen').style.display = 'flex';
+        document.getElementById('userName').innerText = data.name;
+        document.getElementById('welcomeGreeting').innerText = `Good Morning, ${data.name}! 👋`;
+        document.getElementById('userAvatar').innerText = data.name.charAt(0);
         loadMyRecords();
       } else { alert(data.message); }
     }
 
+    function logout() { location.reload(); }
+
+    function getAccurateLocation() {
+      return new Promise((resolve) => {
+        if (!navigator.geolocation) { alert("GPS Not Available!"); return resolve(null); }
+        navigator.geolocation.getCurrentPosition(
+          (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+          (err) => { alert("Location Access Denied!"); resolve(null); },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+        );
+      });
+    }
+
     async function capturePhoto() {
-      const cameraBox = document.getElementById('cameraBox'), video = document.getElementById('webcam'), timer = document.getElementById('timer'), canvas = document.getElementById('canvas');
-      cameraBox.style.display = 'block';
-      
+      const video = document.getElementById('webcam'), timer = document.getElementById('timer'), canvas = document.getElementById('canvas');
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         video.srcObject = stream; await video.play();
@@ -496,31 +448,26 @@
               clearInterval(countdown);
               canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
               stream.getTracks().forEach(t => t.stop());
-              cameraBox.style.display = 'none';
               resolve(canvas.toDataURL('image/jpeg', 0.6));
             }
           }, 1000);
         });
-      } catch (err) {
-        alert('Camera Access Required!');
-        cameraBox.style.display = 'none';
-        return '';
-      }
+      } catch (err) { alert('Camera Permission Required!'); return ''; }
     }
 
     async function handlePunch(type) {
-      const btnIn = document.getElementById('btnIn'), btnOut = document.getElementById('btnOut'), statusMsg = document.getElementById('statusMsg');
-      btnIn.disabled = true; btnOut.disabled = true;
-      statusMsg.innerText = "Fetching GPS Location...";
+      const modal = document.getElementById('cameraModal'), status = document.getElementById('modalStatus');
+      modal.style.display = 'flex';
+      status.innerText = "Fetching GPS Location...";
 
       const coords = await getAccurateLocation();
-      if (!coords) { statusMsg.innerText = ""; btnIn.disabled = false; btnOut.disabled = false; return; }
+      if (!coords) { modal.style.display = 'none'; return; }
 
-      statusMsg.innerText = "Capturing Photo...";
+      status.innerText = "Capturing Photo...";
       const photoBase64 = await capturePhoto();
-      if (!photoBase64) { statusMsg.innerText = ""; btnIn.disabled = false; btnOut.disabled = false; return; }
+      if (!photoBase64) { modal.style.display = 'none'; return; }
 
-      statusMsg.innerText = "Saving Attendance...";
+      status.innerText = "Saving Attendance...";
       const mapRoute = `https://www.google.com/maps?q=${coords.lat},${coords.lng}`;
 
       const res = await fetch(GOOGLE_SCRIPT_URL, { 
@@ -528,11 +475,10 @@
         body: JSON.stringify({ action: type, empId: currentEmpId, photoUrl: photoBase64, mapRoute: mapRoute, lat: coords.lat, lng: coords.lng }) 
       });
       const data = await res.json();
-
-      statusMsg.innerText = ""; btnIn.disabled = false; btnOut.disabled = false;
+      modal.style.display = 'none';
 
       if (data.success) {
-        alert(type === 'punchIn' ? 'Punched IN Successfully!' : 'Punched OUT Successfully!');
+        alert(type === 'punchIn' ? 'Punched In Successfully!' : 'Punched Out Successfully!');
         loadMyRecords();
       } else { alert(data.message); }
     }
@@ -543,131 +489,117 @@
 
       if (data.success && data.records) {
         attendanceHistory = data.records;
-        updateTodayStatus();
+        renderDashboard();
       }
     }
 
-    function updateTodayStatus() {
-      const todayIST = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
-      const todayRecord = attendanceHistory.find(r => r.date === todayIST);
-
-      const btnIn = document.getElementById('btnIn');
-      const btnOut = document.getElementById('btnOut');
-
-      if (todayRecord) {
-        document.getElementById('todayInTime').innerText = todayRecord.inTime || '--:--';
-        document.getElementById('todayOutTime').innerText = todayRecord.outTime || '--:--';
-
-        if (todayRecord.inTime && !todayRecord.outTime) {
-          btnIn.style.display = 'none';
-          btnOut.style.display = 'block';
-        } else {
-          btnIn.style.display = 'block';
-          btnOut.style.display = 'none';
-        }
-      } else {
-        document.getElementById('todayInTime').innerText = '--:--';
-        document.getElementById('todayOutTime').innerText = '--:--';
-        btnIn.style.display = 'block';
-        btnOut.style.display = 'none';
-      }
-    }
-
-    /* Modal & Smart Calendar */
-    function openRosterModal() {
-      document.getElementById('rosterModal').style.display = 'flex';
-      renderCalendar();
-    }
-
-    function closeRosterModal() {
-      document.getElementById('rosterModal').style.display = 'none';
-      document.getElementById('dateDetailsBox').style.display = 'none';
-    }
-
-    function renderCalendar() {
-      const grid = document.getElementById('calendarGrid');
-      grid.innerHTML = '';
+    function renderDashboard() {
       const now = new Date();
       const year = now.getFullYear();
       const month = now.getMonth();
+      const todayStr = now.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
 
-      document.getElementById('calendarMonthTitle').innerText = now.toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+      document.getElementById('calMonthTitle').innerText = now.toLocaleString('en-IN', { month: 'long', year: 'numeric' });
+      document.getElementById('todayDateStr').innerText = now.toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+      // Calendar Setup
+      const calGrid = document.getElementById('calGrid');
+      calGrid.innerHTML = '';
 
       const daysHeader = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      daysHeader.forEach(d => { grid.innerHTML += `<div class="cal-head">${d}</div>`; });
+      daysHeader.forEach(d => { calGrid.innerHTML += `<div class="cal-day-head">${d}</div>`; });
 
       const firstDay = new Date(year, month, 1).getDay();
       const totalDays = new Date(year, month + 1, 0).getDate();
-      const todayStr = now.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
 
-      for (let i = 0; i < firstDay; i++) { grid.innerHTML += `<div></div>`; }
+      for (let i = 0; i < firstDay; i++) { calGrid.innerHTML += `<div></div>`; }
+
+      let presentCount = 0, absentCount = 0, lateCount = 0;
 
       for (let day = 1; day <= totalDays; day++) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         const record = attendanceHistory.find(r => r.date === dateStr);
         const isFuture = dateStr > todayStr;
+        const isToday = dateStr === todayStr;
 
-        let dayClass = 'disabled';
-        let badge = '';
-
-        if (isFuture) {
-          dayClass = 'disabled';
-        } else if (record && record.inTime) {
-          dayClass = 'present';
-          badge = `<div class="badge-status badge-p">P</div>`;
-        } else {
-          dayClass = 'absent';
-          badge = `<div class="badge-status badge-a">A</div>`;
+        let badgeHtml = '';
+        if (!isFuture) {
+          if (record && record.inTime) {
+            presentCount++;
+            badgeHtml = `<span class="status-tag tag-p">P</span>`;
+          } else {
+            absentCount++;
+            badgeHtml = `<span class="status-tag tag-a">A</span>`;
+          }
         }
 
-        let onClickAttr = !isFuture ? `onclick="showDateDetail('${dateStr}')"` : '';
-        grid.innerHTML += `
-          <div class="cal-day ${dayClass}" ${onClickAttr}>
+        let onClickAttr = !isFuture ? `onclick="openDetailModal('${dateStr}')"` : '';
+        calGrid.innerHTML += `
+          <div class="cal-cell ${isToday ? 'today-cell' : ''}" ${onClickAttr}>
             <span>${day}</span>
-            ${badge}
+            ${badgeHtml}
           </div>
         `;
       }
+
+      // Update Metrics
+      document.getElementById('mPresent').innerText = String(presentCount).padStart(2, '0');
+      document.getElementById('mAbsent').innerText = String(absentCount).padStart(2, '0');
+      document.getElementById('mLate').innerText = String(lateCount).padStart(2, '0');
+      document.getElementById('mTotal').innerText = String(totalDays).padStart(2, '0');
+
+      document.getElementById('sPresent').innerText = presentCount;
+      document.getElementById('sAbsent').innerText = absentCount;
+      document.getElementById('sLate').innerText = lateCount;
+
+      // Update Punch Buttons State
+      const todayRecord = attendanceHistory.find(r => r.date === todayStr);
+      const btnIn = document.getElementById('btnPunchIn');
+      const btnOut = document.getElementById('btnPunchOut');
+
+      if (todayRecord && todayRecord.inTime && !todayRecord.outTime) {
+        btnIn.style.display = 'none';
+        btnOut.style.display = 'block';
+      } else {
+        btnIn.style.display = 'block';
+        btnOut.style.display = 'none';
+      }
     }
 
-    /* Fixed: Photo key check & inline Query Window handling */
-    function showDateDetail(dateStr) {
+    function openDetailModal(dateStr) {
       selectedDateForQuery = dateStr;
       const record = attendanceHistory.find(r => r.date === dateStr);
-      const detailBox = document.getElementById('dateDetailsBox');
       document.getElementById('selectedDateTitle').innerText = 'Date: ' + dateStr;
-
-      // Reset Query form state
       document.getElementById('queryForm').style.display = 'none';
-      document.getElementById('queryText').value = '';
 
       if (record && record.inTime) {
-        document.getElementById('dtInTime').innerText = record.inTime || 'N/A';
-        document.getElementById('dtOutTime').innerText = record.outTime || 'N/A';
+        document.getElementById('dtInTime').innerText = record.inTime || '--:--';
+        document.getElementById('dtOutTime').innerText = record.outTime || '--:--';
         
-        // Handles both key conventions (inPhoto/photoUrl & outPhoto/outPhotoUrl)
         const inPhotoSrc = record.inPhoto || record.inPhotoUrl || record.photoUrl;
         const outPhotoSrc = record.outPhoto || record.outPhotoUrl;
 
-        document.getElementById('dtInImgBox').innerHTML = inPhotoSrc ? `<img src="${inPhotoSrc}" class="detail-thumb" alt="IN Photo">` : '<span style="font-size:10px; color:#94a3b8;">No Image</span>';
-        document.getElementById('dtOutImgBox').innerHTML = outPhotoSrc ? `<img src="${outPhotoSrc}" class="detail-thumb" alt="OUT Photo">` : '<span style="font-size:10px; color:#94a3b8;">No Image</span>';
+        document.getElementById('dtInImgBox').innerHTML = inPhotoSrc ? `<img src="${inPhotoSrc}" class="detail-thumb">` : 'N/A';
+        document.getElementById('dtOutImgBox').innerHTML = outPhotoSrc ? `<img src="${outPhotoSrc}" class="detail-thumb">` : 'N/A';
       } else {
         document.getElementById('dtInTime').innerText = 'ABSENT';
         document.getElementById('dtOutTime').innerText = 'ABSENT';
         document.getElementById('dtInImgBox').innerHTML = '';
         document.getElementById('dtOutImgBox').innerHTML = '';
       }
-      detailBox.style.display = 'block';
+
+      document.getElementById('detailModal').style.display = 'flex';
     }
 
+    function closeDetailModal() { document.getElementById('detailModal').style.display = 'none'; }
     function toggleQueryForm() {
-      const form = document.getElementById('queryForm');
-      form.style.display = form.style.display === 'block' ? 'none' : 'block';
+      const qf = document.getElementById('queryForm');
+      qf.style.display = qf.style.display === 'block' ? 'none' : 'block';
     }
 
     async function submitAttendanceQuery() {
       const issue = document.getElementById('queryText').value.trim();
-      if (!issue) return alert('Please describe your issue first!');
+      if (!issue) return alert('Please describe your issue!');
 
       const res = await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
@@ -676,12 +608,9 @@
       const data = await res.json();
 
       if (data.success) {
-        alert(`Query Submitted Successfully!\nTicket ID: ${data.ticketId}`);
-        document.getElementById('queryText').value = '';
-        toggleQueryForm();
-      } else { 
-        alert("Failed to submit query."); 
-      }
+        alert(`Query Submitted! Ticket ID: ${data.ticketId}`);
+        closeDetailModal();
+      } else { alert("Submission failed!"); }
     }
   </script>
 </body>
