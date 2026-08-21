@@ -39,7 +39,7 @@
     
     <div class="app-body">
       <div id="loginBox">
-        <input type="text" id="empId" placeholder="Employee ID (e.g. ARS115437)">
+        <input type="text" id="empId" placeholder="Employee ID">
         <input type="password" id="password" placeholder="Password">
         <button onclick="loginUser()">Sign In</button>
       </div>
@@ -85,6 +85,14 @@
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyXtBaxacajp-ETxTvgx6UgtMeqwnWWtNmUvL78xQ6TziRjpiOsL6zyVqOsBRdzR2vn/exec';
     let currentEmpId = '', userLocation = { lat: '', lng: '' };
 
+    function fetchCurrentLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => { 
+          userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude }; 
+        }, err => {}, { enableHighAccuracy: true });
+      }
+    }
+
     async function loginUser() {
       const empId = document.getElementById('empId').value.trim();
       const password = document.getElementById('password').value.trim();
@@ -99,9 +107,7 @@
         document.getElementById('actionBox').style.display = 'block';
         document.getElementById('welcomeUser').innerText = 'Welcome, ' + data.name;
         
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(pos => { userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude }; });
-        }
+        fetchCurrentLocation();
         loadMyRecords();
       } else { alert(data.message); }
     }
@@ -136,13 +142,21 @@
     }
 
     async function handlePunch(type) {
+      fetchCurrentLocation();
       const photoBase64 = await capturePhoto();
       if (!photoBase64) return alert("Photo missing!");
 
-      const mapRoute = `https://www.google.com/maps?q=${userLocation.lat},${userLocation.lng}`;
+      const mapRoute = userLocation.lat ? `https://www.google.com/maps?q=${userLocation.lat},${userLocation.lng}` : '';
       const res = await fetch(GOOGLE_SCRIPT_URL, { 
         method: 'POST', 
-        body: JSON.stringify({ action: type, empId: currentEmpId, photoUrl: photoBase64, mapRoute }) 
+        body: JSON.stringify({ 
+          action: type, 
+          empId: currentEmpId, 
+          photoUrl: photoBase64, 
+          mapRoute: mapRoute,
+          lat: userLocation.lat,
+          lng: userLocation.lng
+        }) 
       });
       const data = await res.json();
 
