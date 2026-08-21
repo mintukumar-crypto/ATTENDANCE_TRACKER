@@ -5,55 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ARCOS - Admin Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
   <style>
-    :root {
-      --bg-dark: #0b1329;
-      --accent-yellow: #ffb703;
-      --card-bg: #ffffff;
-      --text-main: #0f172a;
-      --text-sub: #64748b;
-      --border-color: #e2e8f0;
-      --badge-active-bg: #dcfce7;
-      --badge-active-color: #15803d;
-      --badge-inactive-bg: #fee2e2;
-      --badge-inactive-color: #b91c1c;
-    }
-
+    :root { --bg-dark: #0b1329; --accent-yellow: #ffb703; --card-bg: #ffffff; --text-main: #0f172a; --text-sub: #64748b; --border-color: #e2e8f0; }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
     body { background: #f8fafc; color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
     .sidebar { width: 250px; background: var(--bg-dark); color: #fff; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
     .brand { padding: 28px 24px; font-size: 26px; font-weight: 900; color: var(--accent-yellow); letter-spacing: 1px; }
     .menu { list-style: none; padding: 0 12px; display: flex; flex-direction: column; gap: 6px; }
-    .menu-item { padding: 14px 18px; color: #94a3b8; font-size: 14px; font-weight: 700; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 12px; }
-    .menu-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    .menu-item { padding: 14px 18px; color: #94a3b8; font-size: 14px; font-weight: 700; border-radius: 12px; cursor: pointer; }
     .menu-item.active { background: var(--accent-yellow); color: var(--bg-dark); font-weight: 900; }
 
     .main-wrapper { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
     .top-header { background: #fff; padding: 20px 32px; border-bottom: 1.5px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-    .top-header h2 { font-size: 20px; font-weight: 800; }
-    .user-badge { font-weight: 800; font-size: 14px; color: var(--text-sub); }
-
     .content-area { padding: 32px; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    .action-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .btn-primary { background: var(--accent-yellow); color: var(--bg-dark); border: none; padding: 12px 20px; border-radius: 10px; font-weight: 800; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
-
+    .btn-primary { background: var(--accent-yellow); color: var(--bg-dark); border: none; padding: 12px 20px; border-radius: 10px; font-weight: 800; cursor: pointer; }
     .table-container { background: #fff; border-radius: 16px; border: 1.5px solid var(--border-color); overflow: hidden; }
     table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
     th { background: #f8fafc; padding: 16px 20px; font-weight: 800; color: var(--text-sub); border-bottom: 1.5px solid var(--border-color); }
     td { padding: 16px 20px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
-    
-    .badge-status { padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 12px; display: inline-block; }
-    .badge-status.active { background: var(--badge-active-bg); color: var(--badge-active-color); }
-    .badge-status.inactive { background: var(--badge-inactive-bg); color: var(--badge-inactive-color); }
 
-    /* CALENDAR STYLES */
+    .badge-status { padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 12px; display: inline-block; }
+    .badge-status.active { background: #dcfce7; color: #15803d; }
+    .badge-status.inactive { background: #fee2e2; color: #b91c1c; }
+
     .search-box { display: flex; gap: 12px; margin-bottom: 24px; background: #fff; padding: 16px; border-radius: 16px; border: 1.5px solid var(--border-color); }
     .search-box input, .search-box select { padding: 12px; border: 1.5px solid var(--border-color); border-radius: 8px; font-weight: 700; outline: none; }
 
@@ -64,21 +42,16 @@
 
     .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; background: #fff; padding: 20px; border-radius: 16px; border: 1.5px solid var(--border-color); }
     .cal-day-header { text-align: center; font-weight: 900; color: var(--text-sub); padding-bottom: 10px; }
-    .cal-day { height: 90px; border: 1.5px solid var(--border-color); border-radius: 12px; padding: 8px; cursor: pointer; transition: 0.2s; position: relative; }
+    .cal-day { height: 90px; border: 1.5px solid var(--border-color); border-radius: 12px; padding: 8px; cursor: pointer; transition: 0.2s; }
     .cal-day:hover { border-color: var(--accent-yellow); background: #fefce8; }
     .cal-day.empty { border: none; background: transparent; cursor: default; }
-    .cal-date { font-weight: 900; font-size: 14px; }
     .status-tag { margin-top: 10px; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 800; text-align: center; }
     .status-tag.present { background: #dcfce7; color: #15803d; }
     .status-tag.absent { background: #fee2e2; color: #b91c1c; }
 
-    /* MODAL POPUP */
     .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; justify-content: center; align-items: center; }
     .modal-box { background: #fff; padding: 24px; border-radius: 16px; width: 420px; max-width: 90%; }
-    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     .photo-preview { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-color); margin-top: 6px; }
-
-    #routeMap { width: 100%; height: 500px; border-radius: 16px; border: 1.5px solid var(--border-color); margin-top: 16px; }
   </style>
 </head>
 <body>
@@ -89,15 +62,13 @@
       <li class="menu-item" onclick="switchTab('dashboardTab', this)">📊 Dashboard</li>
       <li class="menu-item active" onclick="switchTab('employeesTab', this)">👥 Employees</li>
       <li class="menu-item" onclick="switchTab('attendanceTab', this)">📅 Attendance</li>
-      <li class="menu-item" onclick="switchTab('trackerTab', this)">🗺️ Route Tracker</li>
-      <li class="menu-item" onclick="switchTab('queriesTab', this)">❓ Queries</li>
     </ul>
   </aside>
 
   <main class="main-wrapper">
     <header class="top-header">
       <h2>Attendance Management System</h2>
-      <div class="user-badge">Welcome, <b>Admin</b></div>
+      <div>Welcome, <b>Admin</b></div>
     </header>
 
     <div class="content-area">
@@ -116,35 +87,31 @@
 
       <!-- EMPLOYEES TAB -->
       <section id="employeesTab" class="tab-content active">
-        <div class="action-bar">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
           <h3 style="font-size: 22px; font-weight: 900;">Employees List</h3>
-          <button class="btn-primary" onclick="handleManualAddEmployee()">+ Add Employee</button>
+          <button class="btn-primary">+ Add Employee</button>
         </div>
         <div class="table-container">
           <table>
-            <thead>
-              <tr><th>Employee id</th><th>Password</th><th>Employee Name</th><th>Status</th></tr>
-            </thead>
-            <tbody id="employeesTableBody"><tr><td colspan="4">Loading...</td></tr></tbody>
+            <thead><tr><th>Employee id</th><th>Password</th><th>Employee Name</th><th>Status</th></tr></thead>
+            <tbody id="employeesTableBody"><tr><td colspan="4">Loading employees...</td></tr></tbody>
           </table>
         </div>
       </section>
 
-      <!-- ATTENDANCE CALENDAR TAB -->
+      <!-- ATTENDANCE TAB -->
       <section id="attendanceTab" class="tab-content">
         <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 20px;">Employee Attendance Calendar</h3>
         
         <div class="search-box">
           <input type="text" id="attSearchEmpId" placeholder="Enter Employee ID (e.g. ARS115437)" style="flex:1;">
           <select id="attMonth">
-            <option value="1">January</option><option value="2">February</option><option value="3">March</option>
-            <option value="4">April</option><option value="5">May</option><option value="6">June</option>
-            <option value="7">July</option><option value="8" selected>August</option><option value="9">September</option>
-            <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+            <option value="1">Jan</option><option value="2">Feb</option><option value="3">Mar</option>
+            <option value="4">Apr</option><option value="5">May</option><option value="6">Jun</option>
+            <option value="7">Jul</option><option value="8" selected>Aug</option><option value="9">Sep</option>
+            <option value="10">Oct</option><option value="11">Nov</option><option value="12">Dec</option>
           </select>
-          <select id="attYear">
-            <option value="2026" selected>2026</option><option value="2025">2025</option>
-          </select>
+          <select id="attYear"><option value="2026" selected>2026</option></select>
           <button class="btn-primary" onclick="searchMonthlyAttendance()">Search 🔍</button>
         </div>
 
@@ -162,36 +129,13 @@
         </div>
       </section>
 
-      <!-- ROUTE TRACKER TAB -->
-      <section id="trackerTab" class="tab-content">
-        <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 16px;">Live Route Tracker</h3>
-        <div style="display: flex; gap: 12px; margin-bottom: 16px;">
-          <input type="text" id="mapEmpId" placeholder="Employee ID" style="padding:10px; border-radius:8px; border:1px solid #ccc;">
-          <input type="date" id="mapDate" style="padding:10px; border-radius:8px; border:1px solid #ccc;">
-          <button class="btn-primary" onclick="loadMapRoute()">View Path 📍</button>
-        </div>
-        <div id="routeMap"></div>
-      </section>
-
-      <!-- QUERIES TAB -->
-      <section id="queriesTab" class="tab-content">
-        <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 16px;">Queries Raised</h3>
-        <div class="table-container">
-          <table>
-            <thead><tr><th>Ticket ID</th><th>Emp ID</th><th>Date</th><th>Issue</th><th>Status</th></tr></thead>
-            <tbody id="queriesTableBody"></tbody>
-          </table>
-        </div>
-      </section>
-
     </div>
   </main>
 
-  <!-- DETAIL MODAL POPUP -->
   <div class="modal-overlay" id="detailModal">
     <div class="modal-box">
-      <div class="modal-header">
-        <h3 id="modalDateTitle" style="font-size:18px; font-weight:900;">Attendance Detail</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 id="modalDateTitle">Attendance Detail</h3>
         <button onclick="closeModal()" style="border:none; background:none; font-size:20px; cursor:pointer;">✖</button>
       </div>
       <div id="modalBody"></div>
@@ -199,8 +143,7 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwLIVJCFQYsiKzm15FFP9YLkrUK6S2ubzbTXi5_ECCjeBYyylEcFoh6D8KOt_0tVuxx/exec";
-
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzrbf6OvIqYjUgYDlM_Ok0lo9KqB5ihYLongF9r0LzSF1H2c6aXIi3eIvukZRO7tUg1/exec";
     let monthlyDataStore = {};
 
     function switchTab(tabId, el) {
@@ -215,32 +158,41 @@
 
     function loadEmployeesFromSheet() {
       const tbody = document.getElementById('employeesTableBody');
-      window.handleEmpResponse = function(data) {
-        if (data.success && data.employees) {
+      const callbackName = 'cb_emp_' + Date.now();
+
+      window[callbackName] = function(data) {
+        if (data && data.success && data.employees) {
           tbody.innerHTML = '';
           data.employees.forEach(emp => {
-            let badgeClass = emp.status === 'ACTIVE' ? 'badge-status active' : 'badge-status inactive';
-            tbody.innerHTML += `<tr><td><b>${emp.empId}</b></td><td>${emp.password}</td><td>${emp.name}</td><td><span class="${badgeClass}">${emp.status}</span></td></tr>`;
+            let badge = emp.status === 'ACTIVE' ? 'badge-status active' : 'badge-status inactive';
+            tbody.innerHTML += `<tr><td><b>${emp.empId}</b></td><td>${emp.password}</td><td>${emp.name}</td><td><span class="${badge}">${emp.status}</span></td></tr>`;
           });
+        } else {
+          tbody.innerHTML = `<tr><td colspan="4" style="color:red;">Failed to fetch employee list.</td></tr>`;
         }
+        delete window[callbackName];
       };
+
       const script = document.createElement('script');
-      script.src = `${SCRIPT_URL}?action=getEmployees&callback=handleEmpResponse&_=${new Date().getTime()}`;
+      script.src = `${SCRIPT_URL}?action=getEmployees&callback=${callbackName}`;
       document.body.appendChild(script);
     }
 
     function loadDashboardStats() {
-      window.handleDashboardResponse = function(data) {
-        if (data.success && data.stats) {
+      const callbackName = 'cb_dash_' + Date.now();
+      window[callbackName] = function(data) {
+        if (data && data.success && data.stats) {
           document.getElementById('cardTotalEmp').innerText = data.stats.totalEmployees;
           document.getElementById('cardTodayPresent').innerText = data.stats.todayPresent;
           document.getElementById('cardShiftA').innerText = data.stats.shiftA;
           document.getElementById('cardShiftB').innerText = data.stats.shiftB;
           document.getElementById('cardShiftC').innerText = data.stats.shiftC;
         }
+        delete window[callbackName];
       };
+
       const script = document.createElement('script');
-      script.src = `${SCRIPT_URL}?action=getDashboardStats&callback=handleDashboardResponse&_=${new Date().getTime()}`;
+      script.src = `${SCRIPT_URL}?action=getDashboardStats&callback=${callbackName}`;
       document.body.appendChild(script);
     }
 
@@ -251,15 +203,17 @@
 
       if (!empId) return alert("Please enter Employee ID!");
 
-      window.handleMonthlyResponse = function(data) {
-        if (data.success) {
+      const callbackName = 'cb_att_' + Date.now();
+      window[callbackName] = function(data) {
+        if (data && data.success) {
           monthlyDataStore = data.records || {};
           renderCalendar(parseInt(month), parseInt(year));
         }
+        delete window[callbackName];
       };
 
       const script = document.createElement('script');
-      script.src = `${SCRIPT_URL}?action=getMonthlyAttendance&empId=${empId}&month=${month}&year=${year}&callback=handleMonthlyResponse&_=${new Date().getTime()}`;
+      script.src = `${SCRIPT_URL}?action=getMonthlyAttendance&empId=${empId}&month=${month}&year=${year}&callback=${callbackName}`;
       document.body.appendChild(script);
     }
 
@@ -274,7 +228,6 @@
 
       let firstDay = new Date(year, month - 1, 1).getDay();
       let daysInMonth = new Date(year, month, 0).getDate();
-
       let presentCount = 0;
 
       for (let i = 0; i < firstDay; i++) {
@@ -292,7 +245,7 @@
 
         grid.innerHTML += `
           <div class="cal-day" onclick="openDayDetail(${day})">
-            <div class="cal-date">${day}</div>
+            <div><b>${day}</b></div>
             ${tag}
           </div>
         `;
@@ -310,13 +263,13 @@
       document.getElementById('modalDateTitle').innerText = `Attendance Log: Date ${day}`;
 
       if (!rec) {
-        body.innerHTML = `<p style="font-weight:700; color:#b91c1c;">No attendance record found (Absent).</p>`;
+        body.innerHTML = `<p style="font-weight:700; color:#b91c1c;">No record found for this date.</p>`;
       } else {
         body.innerHTML = `
-          <p style="margin-bottom:8px;"><b>Punch In:</b> ${rec.inTime || 'N/A'}</p>
+          <p style="margin-bottom:8px;"><b>In Time:</b> ${rec.inTime || 'N/A'}</p>
           ${rec.inPhoto ? `<img src="${rec.inPhoto}" class="photo-preview">` : ''}
           <hr style="margin:12px 0; border:none; border-top:1px solid #ccc;">
-          <p style="margin-bottom:8px;"><b>Punch Out:</b> ${rec.outTime || 'N/A'}</p>
+          <p style="margin-bottom:8px;"><b>Out Time:</b> ${rec.outTime || 'N/A'}</p>
           ${rec.outPhoto ? `<img src="${rec.outPhoto}" class="photo-preview">` : ''}
         `;
       }
@@ -327,9 +280,10 @@
       document.getElementById('detailModal').style.display = 'none';
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
+    // Auto-load on initial page open
+    window.onload = function() {
       loadEmployeesFromSheet();
-    });
+    };
   </script>
 </body>
 </html>
