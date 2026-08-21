@@ -4,26 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ARCOS Staff Portal - Attendance</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --arcos-black: #000000;
-      --arcos-yellow: #FFC000;
-      --arcos-yellow-dark: #E0A800;
-      --bg-dark: #0A0A0A;
-      --card-bg: #121212;
-      --border-color: #262626;
-      --text-white: #FFFFFF;
-      --text-muted: #8E8E8E;
-      --danger: #EF4444;
-      --success: #10B981;
+      --primary-yellow: #f59e0b;
+      --dark-yellow: #d97706;
+      --bg-light: #ffffff;
+      --card-bg: #ffffff;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --danger: #ef4444;
+      --success: #10b981;
+      --border-color: #e2e8f0;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
 
     body {
-      background: var(--arcos-black);
-      color: var(--text-white);
+      background: #f8fafc;
+      color: var(--text-dark);
       display: flex;
       justify-content: center;
       align-items: center;
@@ -34,187 +33,173 @@
     .app-card {
       background: var(--card-bg);
       border-radius: 20px;
-      box-shadow: 0 0 30px rgba(255, 192, 0, 0.2);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
       width: 100%;
       max-width: 420px;
       overflow: hidden;
-      border: 2px solid var(--arcos-yellow);
+      border: 2px solid var(--primary-yellow);
     }
 
     /* Header Design */
     .app-header {
-      background: var(--arcos-black);
-      padding: 22px 20px;
+      background: var(--primary-yellow);
+      padding: 20px;
       text-align: center;
-      color: var(--text-white);
-      border-bottom: 3px solid var(--arcos-yellow);
+      color: #0f172a;
     }
 
     .brand-logo-container {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 4px;
     }
 
     .arcos-svg-logo {
       width: 32px;
       height: 32px;
-      filter: drop-shadow(0 2px 4px rgba(255, 192, 0, 0.4));
     }
 
     .app-header h2 {
-      font-size: 22px;
-      font-weight: 900;
-      letter-spacing: 0.5px;
-      color: var(--text-white);
+      font-size: 20px;
+      font-weight: 800;
+      color: #0f172a;
     }
 
     .app-header p {
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      color: var(--arcos-yellow);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #451a03;
       text-transform: uppercase;
     }
 
-    .app-body { padding: 22px; }
+    .app-body { padding: 20px; }
 
     /* Inputs */
-    .input-group { margin-bottom: 16px; }
+    .input-group { margin-bottom: 14px; }
     .input-group label { 
       display: block; 
       font-size: 11px; 
-      font-weight: 800; 
+      font-weight: 700; 
       color: var(--text-muted); 
-      margin-bottom: 6px; 
+      margin-bottom: 5px; 
       text-transform: uppercase; 
-      letter-spacing: 0.5px;
     }
-    input {
+    input, textarea {
       width: 100%;
-      padding: 14px 16px;
-      background: #1A1A1A;
-      border: 1px solid var(--border-color);
+      padding: 12px 14px;
+      background: #ffffff;
+      border: 1.5px solid var(--border-color);
       border-radius: 10px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
-      color: var(--text-white);
+      color: var(--text-dark);
       outline: none;
       transition: all 0.2s;
     }
-    input:focus { border-color: var(--arcos-yellow); box-shadow: 0 0 10px rgba(255, 192, 0, 0.3); }
+    input:focus, textarea:focus { border-color: var(--primary-yellow); }
 
     /* Buttons */
     .btn-action {
       width: 100%;
-      padding: 16px;
+      padding: 14px;
       border: none;
       border-radius: 10px;
-      background: var(--arcos-yellow);
-      color: var(--arcos-black);
-      font-size: 15px;
-      font-weight: 900;
+      background: var(--primary-yellow);
+      color: #000;
+      font-size: 14px;
+      font-weight: 800;
       cursor: pointer;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
       transition: all 0.2s;
-      box-shadow: 0 4px 15px rgba(255, 192, 0, 0.3);
     }
-    .btn-action:hover { background: var(--arcos-yellow-dark); transform: translateY(-1px); }
-    .btn-action:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-action:hover { background: var(--dark-yellow); }
+    .btn-action:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .btn-out { 
-      background: var(--danger); 
-      color: var(--text-white); 
-      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); 
-    }
-    .btn-out:hover { background: #DC2626; }
+    .btn-out { background: var(--danger); color: #fff; }
 
     /* Live Clock */
     .clock-badge {
-      background: rgba(255, 192, 0, 0.12);
-      border: 1px solid var(--arcos-yellow);
-      color: var(--arcos-yellow);
-      padding: 10px 14px;
+      background: #fef3c7;
+      border: 1px solid #fde68a;
+      color: #78350f;
+      padding: 8px 12px;
       border-radius: 8px;
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 700;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 16px;
     }
 
     /* CIRCULAR CAMERA */
     #cameraBox {
       display: none;
-      margin: 15px auto 25px;
+      margin: 15px auto 20px;
       width: 180px;
       height: 180px;
       border-radius: 50%;
       overflow: hidden;
       position: relative;
-      border: 4px solid var(--arcos-yellow);
-      box-shadow: 0 0 25px rgba(255, 192, 0, 0.5);
+      border: 4px solid var(--primary-yellow);
     }
     video { width: 100%; height: 100%; object-fit: cover; }
     #timer {
       position: absolute;
       top: 50%; left: 50%;
       transform: translate(-50%,-50%);
-      font-size: 56px;
-      color: var(--arcos-yellow);
-      font-weight: 900;
-      text-shadow: 0 4px 12px rgba(0,0,0,0.9);
+      font-size: 50px;
+      color: #fff;
+      font-weight: 800;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.8);
     }
     canvas { display: none; }
 
     /* Today Summary Box */
     .today-card {
-      background: #181818;
+      background: #f8fafc;
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 16px;
-      margin-top: 20px;
+      padding: 14px;
+      margin-top: 16px;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 10px;
     }
     .today-stat { text-align: center; }
-    .today-stat span { font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
-    .today-stat strong { display: block; font-size: 16px; font-weight: 900; color: var(--arcos-yellow); margin-top: 4px; }
+    .today-stat span { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+    .today-stat strong { display: block; font-size: 15px; font-weight: 800; color: var(--text-dark); margin-top: 2px; }
 
     /* Roster Trigger Button */
     .btn-roster {
       width: 100%;
-      padding: 14px;
-      background: var(--arcos-yellow);
-      color: var(--arcos-black);
-      font-weight: 900;
+      padding: 12px;
+      background: #fff;
+      border: 1.5px solid var(--primary-yellow);
+      color: #000;
+      font-weight: 800;
       font-size: 12px;
-      border: none;
       border-radius: 10px;
-      margin-top: 16px;
+      margin-top: 14px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 6px;
       text-transform: uppercase;
-      transition: all 0.2s;
     }
-    .btn-roster:hover { background: var(--arcos-yellow-dark); }
+    .btn-roster:hover { background: #fef3c7; }
 
     /* Footer */
     .app-footer {
-      background: var(--arcos-yellow);
-      border-top: 1px solid var(--arcos-yellow);
-      padding: 12px;
+      background: #fef3c7;
+      border-top: 1px solid #fde68a;
+      padding: 10px;
       text-align: center;
       font-size: 10px;
-      font-weight: 900;
-      color: var(--arcos-black);
-      letter-spacing: 0.5px;
+      font-weight: 800;
+      color: #78350f;
     }
 
     /* Modal / Calendar Styling */
@@ -222,20 +207,20 @@
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(5px);
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(3px);
       justify-content: center;
       align-items: center;
       z-index: 1000;
       padding: 16px;
     }
     .modal-content {
-      background: var(--card-bg);
-      border-radius: 18px;
+      background: #ffffff;
+      border-radius: 16px;
       width: 100%;
       max-width: 400px;
-      padding: 20px;
-      border: 2px solid var(--arcos-yellow);
+      padding: 18px;
+      border: 2px solid var(--primary-yellow);
       max-height: 90vh;
       overflow-y: auto;
     }
@@ -243,12 +228,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--border-color);
-      padding-bottom: 12px;
-      margin-bottom: 16px;
+      border-bottom: 1.5px solid var(--border-color);
+      padding-bottom: 10px;
+      margin-bottom: 14px;
     }
-    .modal-header h3 { font-size: 16px; font-weight: 900; color: var(--arcos-yellow); }
-    .close-btn { font-size: 24px; font-weight: 900; cursor: pointer; color: var(--danger); }
+    .modal-header h3 { font-size: 15px; font-weight: 800; color: #0f172a; }
+    .close-btn { font-size: 22px; font-weight: 800; cursor: pointer; color: var(--danger); }
 
     /* Calendar Grid */
     .calendar-grid {
@@ -256,61 +241,81 @@
       grid-template-columns: repeat(7, 1fr);
       gap: 6px;
     }
-    .cal-head { text-align: center; font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; padding: 4px; }
+    .cal-head { text-align: center; font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; padding: 2px; }
     
     .cal-day {
-      background: #181818;
+      background: #f8fafc;
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      min-height: 50px;
+      min-height: 48px;
       padding: 4px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
       font-size: 11px;
-      font-weight: 800;
-      color: var(--text-white);
+      font-weight: 700;
     }
     
     /* Status Badges */
-    .cal-day.present { background: rgba(16, 185, 129, 0.1); border-color: var(--success); cursor: pointer; }
-    .cal-day.absent { background: rgba(239, 68, 68, 0.1); border-color: var(--danger); }
-    .cal-day.disabled { opacity: 0.3; cursor: not-allowed; background: #0A0A0A; }
+    .cal-day.present { background: #ecfdf5; border-color: #a7f3d0; cursor: pointer; }
+    .cal-day.absent { background: #fef2f2; border-color: #fecaca; }
+    .cal-day.disabled { opacity: 0.4; cursor: not-allowed; background: #f1f5f9; }
 
     .badge-status {
       font-size: 8px;
       padding: 2px 4px;
       border-radius: 4px;
-      font-weight: 900;
+      font-weight: 800;
       text-transform: uppercase;
       width: 100%;
       text-align: center;
     }
-    .badge-p { background: var(--success); color: var(--text-white); }
-    .badge-a { background: var(--danger); color: var(--text-white); }
+    .badge-p { background: #10b981; color: #fff; }
+    .badge-a { background: #ef4444; color: #fff; }
 
-    /* Detail Card */
+    /* Detail Card & Query Box */
     .detail-card {
-      margin-top: 16px;
-      background: #181818;
+      margin-top: 14px;
+      background: #f8fafc;
       border: 1px solid var(--border-color);
       border-radius: 10px;
-      padding: 14px;
+      padding: 12px;
     }
-    .detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 12px; }
-    .detail-thumb { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--arcos-yellow); }
+    .detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 12px; }
+    .detail-thumb { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-yellow); background: #e2e8f0; }
 
-    .btn-query {
-      width: 100%;
-      padding: 10px;
-      background: rgba(255, 192, 0, 0.15);
-      border: 1px dashed var(--arcos-yellow);
-      color: var(--arcos-yellow);
-      font-size: 11px;
-      font-weight: 800;
-      border-radius: 8px;
+    /* Inline Query Submission Form */
+    .query-box-container {
       margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border-color);
+    }
+    .btn-query-toggle {
+      width: 100%;
+      padding: 8px;
+      background: #fef3c7;
+      border: 1px solid var(--primary-yellow);
+      color: #92400e;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .query-form {
+      display: none;
+      margin-top: 8px;
+    }
+    .btn-submit-query {
+      width: 100%;
+      padding: 8px;
+      background: #0f172a;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      border: none;
+      border-radius: 6px;
+      margin-top: 6px;
       cursor: pointer;
     }
   </style>
@@ -322,9 +327,9 @@
     <div class="app-header">
       <div class="brand-logo-container">
         <svg class="arcos-svg-logo" viewBox="0 0 100 100" fill="none">
-          <path d="M50 15 C30 15 20 35 20 50 C20 70 35 85 50 85 C65 85 80 70 80 50" stroke="#FFC000" stroke-width="12" stroke-linecap="round"/>
-          <path d="M15 75 C35 90 75 80 85 45 C95 10 65 5 45 25" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
-          <circle cx="50" cy="50" r="8" fill="#FFC000"/>
+          <path d="M50 15 C30 15 20 35 20 50 C20 70 35 85 50 85 C65 85 80 70 80 50" stroke="#0f172a" stroke-width="12" stroke-linecap="round"/>
+          <path d="M15 75 C35 90 75 80 85 45 C95 10 65 5 45 25" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="50" cy="50" r="8" fill="#0f172a"/>
         </svg>
         <h2>ARCOS</h2>
       </div>
@@ -349,8 +354,8 @@
       <div id="actionBox" style="display:none;">
         <div class="clock-badge" id="liveClock">IST Time Synchronizing...</div>
 
-        <h3 id="welcomeUser" style="font-size: 18px; font-weight:800; color:var(--text-white);">Welcome</h3>
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Mark your geo-attendance below</p>
+        <h3 id="welcomeUser" style="font-size: 16px; font-weight:800; color:#0f172a;">Welcome</h3>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px;">Mark your geo-attendance below</p>
 
         <!-- Circular Camera Box -->
         <div id="cameraBox">
@@ -361,7 +366,7 @@
 
         <button id="btnIn" class="btn-action" onclick="handlePunch('punchIn')">PUNCH IN NOW</button>
         <button id="btnOut" class="btn-action btn-out" onclick="handlePunch('punchOut')" style="display:none;">PUNCH OUT NOW</button>
-        <div id="statusMsg" style="text-align:center; font-size:12px; font-weight:800; color:var(--arcos-yellow); margin-top:10px;"></div>
+        <div id="statusMsg" style="text-align:center; font-size:12px; font-weight:700; color:#2563eb; margin-top:8px;"></div>
 
         <!-- Today Summary Card -->
         <div class="today-card">
@@ -400,7 +405,7 @@
 
       <!-- Date Record Detail Popup -->
       <div class="detail-card" id="dateDetailsBox" style="display:none;">
-        <h4 id="selectedDateTitle" style="font-size:12px; font-weight:800; text-align:center; margin-bottom:10px; text-transform:uppercase; color: var(--arcos-yellow);">Record Details</h4>
+        <h4 id="selectedDateTitle" style="font-size:12px; font-weight:800; text-align:center; margin-bottom:8px; text-transform:uppercase;">Record Details</h4>
         
         <div class="detail-row">
           <div>
@@ -416,12 +421,18 @@
           <div id="dtOutImgBox"></div>
         </div>
 
-        <button class="btn-query" id="btnQuery" onclick="promptRaiseQuery()">🚨 Attendance Wrong? Raise Query to Admin</button>
+        <!-- Inline Query Window Below Details -->
+        <div class="query-box-container">
+          <button class="btn-query-toggle" onclick="toggleQueryForm()">🚨 Attendance Issue? Raise Query</button>
+          <div class="query-form" id="queryForm">
+            <textarea id="queryText" rows="2" placeholder="Describe issue in detail..."></textarea>
+            <button class="btn-submit-query" onclick="submitAttendanceQuery()">Submit Query to Admin</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Backend Integration Logic -->
   <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmZTB0kT0aiMhu0ah1cICCo-MwWdrUS_CsRX6WGHIsLINWL3kkF6Bv7g4zsjiIqF-h/exec';
     let currentEmpId = '';
@@ -562,6 +573,7 @@
       }
     }
 
+    /* Modal & Smart Calendar */
     function openRosterModal() {
       document.getElementById('rosterModal').style.display = 'flex';
       renderCalendar();
@@ -618,17 +630,27 @@
       }
     }
 
+    /* Fixed: Photo key check & inline Query Window handling */
     function showDateDetail(dateStr) {
       selectedDateForQuery = dateStr;
       const record = attendanceHistory.find(r => r.date === dateStr);
       const detailBox = document.getElementById('dateDetailsBox');
       document.getElementById('selectedDateTitle').innerText = 'Date: ' + dateStr;
 
+      // Reset Query form state
+      document.getElementById('queryForm').style.display = 'none';
+      document.getElementById('queryText').value = '';
+
       if (record && record.inTime) {
         document.getElementById('dtInTime').innerText = record.inTime || 'N/A';
         document.getElementById('dtOutTime').innerText = record.outTime || 'N/A';
-        document.getElementById('dtInImgBox').innerHTML = record.inPhoto ? `<img src="${record.inPhoto}" class="detail-thumb">` : '';
-        document.getElementById('dtOutImgBox').innerHTML = record.outPhoto ? `<img src="${record.outPhoto}" class="detail-thumb">` : '';
+        
+        // Handles both key conventions (inPhoto/photoUrl & outPhoto/outPhotoUrl)
+        const inPhotoSrc = record.inPhoto || record.inPhotoUrl || record.photoUrl;
+        const outPhotoSrc = record.outPhoto || record.outPhotoUrl;
+
+        document.getElementById('dtInImgBox').innerHTML = inPhotoSrc ? `<img src="${inPhotoSrc}" class="detail-thumb" alt="IN Photo">` : '<span style="font-size:10px; color:#94a3b8;">No Image</span>';
+        document.getElementById('dtOutImgBox').innerHTML = outPhotoSrc ? `<img src="${outPhotoSrc}" class="detail-thumb" alt="OUT Photo">` : '<span style="font-size:10px; color:#94a3b8;">No Image</span>';
       } else {
         document.getElementById('dtInTime').innerText = 'ABSENT';
         document.getElementById('dtOutTime').innerText = 'ABSENT';
@@ -638,9 +660,14 @@
       detailBox.style.display = 'block';
     }
 
-    async function promptRaiseQuery() {
-      const issue = prompt(`Describe issue for ${selectedDateForQuery}:`);
-      if (!issue) return;
+    function toggleQueryForm() {
+      const form = document.getElementById('queryForm');
+      form.style.display = form.style.display === 'block' ? 'none' : 'block';
+    }
+
+    async function submitAttendanceQuery() {
+      const issue = document.getElementById('queryText').value.trim();
+      if (!issue) return alert('Please describe your issue first!');
 
       const res = await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
@@ -649,8 +676,12 @@
       const data = await res.json();
 
       if (data.success) {
-        alert(`Query Submitted! Ticket ID: ${data.ticketId}`);
-      } else { alert("Failed to submit query."); }
+        alert(`Query Submitted Successfully!\nTicket ID: ${data.ticketId}`);
+        document.getElementById('queryText').value = '';
+        toggleQueryForm();
+      } else { 
+        alert("Failed to submit query."); 
+      }
     }
   </script>
 </body>
