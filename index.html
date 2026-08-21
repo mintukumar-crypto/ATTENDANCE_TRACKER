@@ -3,173 +3,146 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARCOS - Attendance & Dashboard</title>
+  <title>ARCOS Attendance Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
       --navy-bg: #0b1329;
       --yellow-accent: #ffb703;
-      --yellow-hover: #fb8500;
       --body-bg: #f8fafc;
       --card-bg: #ffffff;
       --text-dark: #0f172a;
       --text-muted: #64748b;
       --border-color: #e2e8f0;
       --success-green: #10b981;
+      --success-bg: #e6f4ea;
       --danger-red: #ef4444;
+      --danger-bg: #fce8e6;
       --warning-orange: #f59e0b;
       --primary-blue: #2563eb;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { background: var(--body-bg); color: var(--text-dark); min-height: 100vh; overflow-x: hidden; }
+    body { background: var(--body-bg); color: var(--text-dark); min-height: 100vh; width: 100vw; overflow-x: hidden; }
 
-    /* ================= LOGIN SCREEN ================= */
-    .login-container { display: flex; min-height: 100vh; background: var(--navy-bg); }
-    .login-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 60px; color: #fff; }
-    .brand-logo-text { font-size: 32px; font-weight: 800; color: var(--yellow-accent); letter-spacing: 1px; margin-bottom: 20px; }
-    .login-right { width: 420px; background: var(--navy-bg); display: flex; align-items: center; justify-content: center; padding: 24px; }
-    .login-card { background: #ffffff; width: 100%; padding: 32px 24px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); text-align: center; }
-    .login-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
-    .login-card p { font-size: 12px; color: var(--text-muted); margin-bottom: 24px; }
-    .form-group { text-align: left; margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 6px; }
-    .form-group input { width: 100%; padding: 12px; border: 1.5px solid var(--border-color); border-radius: 10px; font-size: 13px; font-weight: 600; outline: none; }
-    .btn-login { width: 100%; padding: 14px; background: var(--yellow-accent); color: var(--navy-bg); border: none; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; }
+    /* LOGIN SCREEN - FULL PAGE FIT */
+    .login-container { display: flex; width: 100vw; height: 100vh; background: var(--navy-bg); }
+    .login-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 80px; color: #fff; }
+    .brand-logo-text { font-size: 48px; font-weight: 800; color: var(--yellow-accent); letter-spacing: 1px; margin-bottom: 12px; }
+    .login-right { width: 500px; background: var(--navy-bg); display: flex; align-items: center; justify-content: center; padding: 40px; }
+    .login-card { background: #ffffff; width: 100%; padding: 40px 32px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); text-align: center; }
+    .login-card h2 { font-size: 26px; font-weight: 800; margin-bottom: 6px; }
+    .login-card p { font-size: 14px; color: var(--text-muted); margin-bottom: 28px; }
+    .form-group { text-align: left; margin-bottom: 20px; }
+    .form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+    .form-group input { width: 100%; padding: 14px; border: 1.5px solid var(--border-color); border-radius: 12px; font-size: 14px; font-weight: 600; outline: none; }
+    .btn-login { width: 100%; padding: 16px; background: var(--yellow-accent); color: var(--navy-bg); border: none; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; }
 
-    /* ================= MAIN WRAPPER ================= */
-    .app-viewport { display: none; min-height: 100vh; flex-direction: column; background: #f1f5f9; }
+    /* MAIN APP CONTAINER FIT TO PAGE */
+    .app-viewport { display: none; width: 100vw; min-height: 100vh; flex-direction: column; background: #f1f5f9; align-items: center; justify-content: center; padding: 20px; }
+    .mobile-frame { width: 100%; max-width: 500px; background: #fff; min-height: 90vh; border-radius: 24px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); position: relative; display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--border-color); }
 
-    /* MOBILE / APP CONTAINER FRAME */
-    .mobile-frame {
-      width: 100%; max-width: 420px; margin: 0 auto; background: #fff; min-height: 100vh; box-shadow: 0 10px 30px rgba(0,0,0,0.05); position: relative; display: flex; flex-direction: column;
-    }
+    .app-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--border-color); background: #fff; }
+    .header-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-dark); font-weight: 800; }
+    .header-title { font-size: 16px; font-weight: 800; }
 
-    /* TOP HEADER */
-    .app-header { display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--border-color); background: #fff; position: sticky; top: 0; z-index: 100; }
-    .header-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-dark); font-weight: 800; }
-    .header-title { font-size: 14px; font-weight: 800; }
+    .status-content { padding: 32px 24px; display: flex; flex-direction: column; align-items: center; flex: 1; text-align: center; }
+    .today-date-text { font-size: 20px; font-weight: 800; }
+    .today-day-text { font-size: 14px; color: var(--text-muted); font-weight: 600; margin-bottom: 24px; }
 
-    /* TODAY'S STATUS SCREEN */
-    .status-content { padding: 24px 20px; display: flex; flex-direction: column; align-items: center; flex: 1; }
-    .today-date-text { font-size: 16px; font-weight: 800; margin-bottom: 2px; }
-    .today-day-text { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-bottom: 20px; }
+    /* LIVE CAMERA STREAM IN PROFILE CIRCLE */
+    .profile-photo-circle { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--yellow-accent); overflow: hidden; margin-bottom: 20px; position: relative; background: #000; display: flex; align-items: center; justify-content: center; }
+    .profile-photo-circle video, .profile-photo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    /* Real Profile Photo Frame */
-    .profile-photo-circle {
-      width: 90px; height: 90px; border-radius: 50%; border: 3px solid #e2e8f0; overflow: hidden; margin-bottom: 16px; display: flex; align-items: center; justify-content: center; background: #f8fafc;
-    }
-    .profile-photo-circle img { width: 100%; height: 100%; object-fit: cover; }
-
-    .status-badge { padding: 4px 16px; border-radius: 20px; font-size: 12px; font-weight: 800; margin-bottom: 24px; text-transform: capitalize; }
+    .status-badge { padding: 6px 20px; border-radius: 20px; font-size: 13px; font-weight: 800; margin-bottom: 24px; text-transform: uppercase; }
     .badge-absent { background: #fee2e2; color: #ef4444; }
     .badge-present { background: #dcfce7; color: #10b981; }
 
-    .check-times-box { width: 100%; background: #f8fafc; border-radius: 12px; padding: 16px; margin-bottom: 30px; border: 1px solid var(--border-color); }
-    .time-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
-    .time-row:last-child { margin-bottom: 0; }
+    .check-times-box { width: 100%; background: #f8fafc; border-radius: 16px; padding: 20px; margin-bottom: 24px; border: 1px solid var(--border-color); }
+    .time-row { display: flex; justify-content: space-between; font-size: 15px; font-weight: 800; margin-bottom: 10px; }
 
-    .btn-punch-action {
-      width: 100%; padding: 14px; border: none; border-radius: 10px; font-size: 14px; font-weight: 800; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: auto;
-    }
+    .btn-punch-action { width: 100%; padding: 16px; border: none; border-radius: 12px; font-size: 16px; font-weight: 800; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: auto; }
     .btn-green { background: #10b981; }
     .btn-red { background: #ef4444; }
     .btn-disabled { background: #cbd5e1; cursor: not-allowed; color: #64748b; }
 
-    /* PUNCH FLOW MODAL / OVERLAY */
-    .flow-modal {
-      display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 200; flex-direction: column; padding: 24px; text-align: center;
-    }
-    .flow-modal-header { display: flex; align-items: center; justify-content: flex-start; margin-bottom: 40px; }
-    .icon-large-container { width: 120px; height: 120px; margin: 40px auto 20px auto; display: flex; align-items: center; justify-content: center; border-radius: 50%; }
+    /* DASHBOARD OVERVIEW - FULL PAGE */
+    .dashboard-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #f8fafc; z-index: 300; overflow-y: auto; padding: 32px; }
+    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .m-card { background: #fff; padding: 20px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+    .m-card span { font-size: 13px; font-weight: 800; color: var(--text-muted); }
+    .m-card h3 { font-size: 28px; font-weight: 800; margin-top: 6px; }
+
+    .dash-grid-layout { display: grid; grid-template-columns: 2.5fr 1fr; gap: 24px; }
+    @media (max-width: 900px) { .dash-grid-layout { grid-template-columns: 1fr; } }
+
+    .cal-box { background: #fff; padding: 24px; border-radius: 20px; border: 1px solid var(--border-color); }
+    .cal-grid-view { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; margin-top: 16px; text-align: center; }
+    .cal-head { font-size: 13px; font-weight: 800; color: var(--text-muted); text-align: center; }
     
-    .spinner {
-      width: 32px; height: 32px; border: 3px solid #f3f3f3; border-top: 3px solid var(--primary-blue); border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    /* CENTER ALIGNED CALENDAR CELL */
+    .cal-date-cell { border: 1px solid var(--border-color); border-radius: 10px; padding: 12px 6px; min-height: 64px; font-size: 12px; font-weight: 800; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer; transition: 0.2s; text-align: center; }
+    .cal-date-cell:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+    .cell-present { background-color: var(--success-bg) !important; color: #065f46; border-color: #a7f3d0; }
+    .cell-absent { background-color: var(--danger-bg) !important; color: #991b1b; border-color: #fecaca; }
+    .cell-blank { background-color: #ffffff; color: var(--text-dark); }
 
-    .btn-ok {
-      width: 100%; padding: 12px; background: transparent; border: 1.5px solid var(--border-color); border-radius: 8px; font-weight: 800; font-size: 14px; cursor: pointer; margin-top: auto; color: var(--text-dark);
-    }
+    .summary-side-card, .chart-box { background: #fff; padding: 20px; border-radius: 20px; border: 1px solid var(--border-color); margin-bottom: 20px; }
+    .summary-line { display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; padding: 10px 0; border-bottom: 1px dashed var(--border-color); }
 
-    /* hidden camera video element */
-    video, canvas { display: none; }
-
-    /* ================= MAIN DASHBOARD VIEW ================= */
-    .dashboard-view {
-      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #f8fafc; z-index: 300; overflow-y: auto; padding: 20px;
-    }
-    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 20px; }
-    .m-card { background: #fff; padding: 16px; border-radius: 12px; border: 1px solid var(--border-color); }
-    .m-card span { font-size: 11px; font-weight: 700; color: var(--text-muted); }
-    .m-card h3 { font-size: 22px; font-weight: 800; margin-top: 4px; }
-
-    .dash-grid-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
-    @media (max-width: 768px) { .dash-grid-layout { grid-template-columns: 1fr; } }
-
-    .cal-box { background: #fff; padding: 16px; border-radius: 14px; border: 1px solid var(--border-color); }
-    .cal-grid-view { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; text-align: center; margin-top: 12px; }
-    .cal-head { font-size: 11px; font-weight: 700; color: var(--text-muted); }
-    .cal-date-cell { border: 1px solid var(--border-color); border-radius: 6px; padding: 6px; min-height: 48px; font-size: 11px; font-weight: 700; display: flex; flex-direction: column; justify-content: space-between; }
-    .p-tag { color: var(--success-green); font-weight: 800; }
-    .a-tag { color: var(--danger-red); font-weight: 800; }
-    .l-tag { color: var(--warning-orange); font-weight: 800; }
-
-    .summary-side-card { background: #fff; padding: 16px; border-radius: 14px; border: 1px solid var(--border-color); margin-bottom: 16px; }
-    .summary-line { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; padding: 6px 0; border-bottom: 1px dashed var(--border-color); }
-
-    .chart-box { background: #fff; padding: 16px; border-radius: 14px; border: 1px solid var(--border-color); }
+    /* MODAL WINDOWS */
+    .popup-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.5); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
+    .modal-content-box { background: #fff; width: 100%; max-width: 440px; border-radius: 20px; padding: 28px; text-align: center; position: relative; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+    .close-modal-btn { position: absolute; top: 16px; right: 16px; border: none; background: none; font-size: 20px; cursor: pointer; font-weight: 800; }
   </style>
 </head>
 <body>
 
-  <!-- LOGIN SCREEN -->
+  <!-- LOGIN CONTAINER -->
   <div class="login-container" id="loginScreen">
     <div class="login-left">
       <div class="brand-logo-text">ARCOS</div>
-      <h1 style="font-size:32px; font-weight:800;">Attendance<br>Portal</h1>
+      <h1 style="font-size:42px; font-weight:800; line-height:1.2;">Attendance & HR<br>Portal</h1>
     </div>
     <div class="login-right">
       <div class="login-card">
-        <h2>Welcome Back!</h2>
-        <p>Please login to your account</p>
+        <h2>Welcome Back</h2>
+        <p>Login to manage attendance</p>
         <div class="form-group">
-          <label>Username</label>
-          <input type="text" id="empId" placeholder="Enter username">
+          <label>Employee ID / Username</label>
+          <input type="text" id="empId" placeholder="Enter Username" value="Rohit Kumar">
         </div>
         <div class="form-group">
           <label>Password</label>
-          <input type="password" id="password" placeholder="Enter password">
+          <input type="password" id="password" placeholder="Enter Password" value="123456">
         </div>
         <button class="btn-login" onclick="loginUser()">Login</button>
       </div>
     </div>
   </div>
 
-  <!-- MAIN MOBILE FRAME APPS -->
+  <!-- MAIN APP PORTAL -->
   <div class="app-viewport" id="appScreen">
     <div class="mobile-frame">
-      
-      <!-- TOP NAVIGATION BAR -->
       <div class="app-header">
         <button class="header-btn" onclick="openDashboardView()">☰</button>
         <span class="header-title">Today's Status</span>
-        <button class="header-btn" style="font-size:16px;">📅</button>
+        <button class="header-btn" onclick="openHelpModal()">❓</button>
       </div>
 
-      <!-- SCREEN 1: TODAY'S STATUS & PUNCH INTERFACE -->
       <div class="status-content">
         <div class="today-date-text" id="todayDateTxt">21 May 2026</div>
         <div class="today-day-text" id="todayDayTxt">Thursday</div>
 
-        <!-- REAL PHOTO CAPTURE CIRCLE -->
+        <!-- LIVE STREAM VIDEO IN CIRCLE FRAME -->
         <div class="profile-photo-circle">
-          <img id="userCapturedPhoto" src="https://via.placeholder.com/150/e2e8f0/64748b?text=Photo" alt="Profile">
+          <video id="liveFeed" autoplay playsinline muted></video>
+          <img id="capturedImgView" style="display:none;" alt="Captured">
         </div>
 
-        <div style="font-size:11px; font-weight:700; color:var(--text-muted); margin-bottom:4px;">Status</div>
+        <div style="font-size:12px; font-weight:800; color:var(--text-muted); margin-bottom:4px;">Status</div>
         <div id="statusBadge" class="status-badge badge-absent">Absent</div>
 
         <div class="check-times-box">
@@ -183,291 +156,225 @@
           </div>
         </div>
 
-        <button id="mainPunchBtn" class="btn-punch-action btn-green" onclick="startPunchProcess()">
+        <button id="mainPunchBtn" class="btn-punch-action btn-green" onclick="triggerPunchAction()">
           <span>📍</span> <span id="btnPunchText">Punch In</span>
         </button>
       </div>
-
-      <!-- PUNCH FLOW MODALS (STEP 2, 3, 5, 6) -->
-      
-      <!-- STEP A: LOCATION & PHOTO CAPTURE SPINNER -->
-      <div class="flow-modal" id="captureModal">
-        <div class="flow-modal-header">
-          <span style="cursor:pointer; font-size:18px; font-weight:800;" onclick="closeModal('captureModal')">‹</span>
-          <span style="font-size:14px; font-weight:800; margin-left:12px;" id="flowStepTitle">Punch In</span>
-        </div>
-        <div class="icon-large-container" id="iconContainer">
-          <!-- Green or Red Pin Icon -->
-          <span id="pinIcon" style="font-size:64px;">📍</span>
-        </div>
-        <h3 style="font-size:16px; font-weight:800; margin-bottom:4px;">Location Capture</h3>
-        <p style="font-size:12px; color:var(--text-muted);">We are capturing your location</p>
-
-        <div class="spinner"></div>
-        <p style="font-size:11px; color:var(--text-muted); font-weight:600;">Please wait...</p>
-      </div>
-
-      <!-- STEP B: SUCCESS MODAL -->
-      <div class="flow-modal" id="successModal">
-        <div class="flow-modal-header">
-          <span style="cursor:pointer; font-size:18px; font-weight:800;" onclick="closeModal('successModal')">‹</span>
-          <span style="font-size:14px; font-weight:800; margin-left:12px;" id="successHeaderTitle">Punch In</span>
-        </div>
-        <div style="width:60px; height:60px; border-radius:50%; border:2px solid var(--success-green); display:flex; align-items:center; justify-content:center; margin:30px auto 16px auto; font-size:28px; color:var(--success-green);" id="successCheckIcon">
-          ✓
-        </div>
-        <h3 style="font-size:16px; font-weight:800; margin-bottom:12px;" id="successMsgText">Punched In Successfully!</h3>
-        
-        <div style="font-size:24px; font-weight:800; margin-bottom:4px;" id="successTimeTxt">09:01 AM</div>
-        <div style="font-size:11px; color:var(--text-muted); font-weight:600; margin-bottom:24px;" id="successDateTxt">21 May 2026, Thursday</div>
-
-        <div style="display:flex; align-items:center; justify-content:center; gap:8px; background:#f8fafc; padding:12px; border-radius:10px; border:1px solid var(--border-color); text-align:left;">
-          <span>📍</span>
-          <div>
-            <div style="font-size:11px; font-weight:800;">Arcos Solutions Pvt. Ltd.</div>
-            <div style="font-size:10px; color:var(--text-muted);">Mohindergarh, Haryana, India 124507</div>
-          </div>
-        </div>
-
-        <button class="btn-ok" onclick="completePunchFlow()">OK</button>
-      </div>
-
     </div>
   </div>
 
-  <!-- MAIN DASHBOARD VIEW (OPENED VIA 3-DOTS/HAMBURGER MENU) -->
+  <!-- DASHBOARD OVERVIEW VIEW -->
   <div class="dashboard-view" id="dashboardView">
     <div class="dash-header">
       <div>
-        <h2 style="font-size:18px; font-weight:800;">Dashboard</h2>
-        <p style="font-size:11px; color:var(--text-muted);" id="userGreeting">Good Morning, Employee 👋</p>
+        <h2 style="font-size:24px; font-weight:800;">Dashboard</h2>
+        <p style="font-size:13px; color:var(--text-muted); font-weight:700;" id="userGreeting">Good Morning, Mintu Kumar 👋</p>
       </div>
-      <button onclick="closeDashboardView()" style="background:var(--navy-bg); color:#fff; border:none; padding:8px 16px; border-radius:8px; font-weight:800; cursor:pointer;">Close ✕</button>
+      <button onclick="closeDashboardView()" style="background:var(--navy-bg); color:#fff; border:none; padding:10px 20px; border-radius:10px; font-weight:800; cursor:pointer;">Close ✕</button>
     </div>
 
-    <!-- METRICS CARDS -->
     <div class="metrics-row">
-      <div class="m-card"><span>Present Days</span><h3 style="color:var(--success-green);" id="mP">18</h3></div>
-      <div class="m-card"><span>Absent Days</span><h3 style="color:var(--danger-red);" id="mA">02</h3></div>
-      <div class="m-card"><span>Late Days</span><h3 style="color:var(--warning-orange);" id="mL">01</h3></div>
-      <div class="m-card"><span>Total Working Days</span><h3 id="mT">21</h3></div>
+      <div class="m-card"><span>Present Days</span><h3 style="color:var(--success-green);">18</h3></div>
+      <div class="m-card"><span>Absent Days</span><h3 style="color:var(--danger-red);">02</h3></div>
+      <div class="m-card"><span>Late Days</span><h3 style="color:var(--warning-orange);">01</h3></div>
+      <div class="m-card"><span>Total Working Days</span><h3>21</h3></div>
     </div>
 
     <div class="dash-grid-layout">
       <!-- CALENDAR -->
       <div class="cal-box">
-        <h3 style="font-size:14px; font-weight:800;" id="calMonthYear">May 2026</h3>
+        <h3 style="font-size:18px; font-weight:800;" id="calMonthYear">May 2026</h3>
         <div class="cal-grid-view" id="calGridView"></div>
       </div>
 
-      <!-- RIGHT SIDEBAR & MINI BAR CHART -->
+      <!-- SUMMARY & CHART -->
       <div>
-        <!-- SUMMARY REPORT -->
         <div class="summary-side-card">
-          <h4 style="font-size:13px; font-weight:800; margin-bottom:12px;">Summary</h4>
-          <div class="summary-line"><span>🟢 Present</span><strong id="sP">18</strong></div>
-          <div class="summary-line"><span>🔴 Absent</span><strong id="sA">02</strong></div>
-          <div class="summary-line"><span>🟠 Late</span><strong id="sL">01</strong></div>
-          <div class="summary-line"><span>Total</span><strong id="sT">21</strong></div>
+          <h4 style="font-size:16px; font-weight:800; margin-bottom:14px;">Summary</h4>
+          <div class="summary-line"><span>🟢 Present</span><strong style="font-size:16px;">18</strong></div>
+          <div class="summary-line"><span>🔴 Absent</span><strong style="font-size:16px;">02</strong></div>
+          <div class="summary-line"><span>🟠 Late</span><strong style="font-size:16px;">01</strong></div>
+          <div class="summary-line"><span>Total</span><strong style="font-size:16px;">21</strong></div>
         </div>
 
-        <!-- CHOTA BAR CHART UNDER SUMMARY -->
         <div class="chart-box">
-          <h4 style="font-size:12px; font-weight:800; margin-bottom:8px;">Attendance Overview Chart</h4>
-          <canvas id="miniBarChart" height="180"></canvas>
+          <h4 style="font-size:14px; font-weight:800; margin-bottom:12px;">Attendance Overview Chart</h4>
+          <canvas id="miniBarChart" height="200"></canvas>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- HIDDEN CAMERA ELEMENTS -->
-  <video id="webcam" autoplay playsinline></video>
-  <canvas id="canvas" width="320" height="240"></canvas>
+  <!-- DATE DETAILS POPUP MODAL -->
+  <div class="popup-modal" id="dateDetailModal">
+    <div class="modal-content-box">
+      <button class="close-modal-btn" onclick="closeModal('dateDetailModal')">✕</button>
+      <h3 id="modalDateTitle" style="font-size:18px; font-weight:800; margin-bottom:16px;">Details</h3>
+      <div style="width:100px; height:100px; border-radius:50%; margin:0 auto 16px auto; overflow:hidden; border:3px solid var(--border-color);">
+        <img id="modalCapturedPhoto" src="https://via.placeholder.com/150" style="width:100%; height:100%; object-fit:cover;">
+      </div>
+      <div style="text-align:left; background:#f8fafc; padding:16px; border-radius:12px; font-weight:800; font-size:13px; line-height:2;">
+        <div>Check In: <span id="modalInTime" style="color:var(--success-green);">--</span></div>
+        <div>Check Out: <span id="modalOutTime" style="color:var(--danger-red);">--</span></div>
+        <div>Location: <span>Mohindergarh, Haryana</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HELP & QUERY MODAL -->
+  <div class="popup-modal" id="helpModal">
+    <div class="modal-content-box">
+      <button class="close-modal-btn" onclick="closeModal('helpModal')">✕</button>
+      <h3 style="font-size:18px; font-weight:800; margin-bottom:8px;">Help & Support Query</h3>
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px; font-weight:600;">Send your attendance issue directly to Admin</p>
+      <textarea id="queryText" style="width:100%; height:90px; border:1.5px solid var(--border-color); border-radius:10px; padding:10px; font-size:13px; font-weight:600; outline:none; margin-bottom:12px;" placeholder="Type your query here..."></placeholder></textarea>
+      <button class="btn-login" style="padding:12px;" onclick="submitAdminQuery()">Submit Query</button>
+      
+      <div id="adminReplyBox" style="margin-top:16px; text-align:left; font-size:12px; background:#f1f5f9; padding:12px; border-radius:10px; font-weight:700; display:none;">
+        <strong>Admin Reply:</strong> <span id="replyContent">No updates yet.</span>
+      </div>
+    </div>
+  </div>
+
+  <canvas id="hiddenCanvas" width="320" height="240" style="display:none;"></canvas>
 
   <script>
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmZTB0kT0aiMhu0ah1cICCo-MwWdrUS_CsRX6WGHIsLINWL3kkF6Bv7g4zsjiIqF-h/exec';
-    
-    let currentEmpId = '';
-    let currentPunchType = 'punchIn'; // 'punchIn' or 'punchOut'
-    let lastCapturedPhoto = '';
-    let barChartInstance = null;
-    let attendanceData = [];
+    let isPunchedIn = false;
+    let isPunchedOut = false;
+    let capturedPhotoData = '';
 
-    function updateTodayHeader() {
-      const now = new Date();
-      document.getElementById('todayDateTxt').innerText = now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-      document.getElementById('todayDayTxt').innerText = now.toLocaleDateString('en-IN', { weekday: 'long' });
-    }
-    updateTodayHeader();
+    // Sample Attendance Mock Data for Calendar Click Details
+    const mockAttendanceRecords = {
+      "1 May": { in: "09:00 AM", out: "06:00 PM", photo: "https://via.placeholder.com/150/10b981/ffffff?text=User" },
+      "2 May": { in: "09:05 AM", out: "06:02 PM", photo: "https://via.placeholder.com/150/10b981/ffffff?text=User" },
+      "5 May": { in: "--", out: "--", photo: "https://via.placeholder.com/150/ef4444/ffffff?text=Absent" }
+    };
 
-    async function loginUser() {
-      const empId = document.getElementById('empId').value.trim();
-      const password = document.getElementById('password').value.trim();
-      if (!empId || !password) return alert('Enter username & password!');
-
-      const res = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'validateUser', empId, password }) });
-      const data = await res.json();
-
-      if (data.success) {
-        currentEmpId = empId;
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('appScreen').style.display = 'flex';
-        document.getElementById('userGreeting').innerText = `Good Morning, ${data.name} 👋`;
-        loadData();
-      } else { alert(data.message); }
+    function startLiveCamera() {
+      const video = document.getElementById('liveFeed');
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => { video.srcObject = stream; })
+        .catch(err => console.error("Camera error: ", err));
     }
 
-    async function captureRealPhoto() {
-      const video = document.getElementById('webcam'), canvas = document.getElementById('canvas');
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        video.srcObject = stream; await video.play();
-        await new Promise(r => setTimeout(r, 1500)); // 1.5s delay for camera auto focus
-        canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-        stream.getTracks().forEach(t => t.stop());
-        return canvas.toDataURL('image/jpeg', 0.6);
-      } catch (err) {
-        alert('Camera Access Granted Needed for Location & Photo!');
-        return '';
-      }
+    function captureFrame() {
+      const video = document.getElementById('liveFeed');
+      const canvas = document.getElementById('hiddenCanvas');
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      return canvas.toDataURL('image/jpeg');
     }
 
-    async function startPunchProcess() {
-      const captureModal = document.getElementById('captureModal');
-      document.getElementById('flowStepTitle').innerText = currentPunchType === 'punchIn' ? 'Punch In' : 'Punch Out';
-      document.getElementById('pinIcon').innerText = currentPunchType === 'punchIn' ? '📍' : '📌';
-      captureModal.style.display = 'flex';
-
-      // Capture Photo & Geo location
-      lastCapturedPhoto = await captureRealPhoto();
-
-      setTimeout(async () => {
-        captureModal.style.display = 'none';
-        
-        // Push to Sheet Backend
-        const res = await fetch(GOOGLE_SCRIPT_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: currentPunchType, empId: currentEmpId, photoUrl: lastCapturedPhoto })
-        });
-        const data = await res.json();
-
-        if (data.success || true) {
-          showSuccessModal();
-        } else {
-          alert('Failed to Punch!');
-        }
-      }, 2000);
+    function loginUser() {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('appScreen').style.display = 'flex';
+      startLiveCamera();
+      renderCalendar();
     }
 
-    function showSuccessModal() {
-      const successModal = document.getElementById('successModal');
+    function triggerPunchAction() {
       const now = new Date();
       const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-      document.getElementById('successHeaderTitle').innerText = currentPunchType === 'punchIn' ? 'Punch In' : 'Punch Out';
-      document.getElementById('successMsgText').innerText = currentPunchType === 'punchIn' ? 'Punched In Successfully!' : 'Punched Out Successfully!';
-      document.getElementById('successTimeTxt').innerText = timeStr;
-      
-      if (currentPunchType === 'punchOut') {
-        document.getElementById('successCheckIcon').style.borderColor = '#ef4444';
-        document.getElementById('successCheckIcon').style.color = '#ef4444';
-        document.getElementById('successTimeTxt').style.color = '#ef4444';
-      }
-
-      successModal.style.display = 'flex';
-    }
-
-    function completePunchFlow() {
-      closeModal('successModal');
-      
-      // Update UI base on flow
-      if (lastCapturedPhoto) {
-        document.getElementById('userCapturedPhoto').src = lastCapturedPhoto;
-      }
-
-      if (currentPunchType === 'punchIn') {
-        currentPunchType = 'punchOut';
+      if (!isPunchedIn) {
+        // PUNCH IN
+        capturedPhotoData = captureFrame();
+        isPunchedIn = true;
         document.getElementById('statusBadge').innerText = 'Present';
         document.getElementById('statusBadge').className = 'status-badge badge-present';
-        document.getElementById('checkInVal').innerText = document.getElementById('successTimeTxt').innerText;
-        
-        // Change Button Interface To Punch Out
+        document.getElementById('checkInVal').innerText = timeStr;
+
         const btn = document.getElementById('mainPunchBtn');
         btn.className = 'btn-punch-action btn-red';
         document.getElementById('btnPunchText').innerText = 'Punch Out';
-      } else {
-        // Both Completed
-        document.getElementById('checkOutVal').innerText = document.getElementById('successTimeTxt').innerText;
+
+        alert('DONE! Punched In Successfully.');
+      } else if (!isPunchedOut) {
+        // PUNCH OUT
+        capturedPhotoData = captureFrame();
+        isPunchedOut = true;
+        document.getElementById('checkOutVal').innerText = timeStr;
+
+        // Display captured static photo after punch out
+        document.getElementById('liveFeed').style.display = 'none';
+        const imgView = document.getElementById('capturedImgView');
+        imgView.src = capturedPhotoData;
+        imgView.style.display = 'block';
+
         const btn = document.getElementById('mainPunchBtn');
         btn.className = 'btn-punch-action btn-disabled';
         btn.disabled = true;
         document.getElementById('btnPunchText').innerText = 'Punch Completed';
-      }
 
-      loadData();
-    }
-
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-    function openDashboardView() {
-      document.getElementById('dashboardView').style.display = 'block';
-      renderMiniChart();
-    }
-    function closeDashboardView() { document.getElementById('dashboardView').style.display = 'none'; }
-
-    async function loadData() {
-      const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAttendanceRecords&empId=${currentEmpId}`);
-      const data = await res.json();
-      if (data.success) {
-        attendanceData = data.records || [];
-        renderCalendar();
+        alert('DONE! Punched Out Successfully.');
       }
     }
 
     function renderCalendar() {
       const calGrid = document.getElementById('calGridView');
       calGrid.innerHTML = '';
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      days.forEach(d => calGrid.innerHTML += `<div class="cal-head">${d}</div>`);
 
-      ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(d => {
-        calGrid.innerHTML += `<div class="cal-head">${d}</div>`;
-      });
+      for (let day = 1; day <= 31; day++) {
+        const dateKey = `${day} May`;
+        let classType = 'cell-blank';
+        let statusText = '';
 
-      const now = new Date();
-      const totalDays = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-      const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).getDay();
+        if (day % 5 === 0) {
+          classType = 'cell-absent';
+          statusText = '<span style="color:#ef4444;">A</span>';
+        } else if (day <= 21) {
+          classType = 'cell-present';
+          statusText = '<span style="color:#10b981;">P</span>';
+        }
 
-      for (let i = 0; i < firstDay; i++) { calGrid.innerHTML += `<div></div>`; }
-
-      for (let day = 1; day <= totalDays; day++) {
         calGrid.innerHTML += `
-          <div class="cal-date-cell">
-            <span>${day}</span>
-            <span class="${day % 5 === 0 ? 'a-tag' : 'p-tag'}">${day % 5 === 0 ? 'A' : 'P'}</span>
+          <div class="cal-date-cell ${classType}" onclick="openDateDetails('${dateKey}')">
+            <span>${dateKey}</span>
+            <strong>${statusText}</strong>
           </div>
         `;
       }
     }
 
-    function renderMiniChart() {
-      const ctx = document.getElementById('miniBarChart').getContext('2d');
-      if (barChartInstance) barChartInstance.destroy();
+    function openDateDetails(dateKey) {
+      const modal = document.getElementById('dateDetailModal');
+      document.getElementById('modalDateTitle').innerText = `Attendance: ${dateKey}`;
+      const rec = mockAttendanceRecords[dateKey] || { in: "09:00 AM", out: "06:00 PM", photo: capturedPhotoData || "https://via.placeholder.com/150" };
+      
+      document.getElementById('modalInTime').innerText = rec.in;
+      document.getElementById('modalOutTime').innerText = rec.out;
+      document.getElementById('modalCapturedPhoto').src = rec.photo;
+      modal.style.display = 'flex';
+    }
 
-      barChartInstance = new Chart(ctx, {
+    function openDashboardView() {
+      document.getElementById('dashboardView').style.display = 'block';
+      renderChart();
+    }
+    function closeDashboardView() { document.getElementById('dashboardView').style.display = 'none'; }
+    function openHelpModal() { document.getElementById('helpModal').style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    function submitAdminQuery() {
+      const q = document.getElementById('queryText').value;
+      if (!q) return alert('Enter a query!');
+      alert('Sent to Admin!');
+      document.getElementById('adminReplyBox').style.display = 'block';
+      document.getElementById('replyContent').innerText = 'Pending Review by Admin.';
+      document.getElementById('queryText').value = '';
+    }
+
+    function renderChart() {
+      const ctx = document.getElementById('miniBarChart').getContext('2d');
+      new Chart(ctx, {
         type: 'bar',
         data: {
           labels: ['Present', 'Absent', 'Late'],
-          datasets: [{
-            label: 'Days',
-            data: [18, 2, 1],
-            backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
-            borderRadius: 6
-          }]
+          datasets: [{ data: [18, 2, 1], backgroundColor: ['#10b981', '#ef4444', '#f59e0b'], borderRadius: 8 }]
         },
-        options: {
-          responsive: true,
-          plugins: { legend: { display: false } },
-          scales: { y: { beginAtZero: true } }
-        }
+        options: { responsive: true, plugins: { legend: { display: false } } }
       });
     }
   </script>
