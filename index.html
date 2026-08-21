@@ -3,193 +3,226 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARCOS Staff Attendance</title>
-  <!-- Google Font: Montserrat & Poppins -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>ARCOS Staff Portal - Attendance</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-    
-    body { 
-      background: #f8fafc; 
-      color: #0f172a; 
-      display: flex; 
-      justify-content: center; 
-      align-items: center; 
-      min-height: 100vh; 
-      padding: 15px; 
+    :root {
+      --primary-yellow: #f59e0b;
+      --dark-yellow: #d97706;
+      --light-yellow: #fef3c7;
+      --bg-slate: #0f172a;
+      --card-bg: #ffffff;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --danger: #ef4444;
+      --success: #10b981;
     }
 
-    /* Main Container with Dark Yellow Border */
-    .app-card { 
-      background: #ffffff; 
-      border-radius: 24px; 
-      box-shadow: 0 15px 35px rgba(234, 179, 8, 0.2); 
-      width: 100%; 
-      max-width: 460px; 
-      overflow: hidden; 
-      border: 3px solid #eab308; 
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    body {
+      background: #0f172a;
+      background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
+      color: var(--text-dark);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
     }
 
-    /* Header with Dark Yellow Background & Black Bold Font */
-    .app-header { 
-      background: #eab308; 
-      color: #000000; 
-      padding: 22px 15px; 
-      text-align: center; 
-      border-bottom: 2px solid #ca8a04;
+    .app-card {
+      background: var(--card-bg);
+      border-radius: 28px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      width: 100%;
+      max-width: 440px;
+      overflow: hidden;
+      border: 3px solid var(--primary-yellow);
     }
-    
-    .app-header h2 { 
-      font-family: 'Montserrat', sans-serif; 
-      font-size: 19px; 
-      font-weight: 900; 
-      letter-spacing: 0.5px;
+
+    /* Header Design */
+    .app-header {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      padding: 24px 20px;
+      text-align: center;
+      color: #000;
+      position: relative;
+    }
+
+    .brand-logo-container {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 12px;
+      margin-bottom: 6px;
+    }
+
+    .arcos-svg-logo {
+      width: 36px;
+      height: 36px;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+    }
+
+    .app-header h2 {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: #0f172a;
       text-transform: uppercase;
     }
 
-    .app-body { padding: 22px; }
+    .app-header p {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: #451a03;
+      text-transform: uppercase;
+    }
+
+    .app-body { padding: 24px; }
 
     /* Inputs */
-    input { 
-      width: 100%; 
-      padding: 14px; 
-      margin-bottom: 14px; 
-      border: 2px solid #e2e8f0; 
-      border-radius: 12px; 
-      font-size: 14px; 
-      outline: none; 
-      transition: 0.3s;
+    .input-group { margin-bottom: 16px; }
+    .input-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; }
+    input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      outline: none;
+      transition: all 0.2s;
     }
-    input:focus { border-color: #eab308; }
+    input:focus { border-color: var(--primary-yellow); box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15); }
 
-    /* Primary Action Buttons */
-    .btn-action { 
-      width: 100%; 
-      padding: 15px; 
-      border: none; 
-      border-radius: 14px; 
-      background: #2563eb; 
-      color: #fff; 
-      font-size: 16px; 
-      font-weight: 700; 
-      cursor: pointer; 
-      transition: 0.2s; 
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    /* Buttons */
+    .btn-action {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
     }
-    .btn-action:hover { background: #1d4ed8; }
-    .btn-action:disabled { background: #94a3b8; cursor: not-allowed; }
-    
-    .btn-out { background: #dc2626; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2); }
-    .btn-out:hover { background: #b91c1c; }
+    .btn-action:hover { transform: translateY(-1px); box-shadow: 0 12px 20px -3px rgba(37, 99, 235, 0.4); }
+    .btn-action:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
-    /* CIRCULAR CAMERA STYLE */
-    #cameraBox { 
-      display: none; 
-      margin: 20px auto; 
-      width: 220px;
-      height: 220px;
+    .btn-out { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3); }
+
+    /* Live Clock */
+    .clock-badge {
+      background: var(--light-yellow);
+      border: 1px solid #fde68a;
+      color: #78350f;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    /* CIRCULAR CAMERA */
+    #cameraBox {
+      display: none;
+      margin: 15px auto 25px;
+      width: 200px;
+      height: 200px;
       border-radius: 50%;
-      overflow: hidden; 
-      position: relative; 
-      border: 4px solid #eab308;
-      box-shadow: 0 0 20px rgba(0,0,0,0.15);
+      overflow: hidden;
+      position: relative;
+      border: 4px solid var(--primary-yellow);
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.4);
     }
     video { width: 100%; height: 100%; object-fit: cover; }
-    #timer { 
-      position: absolute; 
-      top: 50%; 
-      left: 50%; 
-      transform: translate(-50%,-50%); 
-      font-size: 56px; 
-      color: #eab308; 
-      font-weight: 900; 
-      text-shadow: 0 0 10px rgba(0,0,0,0.8); 
+    #timer {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      font-size: 64px;
+      color: #fff;
+      font-weight: 800;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.8);
     }
     canvas { display: none; }
 
-    /* Live Time Display */
-    .clock-box {
-      text-align: center;
-      background: #fefce8;
-      border: 1px solid #fef08a;
-      padding: 10px;
-      border-radius: 12px;
-      margin-bottom: 15px;
-      font-weight: 600;
-      color: #854d0e;
-      font-size: 13px;
-    }
-
-    /* Today Punch Status Box */
-    .today-status-card {
+    /* Today Summary Box */
+    .today-card {
       background: #f8fafc;
-      border: 1px dashed #cbd5e1;
-      border-radius: 12px;
-      padding: 12px;
-      margin-top: 15px;
-      display: flex;
-      justify-content: space-around;
-      text-align: center;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 16px;
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
     }
-    .status-item span { display: block; font-size: 11px; color: #64748b; font-weight: 600; text-transform: uppercase; }
-    .status-item strong { font-size: 14px; color: #0f172a; font-weight: 700; }
+    .today-stat { text-align: center; }
+    .today-stat span { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; }
+    .today-stat strong { display: block; font-size: 15px; font-weight: 800; color: var(--text-dark); margin-top: 2px; }
 
-    /* Daily Roster Dropdown Button */
+    /* Roster Trigger Button */
     .btn-roster {
       width: 100%;
-      padding: 12px;
-      background: #eab308;
-      color: #000000;
-      font-family: 'Montserrat', sans-serif;
+      padding: 14px;
+      background: var(--primary-yellow);
+      color: #000;
       font-weight: 800;
-      font-size: 14px;
+      font-size: 13px;
       border: none;
-      border-radius: 12px;
-      margin-top: 18px;
+      border-radius: 14px;
+      margin-top: 16px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      box-shadow: 0 4px 10px rgba(234, 179, 8, 0.3);
-      transition: 0.2s;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+      transition: all 0.2s;
     }
-    .btn-roster:hover { background: #ca8a04; }
+    .btn-roster:hover { background: var(--dark-yellow); }
 
     /* Footer */
     .app-footer {
-      background: #fef9c3;
-      border-top: 2px solid #eab308;
-      padding: 12px;
+      background: #fef3c7;
+      border-top: 2px solid var(--primary-yellow);
+      padding: 14px;
       text-align: center;
       font-size: 11px;
-      font-weight: 700;
-      color: #854d0e;
+      font-weight: 800;
+      color: #78350f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
-    /* Calendar Modal */
+    /* Modal / Calendar Styling */
     .modal {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(3px);
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(4px);
       justify-content: center;
       align-items: center;
       z-index: 1000;
-      padding: 15px;
+      padding: 16px;
     }
     .modal-content {
       background: #fff;
-      border-radius: 20px;
+      border-radius: 24px;
       width: 100%;
-      max-width: 400px;
+      max-width: 420px;
       padding: 20px;
-      border: 3px solid #eab308;
+      border: 3px solid var(--primary-yellow);
       max-height: 90vh;
       overflow-y: auto;
     }
@@ -197,73 +230,114 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 2px solid #fef08a;
-      padding-bottom: 10px;
-      margin-bottom: 15px;
+      border-bottom: 2px solid #fef3c7;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
     }
-    .modal-header h3 { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; }
-    .close-btn { font-size: 20px; font-weight: bold; cursor: pointer; color: #dc2626; }
+    .modal-header h3 { font-size: 16px; font-weight: 800; color: #0f172a; }
+    .close-btn { font-size: 24px; font-weight: 800; cursor: pointer; color: var(--danger); }
 
     /* Calendar Grid */
     .calendar-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 6px;
+    }
+    .cal-head { text-align: center; font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase; padding: 4px; }
+    
+    .cal-day {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      min-height: 52px;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    
+    /* Status Badges */
+    .cal-day.present { background: #ecfdf5; border-color: #a7f3d0; cursor: pointer; }
+    .cal-day.absent { background: #fef2f2; border-color: #fecaca; }
+    .cal-day.disabled { opacity: 0.4; cursor: not-allowed; background: #f1f5f9; }
+
+    .badge-status {
+      font-size: 8px;
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-weight: 800;
+      text-transform: uppercase;
+      width: 100%;
       text-align: center;
     }
-    .cal-day-head { font-size: 11px; font-weight: 700; color: #64748b; padding: 4px; }
-    .cal-date {
-      padding: 10px 0;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 600;
-      background: #f1f5f9;
+    .badge-p { background: #10b981; color: #fff; }
+    .badge-a { background: #ef4444; color: #fff; }
+
+    /* Detail Card */
+    .detail-card {
+      margin-top: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 12px; }
+    .detail-thumb { width: 42px; height: 42px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary-yellow); }
+
+    .btn-query {
+      width: 100%;
+      padding: 10px;
+      background: #fef3c7;
+      border: 1px dashed var(--dark-yellow);
+      color: #92400e;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 10px;
+      margin-top: 10px;
       cursor: pointer;
     }
-    .cal-date:hover { background: #fef08a; }
-    .cal-date.active-entry { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
-
-    /* Details Popup */
-    .date-details-box {
-      margin-top: 15px;
-      padding: 12px;
-      background: #f8fafc;
-      border-radius: 12px;
-      border: 1px solid #e2e8f0;
-    }
-    .punch-detail-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-      font-size: 12px;
-    }
-    .detail-img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #eab308; }
-    #statusMsg { font-size: 12px; color: #2563eb; font-weight: 600; text-align: center; margin-top: 8px; }
   </style>
 </head>
 <body>
 
   <div class="app-card">
-    <!-- Dark Yellow Header -->
+    <!-- Corporate Header -->
     <div class="app-header">
-      <h2>🏢 ARCOS STAFF ATTENDANCE</h2>
+      <div class="brand-logo-container">
+        <!-- SVG Vector ARCOS Logo -->
+        <svg class="arcos-svg-logo" viewBox="0 0 100 100" fill="none">
+          <path d="M50 15 C30 15 20 35 20 50 C20 70 35 85 50 85 C65 85 80 70 80 50" stroke="#0f172a" stroke-width="12" stroke-linecap="round"/>
+          <path d="M15 75 C35 90 75 80 85 45 C95 10 65 5 45 25" stroke="#ffffff" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="50" cy="50" r="8" fill="#0f172a"/>
+        </svg>
+        <h2>ARCOS</h2>
+      </div>
+      <p>Warehouse of Workforce</p>
     </div>
-    
+
     <div class="app-body">
-      <!-- Login View -->
+      <!-- Login Box -->
       <div id="loginBox">
-        <input type="text" id="empId" placeholder="Employee ID">
-        <input type="password" id="password" placeholder="Password">
-        <button class="btn-action" onclick="loginUser()">Sign In</button>
+        <div class="input-group">
+          <label>Employee Identifier</label>
+          <input type="text" id="empId" placeholder="e.g. ARS300248">
+        </div>
+        <div class="input-group">
+          <label>Security Password</label>
+          <input type="password" id="password" placeholder="••••••••">
+        </div>
+        <button class="btn-action" onclick="loginUser()">Sign In to Portal</button>
       </div>
 
-      <!-- Main Portal View -->
+      <!-- Main Action Portal -->
       <div id="actionBox" style="display:none;">
-        <div class="clock-box" id="liveClock">Loading Indian Standard Time...</div>
+        <div class="clock-badge" id="liveClock">IST Time Synchronizing...</div>
 
-        <h3 id="welcomeUser" style="color:#0f172a; font-size: 16px; font-weight:700;">Welcome</h3>
-        <p style="color:#64748b; font-size:12px; margin-bottom:15px;">Mark your daily attendance below</p>
+        <h3 id="welcomeUser" style="font-size: 16px; font-weight:800; color:#0f172a;">Welcome</h3>
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px;">Mark your geo-attendance below</p>
 
         <!-- Circular Camera Box -->
         <div id="cameraBox">
@@ -272,32 +346,32 @@
         </div>
         <canvas id="canvas" width="320" height="240"></canvas>
 
-        <button id="btnIn" class="btn-action" onclick="handlePunch('punchIn')">Punch IN</button>
-        <button id="btnOut" class="btn-action btn-out" onclick="handlePunch('punchOut')" style="display:none;">Punch OUT</button>
-        <div id="statusMsg"></div>
+        <button id="btnIn" class="btn-action" onclick="handlePunch('punchIn')">PUNCH IN NOW</button>
+        <button id="btnOut" class="btn-action btn-out" onclick="handlePunch('punchOut')" style="display:none;">PUNCH OUT NOW</button>
+        <div id="statusMsg" style="text-align:center; font-size:12px; font-weight:700; color:#2563eb; margin-top:8px;"></div>
 
-        <!-- Today Status Below Punch Button -->
-        <div class="today-status-card">
-          <div class="status-item">
-            <span>Today's IN</span>
+        <!-- Today Summary Card -->
+        <div class="today-card">
+          <div class="today-stat">
+            <span>Today IN</span>
             <strong id="todayInTime">--:--</strong>
           </div>
-          <div class="status-item">
-            <span>Today's OUT</span>
+          <div class="today-stat">
+            <span>Today OUT</span>
             <strong id="todayOutTime">--:--</strong>
           </div>
         </div>
 
-        <!-- Dark Yellow Roster Button -->
+        <!-- Roster Calendar Trigger -->
         <button class="btn-roster" onclick="openRosterModal()">
-          ▼ DAILY ROSTER ▼
+          ▼ VIEW MONTHLY ROSTER & CALENDAR ▼
         </button>
       </div>
     </div>
 
-    <!-- Dark Yellow Theme Footer -->
+    <!-- Corporate Footer -->
     <div class="app-footer">
-      ARCOS STAFF PORTAL • POWERED BY GOOGLE SHEETS
+      <span>POWERED BY ARCOS WORKFORCE MANAGEMENT SYSTEM</span>
     </div>
   </div>
 
@@ -311,22 +385,25 @@
 
       <div class="calendar-grid" id="calendarGrid"></div>
 
-      <div class="date-details-box" id="dateDetailsBox" style="display:none;">
-        <h4 id="selectedDateTitle" style="font-size:13px; font-weight:700; margin-bottom:10px; text-align:center;">Detailed Record</h4>
+      <!-- Date Record Detail Popup -->
+      <div class="detail-card" id="dateDetailsBox" style="display:none;">
+        <h4 id="selectedDateTitle" style="font-size:12px; font-weight:800; text-align:center; margin-bottom:10px; text-transform:uppercase;">Record Details</h4>
         
-        <div class="punch-detail-row">
+        <div class="detail-row">
           <div>
-            <strong>PUNCH IN:</strong> <span id="dtInTime">N/A</span>
+            <strong>IN:</strong> <span id="dtInTime">N/A</span>
           </div>
           <div id="dtInImgBox"></div>
         </div>
 
-        <div class="punch-detail-row" style="margin-bottom:0;">
+        <div class="detail-row">
           <div>
-            <strong>PUNCH OUT:</strong> <span id="dtOutTime">N/A</span>
+            <strong>OUT:</strong> <span id="dtOutTime">N/A</span>
           </div>
           <div id="dtOutImgBox"></div>
         </div>
+
+        <button class="btn-query" id="btnQuery" onclick="promptRaiseQuery()">🚨 Attendance Wrong? Raise Query to Admin</button>
       </div>
     </div>
   </div>
@@ -335,8 +412,8 @@
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmZTB0kT0aiMhu0ah1cICCo-MwWdrUS_CsRX6WGHIsLINWL3kkF6Bv7g4zsjiIqF-h/exec';
     let currentEmpId = '';
     let attendanceHistory = [];
+    let selectedDateForQuery = '';
 
-    // Live Clock IST India Format
     function updateClock() {
       const now = new Date();
       const options = { timeZone: 'Asia/Kolkata', weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true };
@@ -354,10 +431,7 @@
         }
         navigator.geolocation.getCurrentPosition(
           (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-          (err) => {
-            alert("Location Access Required!");
-            resolve(null);
-          },
+          (err) => { alert("Location Permission Denied!"); resolve(null); },
           { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         );
       });
@@ -366,7 +440,7 @@
     async function loginUser() {
       const empId = document.getElementById('empId').value.trim();
       const password = document.getElementById('password').value.trim();
-      if (!empId || !password) return alert('Enter credentials!');
+      if (!empId || !password) return alert('Please enter credentials!');
 
       const res = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'validateUser', empId, password }) });
       const data = await res.json();
@@ -403,7 +477,7 @@
           }, 1000);
         });
       } catch (err) {
-        alert('Camera Permission Required!');
+        alert('Camera Access Required!');
         cameraBox.style.display = 'none';
         return '';
       }
@@ -415,26 +489,18 @@
       statusMsg.innerText = "Fetching GPS Location...";
 
       const coords = await getAccurateLocation();
-      if (!coords) {
-        statusMsg.innerText = ""; btnIn.disabled = false; btnOut.disabled = false;
-        return;
-      }
+      if (!coords) { statusMsg.innerText = ""; btnIn.disabled = false; btnOut.disabled = false; return; }
 
-      statusMsg.innerText = "Capturing Selfie...";
+      statusMsg.innerText = "Capturing Photo...";
       const photoBase64 = await capturePhoto();
-      if (!photoBase64) {
-        statusMsg.innerText = ""; btnIn.disabled = false; btnOut.disabled = false;
-        return;
-      }
+      if (!photoBase64) { statusMsg.innerText = ""; btnIn.disabled = false; btnOut.disabled = false; return; }
 
       statusMsg.innerText = "Saving Attendance...";
       const mapRoute = `https://www.google.com/maps?q=${coords.lat},${coords.lng}`;
 
       const res = await fetch(GOOGLE_SCRIPT_URL, { 
         method: 'POST', 
-        body: JSON.stringify({ 
-          action: type, empId: currentEmpId, photoUrl: photoBase64, mapRoute: mapRoute, lat: coords.lat, lng: coords.lng
-        }) 
+        body: JSON.stringify({ action: type, empId: currentEmpId, photoUrl: photoBase64, mapRoute: mapRoute, lat: coords.lat, lng: coords.lng }) 
       });
       const data = await res.json();
 
@@ -482,7 +548,7 @@
       }
     }
 
-    /* Modal & Calendar Functions */
+    /* Modal & Smart Calendar */
     function openRosterModal() {
       document.getElementById('rosterModal').style.display = 'flex';
       renderCalendar();
@@ -497,52 +563,81 @@
       const grid = document.getElementById('calendarGrid');
       grid.innerHTML = '';
       const now = new Date();
-      
       const year = now.getFullYear();
       const month = now.getMonth();
-      
+
       document.getElementById('calendarMonthTitle').innerText = now.toLocaleString('en-IN', { month: 'long', year: 'numeric' });
 
       const daysHeader = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      daysHeader.forEach(d => {
-        grid.innerHTML += `<div class="cal-day-head">${d}</div>`;
-      });
+      daysHeader.forEach(d => { grid.innerHTML += `<div class="cal-head">${d}</div>`; });
 
       const firstDay = new Date(year, month, 1).getDay();
       const totalDays = new Date(year, month + 1, 0).getDate();
+      const todayStr = now.toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' });
 
-      for (let i = 0; i < firstDay; i++) {
-        grid.innerHTML += `<div></div>`;
-      }
+      for (let i = 0; i < firstDay; i++) { grid.innerHTML += `<div></div>`; }
 
       for (let day = 1; day <= totalDays; day++) {
         const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         const record = attendanceHistory.find(r => r.date === dateStr);
+        const isFuture = dateStr > todayStr;
 
-        let activeClass = record ? 'active-entry' : '';
-        grid.innerHTML += `<div class="cal-date ${activeClass}" onclick="showDateDetail('${dateStr}')">${day}</div>`;
+        let dayClass = 'disabled';
+        let badge = '';
+
+        if (isFuture) {
+          dayClass = 'disabled';
+        } else if (record && record.inTime) {
+          dayClass = 'present';
+          badge = `<div class="badge-status badge-p">P</div>`;
+        } else {
+          dayClass = 'absent';
+          badge = `<div class="badge-status badge-a">A</div>`;
+        }
+
+        let onClickAttr = !isFuture ? `onclick="showDateDetail('${dateStr}')"` : '';
+        grid.innerHTML += `
+          <div class="cal-day ${dayClass}" ${onClickAttr}>
+            <span>${day}</span>
+            ${badge}
+          </div>
+        `;
       }
     }
 
     function showDateDetail(dateStr) {
+      selectedDateForQuery = dateStr;
       const record = attendanceHistory.find(r => r.date === dateStr);
       const detailBox = document.getElementById('dateDetailsBox');
       document.getElementById('selectedDateTitle').innerText = 'Date: ' + dateStr;
 
-      if (record) {
+      if (record && record.inTime) {
         document.getElementById('dtInTime').innerText = record.inTime || 'N/A';
         document.getElementById('dtOutTime').innerText = record.outTime || 'N/A';
-
-        document.getElementById('dtInImgBox').innerHTML = record.inPhoto ? `<img src="${record.inPhoto}" class="detail-img">` : '';
-        document.getElementById('dtOutImgBox').innerHTML = record.outPhoto ? `<img src="${record.outPhoto}" class="detail-img">` : '';
-        detailBox.style.display = 'block';
+        document.getElementById('dtInImgBox').innerHTML = record.inPhoto ? `<img src="${record.inPhoto}" class="detail-thumb">` : '';
+        document.getElementById('dtOutImgBox').innerHTML = record.outPhoto ? `<img src="${record.outPhoto}" class="detail-thumb">` : '';
       } else {
-        document.getElementById('dtInTime').innerText = 'No Record';
-        document.getElementById('dtOutTime').innerText = 'No Record';
+        document.getElementById('dtInTime').innerText = 'ABSENT';
+        document.getElementById('dtOutTime').innerText = 'ABSENT';
         document.getElementById('dtInImgBox').innerHTML = '';
         document.getElementById('dtOutImgBox').innerHTML = '';
-        detailBox.style.display = 'block';
       }
+      detailBox.style.display = 'block';
+    }
+
+    async function promptRaiseQuery() {
+      const issue = prompt(`Describe issue for ${selectedDateForQuery}:`);
+      if (!issue) return;
+
+      const res = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'raiseQuery', empId: currentEmpId, date: selectedDateForQuery, issue: issue })
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        alert(`Query Submitted! Ticket ID: ${data.ticketId}`);
+      } else { alert("Failed to submit query."); }
     }
   </script>
 </body>
