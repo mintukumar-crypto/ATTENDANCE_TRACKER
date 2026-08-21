@@ -2,690 +2,283 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ARCOS Attendance Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ARCOS - Admin Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
   <style>
     :root {
-      --navy-bg: #0b1329;
-      --yellow-accent: #ffb703;
-      --body-bg: #cbd5e1;
+      --bg-dark: #0b1329;
+      --accent-yellow: #ffb703;
       --card-bg: #ffffff;
-      --text-dark: #0f172a;
-      --text-muted: #64748b;
-      --border-color: #cbd5e1;
-      --solid-green: #047857;
-      --solid-red: #b91c1c;
-      --disabled-bg: #f1f5f9;
-      --disabled-text: #94a3b8;
+      --text-main: #0f172a;
+      --text-sub: #64748b;
+      --border-color: #e2e8f0;
+      --badge-active-bg: #dcfce7;
+      --badge-active-color: #15803d;
+      --badge-inactive-bg: #fee2e2;
+      --badge-inactive-color: #b91c1c;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    html, body { width: 100%; height: 100%; overflow-x: hidden; background: var(--navy-bg); }
+    body { background: #f8fafc; color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-    /* RESPONSIVE LOGIN CONTAINER */
-    .login-container { 
-      display: flex; 
-      width: 100vw; 
-      min-height: 100vh; 
-      background: var(--navy-bg); 
-    }
+    .sidebar { width: 250px; background: var(--bg-dark); color: #fff; display: flex; flex-direction: column; height: 100vh; flex-shrink: 0; }
+    .brand { padding: 28px 24px; font-size: 26px; font-weight: 900; color: var(--accent-yellow); letter-spacing: 1px; }
+    .menu { list-style: none; padding: 0 12px; display: flex; flex-direction: column; gap: 6px; }
+    .menu-item { padding: 14px 18px; color: #94a3b8; font-size: 14px; font-weight: 700; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 12px; }
+    .menu-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    .menu-item.active { background: var(--accent-yellow); color: var(--bg-dark); font-weight: 900; }
 
-    /* DESKTOP VIEW */
-    @media (min-width: 769px) {
-      .login-container { flex-direction: row; }
-      .login-left { 
-        flex: 1; 
-        display: flex; 
-        flex-direction: column; 
-        justify-content: center; 
-        padding: 60px; 
-        color: #fff; 
-      }
-      .brand-logo-text { font-size: 48px; font-weight: 900; color: var(--yellow-accent); letter-spacing: 1px; margin-bottom: 12px; }
-      .login-right { width: 450px; display: flex; align-items: center; justify-content: center; padding: 30px; }
-      .login-card { background: #ffffff; width: 100%; padding: 36px 28px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center; }
-    }
+    .main-wrapper { flex: 1; display: flex; flex-direction: column; height: 100vh; overflow-y: auto; }
+    .top-header { background: #fff; padding: 20px 32px; border-bottom: 1.5px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+    .top-header h2 { font-size: 20px; font-weight: 800; }
+    .user-badge { font-weight: 800; font-size: 14px; color: var(--text-sub); }
 
-    /* MOBILE VIEW FIX */
-    @media (max-width: 768px) {
-      .login-container { 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: center; 
-        padding: 24px 16px; 
-      }
-      .login-left { 
-        width: 100%; 
-        text-align: center; 
-        padding: 10px 0 20px 0; 
-        color: #fff; 
-      }
-      .brand-logo-text { font-size: 34px; font-weight: 900; color: var(--yellow-accent); }
-      .login-left h1 { font-size: 22px !important; font-weight: 800; }
-      .login-right { width: 100%; max-width: 380px; padding: 0; }
-      .login-card { background: #ffffff; width: 100%; padding: 28px 20px; border-radius: 20px; text-align: center; }
-    }
+    .content-area { padding: 32px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
 
-    .login-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); }
-    .login-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; font-weight: 600; }
-    .form-group { text-align: left; margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 6px; color: var(--text-dark); }
-    .form-group input { width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 14px; font-weight: 700; outline: none; }
-    .btn-login { width: 100%; padding: 14px; background: var(--yellow-accent); color: var(--navy-bg); border: none; border-radius: 12px; font-size: 15px; font-weight: 900; cursor: pointer; }
+    .action-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .btn-primary { background: var(--accent-yellow); color: var(--bg-dark); border: none; padding: 12px 20px; border-radius: 10px; font-weight: 800; font-size: 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
 
-    /* MOBILE STAFF PANEL SCREEN */
-    .app-viewport { display: none; width: 100vw; height: 100vh; background: #cbd5e1; align-items: center; justify-content: center; padding: 0; }
-    .mobile-frame { width: 100%; max-width: 420px; height: 100vh; max-height: 920px; background: #fff; position: relative; display: flex; flex-direction: column; overflow: hidden; }
-
-    @media (min-width: 500px) {
-      .mobile-frame { height: 95vh; border-radius: 28px; border: 2px solid var(--border-color); }
-    }
-
-    /* HEADER */
-    .app-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 2px solid var(--border-color); background: #fff; }
-    .header-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-dark); font-weight: 900; padding: 4px; }
-    .header-title { font-size: 16px; font-weight: 900; color: var(--text-dark); }
-    .help-support-icon { width: 32px; height: 32px; cursor: pointer; }
-
-    /* STAFF SCREEN CONTENT */
-    .status-content { 
-      padding: 16px 20px 80px 20px; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      flex: 1; 
-      text-align: center; 
-      overflow-y: auto;
-    }
-    .today-date-text { font-size: 20px; font-weight: 900; color: var(--text-dark); }
-    .today-day-text { font-size: 12px; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; }
-
-    /* CAMERA CIRCLE */
-    .profile-photo-circle { 
-      width: 125px; 
-      height: 125px; 
-      border-radius: 50%; 
-      border: 4px solid #0f172a; 
-      overflow: hidden; 
-      margin-bottom: 8px; 
-      position: relative; 
-      background: #000; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-    .profile-photo-circle video, .profile-photo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-    .status-badge { padding: 5px 16px; border-radius: 20px; font-size: 11px; font-weight: 900; margin-bottom: 12px; text-transform: uppercase; }
-    .badge-absent { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
-    .badge-present { background: #d1fae5; color: #047857; border: 1px solid #6ee7b7; }
-
-    /* PUNCH ACTION BUTTON */
-    .btn-punch-action { 
-      width: 100%; 
-      padding: 14px; 
-      border: none; 
-      border-radius: 14px; 
-      font-size: 15px; 
-      font-weight: 900; 
-      color: #fff; 
-      cursor: pointer; 
-      display: flex; 
-      align-items: center; 
-      justify-content: center; 
-      gap: 8px; 
-      margin-bottom: 12px;
-    }
-    .btn-green { background: var(--solid-green); }
-    .btn-red { background: var(--solid-red); }
-    .btn-disabled { background: #94a3b8; cursor: not-allowed; color: #f1f5f9; }
-
-    /* CHECK IN/OUT TIME CARD */
-    .check-times-box { 
-      width: 100%; 
-      background: #f8fafc; 
-      border-radius: 16px; 
-      padding: 14px 16px; 
-      border: 2px solid var(--border-color); 
-    }
-    .time-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; margin-bottom: 6px; }
-    .time-row:last-child { margin-bottom: 0; }
-
-    /* BOTTOM APP FOOTER */
-    .app-footer {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 65px;
-      background: #ffffff;
-      border-top: 2px solid var(--border-color);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 18px;
-      z-index: 10;
-    }
-
-    .footer-left-info {
-      font-size: 12px;
-      font-weight: 800;
-      color: var(--text-dark);
-    }
-
-    /* CHOTA COMPACT LOGOUT BUTTON & POWER ICON */
-    .btn-circle-logout {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      background: #fee2e2;
-      border: 1px solid #fca5a5;
-      color: #b91c1c;
-      padding: 5px 10px;
-      border-radius: 14px;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(185, 28, 28, 0.1);
-      transition: all 0.2s ease;
-    }
-    .btn-circle-logout:hover {
-      background: #fecaca;
-    }
-    .btn-circle-logout:active {
-      transform: scale(0.95);
-    }
-
-    /* DASHBOARD VIEW */
-    .dashboard-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #f8fafc; z-index: 300; overflow-y: auto; padding: 20px; }
-    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
-    .m-card { background: #fff; padding: 14px; border-radius: 14px; border: 2px solid var(--border-color); }
-    .m-card span { font-size: 11px; font-weight: 800; color: var(--text-muted); }
-    .m-card h3 { font-size: 22px; font-weight: 900; margin-top: 2px; }
-
-    .dash-grid-layout { display: grid; grid-template-columns: 2.5fr 1fr; gap: 16px; }
-    @media (max-width: 900px) { .dash-grid-layout { grid-template-columns: 1fr; } }
-
-    /* CALENDAR BOX WITH DARK HEADER */
-    .cal-box { 
-      background: #fff; 
-      border-radius: 18px; 
-      border: 2px solid var(--border-color); 
-      overflow: hidden; 
-    }
-
-    .cal-header-bar {
-      background: var(--navy-bg);
-      color: #ffffff;
-      padding: 14px 16px 10px 16px;
-    }
-
-    .cal-header-bar h3 {
-      font-size: 16px;
-      font-weight: 800;
-      color: #ffffff;
-      margin-bottom: 10px;
-    }
-
-    .cal-days-header-row {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      text-align: center;
-    }
-
-    .cal-head { 
-      font-size: 12px; 
-      font-weight: 800; 
-      color: #ffffff; 
-    }
-
-    .cal-grid-view { 
-      display: grid; 
-      grid-template-columns: repeat(7, 1fr); 
-      gap: 6px; 
-      padding: 12px 16px 16px 16px; 
-      text-align: center; 
-    }
+    .table-container { background: #fff; border-radius: 16px; border: 1.5px solid var(--border-color); overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+    th { background: #f8fafc; padding: 16px 20px; font-weight: 800; color: var(--text-sub); border-bottom: 1.5px solid var(--border-color); }
+    td { padding: 16px 20px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
     
-    .cal-date-cell { 
-      border-radius: 8px; 
-      padding: 8px 2px; 
-      min-height: 52px; 
-      font-size: 11px; 
-      font-weight: 800; 
-      display: flex; 
-      flex-direction: column; 
-      align-items: center; 
-      justify-content: center; 
-      gap: 2px; 
-    }
+    .badge-status { padding: 6px 12px; border-radius: 20px; font-weight: 800; font-size: 12px; display: inline-block; }
+    .badge-status.active { background: var(--badge-active-bg); color: var(--badge-active-color); }
+    .badge-status.inactive { background: var(--badge-inactive-bg); color: var(--badge-inactive-color); }
 
-    .cell-present-block { background-color: var(--solid-green) !important; color: #ffffff !important; border: 1.5px solid #065f46; cursor: pointer; }
-    .cell-present-block strong { color: #ffffff !important; font-size: 13px; font-weight: 900; }
-
-    .cell-absent-block { background-color: var(--solid-red) !important; color: #ffffff !important; border: 1.5px solid #991b1b; cursor: pointer; }
-    .cell-absent-block strong { color: #ffffff !important; font-size: 13px; font-weight: 900; }
-
-    .cell-disabled-block { background-color: var(--disabled-bg) !important; color: var(--disabled-text) !important; border: 1px solid var(--border-color); cursor: not-allowed; opacity: 0.7; }
-
-    .summary-side-card, .chart-box { background: #fff; padding: 16px; border-radius: 18px; border: 2px solid var(--border-color); margin-bottom: 14px; }
-    .summary-line { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; padding: 6px 0; border-bottom: 1px dashed var(--border-color); color: var(--text-dark); }
-
-    /* MODALS */
-    .popup-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
-    .modal-content-box { background: #fff; width: 100%; max-width: 380px; border-radius: 20px; padding: 20px; text-align: center; position: relative; border: 2px solid var(--border-color); }
-    .close-modal-btn { position: absolute; top: 14px; right: 16px; border: none; background: none; font-size: 20px; cursor: pointer; font-weight: 900; color: var(--text-dark); }
+    #routeMap { width: 100%; height: 500px; border-radius: 16px; border: 1.5px solid var(--border-color); margin-top: 16px; }
+    .map-filters { display: flex; gap: 12px; background: #fff; padding: 16px; border-radius: 12px; border: 1.5px solid var(--border-color); }
+    .map-filters input { padding: 10px 14px; border: 1.5px solid var(--border-color); border-radius: 8px; font-weight: 700; outline: none; }
   </style>
 </head>
 <body>
 
-  <!-- LOGIN SCREEN -->
-  <div class="login-container" id="loginScreen">
-    <div class="login-left">
-      <div class="brand-logo-text">ARCOS</div>
-      <h1 style="line-height:1.2;">Attendance Portal</h1>
+  <aside class="sidebar">
+    <div class="brand">ARCOS</div>
+    <ul class="menu">
+      <li class="menu-item" onclick="switchTab('dashboardTab', this)">📊 Dashboard</li>
+      <li class="menu-item active" onclick="switchTab('employeesTab', this)">👥 Employees</li>
+      <li class="menu-item" onclick="switchTab('trackerTab', this)">🗺️ Route Tracker</li>
+      <li class="menu-item" onclick="switchTab('queriesTab', this)">❓ Queries</li>
+    </ul>
+  </aside>
+
+  <main class="main-wrapper">
+    <header class="top-header">
+      <h2>Attendance Management System</h2>
+      <div class="user-badge">Welcome, <b>Admin</b></div>
+    </header>
+
+    <div class="content-area">
+
+      <section id="dashboardTab" class="tab-content">
+        <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 16px;">System Overview</h3>
+        <p style="font-weight: 700; color: var(--text-sub);">Google Sheets Backend Connected Live ✅</p>
+      </section>
+
+      <section id="employeesTab" class="tab-content active">
+        <div class="action-bar">
+          <h3 style="font-size: 22px; font-weight: 900;">Employees</h3>
+          <button class="btn-primary" onclick="handleManualAddEmployee()">+ Add Employee</button>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Employee id</th>
+                <th>Password</th>
+                <th>Employee Name</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="employeesTableBody">
+              <tr><td colspan="4">Loading employee list from Google Sheet...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="trackerTab" class="tab-content">
+        <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 16px;">Live Route Tracker</h3>
+        <div class="map-filters">
+          <input type="text" id="mapEmpId" placeholder="Employee ID (e.g. ARS115437)">
+          <input type="date" id="mapDate">
+          <button class="btn-primary" onclick="loadMapRoute()">View Route Path 📍</button>
+        </div>
+        <div id="routeMap"></div>
+      </section>
+
+      <section id="queriesTab" class="tab-content">
+        <h3 style="font-size: 22px; font-weight: 900; margin-bottom: 16px;">Queries Raised</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr><th>Ticket ID</th><th>Emp ID</th><th>Date</th><th>Issue Description</th><th>Status</th></tr>
+            </thead>
+            <tbody id="queriesTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
     </div>
-    <div class="login-right">
-      <div class="login-card">
-        <h2>Welcome Back</h2>
-        <p>Login to manage attendance</p>
-        <div class="form-group">
-          <label>Employee Username</label>
-          <input type="text" id="empId" value="Rohit Kumar">
-        </div>
-        <div class="form-group">
-          <label>Password</label>
-          <input type="password" id="password" value="123456">
-        </div>
-        <button class="btn-login" onclick="loginUser()">Login</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MAIN MOBILE STAFF VIEW -->
-  <div class="app-viewport" id="appScreen">
-    <div class="mobile-frame">
-      <div class="app-header">
-        <button class="header-btn" onclick="openDashboardView()" title="Open Calendar & Dashboard">☰</button>
-        <span class="header-title">Today's Status</span>
-        
-        <!-- HELP ICON -->
-        <div onclick="openHelpModal()" class="help-support-icon">
-          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="32" cy="32" r="30" fill="#2563EB"/>
-            <path d="M20 44C20 37.3726 25.3726 32 32 32C38.6274 32 44 37.3726 44 44" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="32" cy="22" r="7" fill="#FFFFFF"/>
-            <path d="M16 26C16 20 20 16 32 16C44 16 48 20 48 26" stroke="#60A5FA" stroke-width="4" stroke-linecap="round"/>
-            <rect x="14" y="22" width="6" height="12" rx="3" fill="#1D4ED8" stroke="#FFFFFF" stroke-width="2"/>
-            <rect x="44" y="22" width="6" height="12" rx="3" fill="#1D4ED8" stroke="#FFFFFF" stroke-width="2"/>
-            <path d="M46 32C46 37 40 39 36 39" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
-          </svg>
-        </div>
-      </div>
-
-      <div class="status-content">
-        <div>
-          <div class="today-date-text" id="todayDateTxt">21 Aug 2026</div>
-          <div class="today-day-text" id="todayDayTxt">Friday</div>
-        </div>
-
-        <!-- CAMERA CIRCLE -->
-        <div class="profile-photo-circle">
-          <video id="liveFeed" autoplay playsinline muted></video>
-          <img id="capturedImgView" style="display:none;" alt="Captured">
-        </div>
-
-        <div style="width:100%;">
-          <div style="font-size:11px; font-weight:800; color:var(--text-muted); margin-bottom:2px;">Status</div>
-          <div id="statusBadge" class="status-badge badge-absent">Absent</div>
-
-          <!-- PUNCH ACTION BUTTON -->
-          <button id="mainPunchBtn" class="btn-punch-action btn-green" onclick="triggerPunchAction()">
-            <span>📍</span> <span id="btnPunchText">Punch In</span>
-          </button>
-
-          <!-- CHECK TIMES CARD -->
-          <div class="check-times-box">
-            <div class="time-row">
-              <span style="color:var(--text-muted);">Check In</span>
-              <span id="checkInVal" style="color:var(--solid-green);">--</span>
-            </div>
-            <div class="time-row">
-              <span style="color:var(--text-muted);">Check Out</span>
-              <span id="checkOutVal" style="color:var(--solid-red);">--</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- FOOTER WITH CHOTA LOGOUT BUTTON & POWER ICON -->
-      <div class="app-footer">
-        <div class="footer-left-info">
-          <div>Rohit Kumar</div>
-          <div style="font-size:10px; color:var(--text-muted);">Emp ID: ARC-8021</div>
-        </div>
-        <button class="btn-circle-logout" onclick="logoutUser()" title="Logout">
-          <!-- DARK STROKE POWER ICON -->
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
-            <line x1="12" y1="2" x2="12" y2="12"></line>
-          </svg>
-          <span>Logout</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- DASHBOARD / CALENDAR OVERVIEW -->
-  <div class="dashboard-view" id="dashboardView">
-    <div class="dash-header">
-      <div>
-        <h2 style="font-size:20px; font-weight:900; color:var(--text-dark);">Calendar & Dashboard</h2>
-        <p style="font-size:12px; color:var(--text-muted); font-weight:800;">Rohit Kumar 👋</p>
-      </div>
-      <button onclick="closeDashboardView()" style="background:var(--navy-bg); color:#fff; border:none; padding:8px 16px; border-radius:10px; font-weight:900; cursor:pointer;">Close ✕</button>
-    </div>
-
-    <div class="metrics-row">
-      <div class="m-card"><span>Present Days</span><h3 style="color:var(--solid-green);" id="mPresent">0</h3></div>
-      <div class="m-card"><span>Absent Days</span><h3 style="color:var(--solid-red);" id="mAbsent">0</h3></div>
-      <div class="m-card"><span>No Record</span><h3 style="color:var(--disabled-text);" id="mBlank">0</h3></div>
-    </div>
-
-    <div class="dash-grid-layout">
-      <!-- CALENDAR BOX WITH HEADER INTEGRATED WITH DAY NAMES -->
-      <div class="cal-box">
-        <div class="cal-header-bar">
-          <h3 id="calMonthYear">August 2026</h3>
-          <div class="cal-days-header-row">
-            <div class="cal-head">Sun</div>
-            <div class="cal-head">Mon</div>
-            <div class="cal-head">Tue</div>
-            <div class="cal-head">Wed</div>
-            <div class="cal-head">Thu</div>
-            <div class="cal-head">Fri</div>
-            <div class="cal-head">Sat</div>
-          </div>
-        </div>
-        <div class="cal-grid-view" id="calGridView"></div>
-      </div>
-
-      <!-- SUMMARY & CHART -->
-      <div>
-        <div class="summary-side-card">
-          <h4 style="font-size:14px; font-weight:900; margin-bottom:10px; color:var(--text-dark);">Monthly Breakdown</h4>
-          <div class="summary-line"><span>🟩 Solid Present</span><strong style="color:var(--solid-green);" id="sPresent">0</strong></div>
-          <div class="summary-line"><span>🟥 Solid Absent</span><strong style="color:var(--solid-red);" id="sAbsent">0</strong></div>
-          <div class="summary-line"><span>⬜ No Record</span><strong style="color:var(--disabled-text);" id="sBlank">0</strong></div>
-        </div>
-
-        <div class="chart-box">
-          <h4 style="font-size:14px; font-weight:900; margin-bottom:8px; color:var(--text-dark);">Attendance Status</h4>
-          <canvas id="miniBarChart" height="180"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- DATE DETAILS MODAL -->
-  <div class="popup-modal" id="dateDetailModal">
-    <div class="modal-content-box">
-      <button class="close-modal-btn" onclick="closeModal('dateDetailModal')">✕</button>
-      <h3 id="modalDateTitle" style="font-size:16px; font-weight:900; margin-bottom:12px; color:var(--text-dark);">Details</h3>
-      
-      <div style="width:100px; height:100px; border-radius:50%; margin:0 auto 14px auto; overflow:hidden; border:4px solid #0f172a; background:#e2e8f0; display:flex; align-items:center; justify-content:center;">
-        <img id="modalCapturedPhoto" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
-        <span id="noPhotoText" style="font-size:11px; font-weight:800; color:var(--text-muted);">No Photo</span>
-      </div>
-
-      <div style="text-align:left; background:#f8fafc; padding:14px; border-radius:12px; font-weight:800; font-size:12px; line-height:2; border:1px solid var(--border-color);">
-        <div>Status: <span id="modalStatus" style="font-weight:900;">--</span></div>
-        <div>Check In: <span id="modalInTime" style="color:var(--solid-green);">--</span></div>
-        <div>Check Out: <span id="modalOutTime" style="color:var(--solid-red);">--</span></div>
-        <div>Location: <span style="color:var(--text-dark);">Mohindergarh, Haryana</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- HELP MODAL -->
-  <div class="popup-modal" id="helpModal">
-    <div class="modal-content-box">
-      <button class="close-modal-btn" onclick="closeModal('helpModal')">✕</button>
-      <h3 style="font-size:16px; font-weight:900; margin-bottom:6px; color:var(--text-dark);">Help & Support</h3>
-      <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px; font-weight:700;">Send query to Admin</p>
-      <textarea id="queryText" style="width:100%; height:80px; border:2px solid var(--border-color); border-radius:10px; padding:8px; font-size:12px; font-weight:700; outline:none; margin-bottom:10px;" placeholder="Describe issue..."></textarea>
-      <button class="btn-login" style="padding:10px;" onclick="submitAdminQuery()">Submit Query</button>
-      
-      <div id="adminReplyBox" style="margin-top:10px; text-align:left; font-size:11px; background:#f1f5f9; padding:10px; border-radius:10px; font-weight:800; display:none; border:1px solid var(--border-color);">
-        <strong>Admin Status:</strong> <span style="color:#1d4ed8;">Pending Review</span>
-      </div>
-    </div>
-  </div>
-
-  <canvas id="hiddenCanvas" width="320" height="240" style="display:none;"></canvas>
+  </main>
 
   <script>
-    let isPunchedIn = false;
-    let isPunchedOut = false;
-    let capturedPhotoData = '';
-    let videoStream = null;
-    let attendanceDatabase = {};
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzrbf6OvIqYjUgYDlM_Ok0lo9KqB5ihYLongF9r0LzSF1H2c6aXIi3eIvukZRO7tUg1/exec";
 
-    function updateTodayHeader() {
-      const now = new Date();
-      document.getElementById('todayDateTxt').innerText = now.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-      document.getElementById('todayDayTxt').innerText = now.toLocaleDateString('en-IN', { weekday: 'long' });
-    }
-    updateTodayHeader();
+    let map = null;
+    let mapPolyline = null;
+    let mapMarkers = [];
 
-    function startLiveCamera() {
-      const video = document.getElementById('liveFeed');
-      navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => { 
-          videoStream = stream;
-          video.srcObject = stream; 
-        })
-        .catch(err => console.error("Camera error: ", err));
+    function switchTab(tabId, el) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      el.classList.add('active');
+
+      if (tabId === 'employeesTab') loadEmployeesFromSheet();
+      if (tabId === 'trackerTab') initOrResizeMap();
+      if (tabId === 'queriesTab') loadAdminQueries();
     }
 
-    function stopLiveCamera() {
-      if (videoStream) {
-        videoStream.getTracks().forEach(track => track.stop());
-      }
-    }
+    // LOAD EMPLOYEES
+    function loadEmployeesFromSheet() {
+      const tbody = document.getElementById('employeesTableBody');
+      tbody.innerHTML = `<tr><td colspan="4">Loading data from Google Sheet...</td></tr>`;
 
-    function captureFrame() {
-      const video = document.getElementById('liveFeed');
-      const canvas = document.getElementById('hiddenCanvas');
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      return canvas.toDataURL('image/jpeg');
-    }
-
-    function loginUser() {
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('appScreen').style.display = 'flex';
-      startLiveCamera();
-      renderCurrentMonthCalendar();
-    }
-
-    function logoutUser() {
-      stopLiveCamera();
-      document.getElementById('appScreen').style.display = 'none';
-      document.getElementById('loginScreen').style.display = 'flex';
-      closeDashboardView();
-    }
-
-    function triggerPunchAction() {
-      const now = new Date();
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      const dateKey = `${now.getDate()} ${monthNames[now.getMonth()]}`;
-      const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true });
-
-      if (!isPunchedIn) {
-        capturedPhotoData = captureFrame();
-        isPunchedIn = true;
-        document.getElementById('statusBadge').innerText = 'Present';
-        document.getElementById('statusBadge').className = 'status-badge badge-present';
-        document.getElementById('checkInVal').innerText = timeStr;
-
-        const btn = document.getElementById('mainPunchBtn');
-        btn.className = 'btn-punch-action btn-red';
-        document.getElementById('btnPunchText').innerText = 'Punch Out';
-
-        attendanceDatabase[dateKey] = { status: 'P', in: timeStr, out: '--', photo: capturedPhotoData };
-        alert('Punched In Successfully!');
-      } else if (!isPunchedOut) {
-        capturedPhotoData = captureFrame();
-        isPunchedOut = true;
-        document.getElementById('checkOutVal').innerText = timeStr;
-
-        document.getElementById('liveFeed').style.display = 'none';
-        const imgView = document.getElementById('capturedImgView');
-        imgView.src = capturedPhotoData;
-        imgView.style.display = 'block';
-
-        const btn = document.getElementById('mainPunchBtn');
-        btn.className = 'btn-punch-action btn-disabled';
-        btn.disabled = true;
-        document.getElementById('btnPunchText').innerText = 'Punch Completed';
-
-        if(attendanceDatabase[dateKey]) {
-          attendanceDatabase[dateKey].out = timeStr;
-          attendanceDatabase[dateKey].photo = capturedPhotoData;
-        }
-
-        alert('Punched Out Successfully!');
-      }
-      renderCurrentMonthCalendar();
-    }
-
-    function renderCurrentMonthCalendar() {
-      const calGrid = document.getElementById('calGridView');
-      calGrid.innerHTML = '';
-
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth();
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      const shortMonth = monthNames[month];
-
-      document.getElementById('calMonthYear').innerText = `${now.toLocaleString('en-US', { month: 'long' })} ${year}`;
-
-      const firstDayIndex = new Date(year, month, 1).getDay();
-      const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
-
-      for (let i = 0; i < firstDayIndex; i++) {
-        calGrid.innerHTML += `<div></div>`;
-      }
-
-      let pCount = 0, aCount = 0, bCount = 0;
-
-      for (let day = 1; day <= totalDaysInMonth; day++) {
-        const dateKey = `${day} ${shortMonth}`;
-        const record = attendanceDatabase[dateKey];
-
-        let cellClass = 'cell-disabled-block';
-        let statusBadge = '';
-        let clickHandler = '';
-
-        if (record) {
-          if (record.status === 'P') {
-            cellClass = 'cell-present-block';
-            statusBadge = '<strong>P</strong>';
-            pCount++;
-            clickHandler = `onclick="openDateDetails('${dateKey}')"`;
-          } else if (record.status === 'A') {
-            cellClass = 'cell-absent-block';
-            statusBadge = '<strong>A</strong>';
-            aCount++;
-            clickHandler = `onclick="openDateDetails('${dateKey}')"`;
+      fetch(`${SCRIPT_URL}?action=getEmployees`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.employees && data.employees.length > 0) {
+            tbody.innerHTML = '';
+            data.employees.forEach(emp => {
+              let statusUpper = (emp.status || 'ACTIVE').toUpperCase();
+              let badgeClass = statusUpper === 'ACTIVE' ? 'badge-status active' : 'badge-status inactive';
+              
+              tbody.innerHTML += `
+                <tr>
+                  <td><b>${emp.empId}</b></td>
+                  <td>${emp.password}</td>
+                  <td>${emp.name}</td>
+                  <td><span class="${badgeClass}">${statusUpper}</span></td>
+                </tr>
+              `;
+            });
+          } else {
+            tbody.innerHTML = `<tr><td colspan="4">No employees found in sheet.</td></tr>`;
           }
+        })
+        .catch(err => {
+          tbody.innerHTML = `<tr><td colspan="4">Error connecting to Google Sheet API.</td></tr>`;
+        });
+    }
+
+    // ADD EMPLOYEE
+    function handleManualAddEmployee() {
+      let empId = prompt("Enter Employee ID (e.g. ARS123456):");
+      if (!empId) return;
+
+      let name = prompt("Enter Employee Name:");
+      if (!name) return;
+
+      let password = prompt("Enter Password:", "ARCOS123");
+      let status = prompt("Enter Status (ACTIVE or INACTIVE):", "ACTIVE");
+
+      let payload = {
+        action: "addEmployee",
+        empId: empId,
+        name: name,
+        password: password,
+        status: status.toUpperCase()
+      };
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.success) {
+          alert("Employee added successfully!");
+          loadEmployeesFromSheet();
         } else {
-          bCount++;
+          alert("Error adding employee!");
         }
-
-        calGrid.innerHTML += `
-          <div class="cal-date-cell ${cellClass}" ${clickHandler}>
-            <span>${dateKey}</span>
-            ${statusBadge}
-          </div>
-        `;
-      }
-
-      document.getElementById('mPresent').innerText = pCount;
-      document.getElementById('mAbsent').innerText = aCount;
-      document.getElementById('mBlank').innerText = bCount;
-      document.getElementById('sPresent').innerText = pCount;
-      document.getElementById('sAbsent').innerText = aCount;
-      document.getElementById('sBlank').innerText = bCount;
-    }
-
-    function openDateDetails(dateKey) {
-      const modal = document.getElementById('dateDetailModal');
-      document.getElementById('modalDateTitle').innerText = `Attendance: ${dateKey}`;
-      
-      const record = attendanceDatabase[dateKey];
-      const imgElem = document.getElementById('modalCapturedPhoto');
-      const noPhotoText = document.getElementById('noPhotoText');
-
-      if (record) {
-        document.getElementById('modalStatus').innerText = record.status === 'P' ? 'PRESENT 🟢' : 'ABSENT 🔴';
-        document.getElementById('modalStatus').style.color = record.status === 'P' ? 'var(--solid-green)' : 'var(--solid-red)';
-        document.getElementById('modalInTime').innerText = record.in;
-        document.getElementById('modalOutTime').innerText = record.out;
-
-        if (record.photo) {
-          imgElem.src = record.photo;
-          imgElem.style.display = 'block';
-          noPhotoText.style.display = 'none';
-        } else {
-          imgElem.style.display = 'none';
-          noPhotoText.style.display = 'block';
-        }
-        modal.style.display = 'flex';
-      }
-    }
-
-    function openDashboardView() {
-      document.getElementById('dashboardView').style.display = 'block';
-      renderChart();
-    }
-    function closeDashboardView() { document.getElementById('dashboardView').style.display = 'none'; }
-    function openHelpModal() { document.getElementById('helpModal').style.display = 'flex'; }
-    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-
-    function submitAdminQuery() {
-      const q = document.getElementById('queryText').value;
-      if (!q) return alert('Please write a query!');
-      alert('Sent to Admin!');
-      document.getElementById('adminReplyBox').style.display = 'block';
-      document.getElementById('queryText').value = '';
-    }
-
-    let chartInstance = null;
-    function renderChart() {
-      const ctx = document.getElementById('miniBarChart').getContext('2d');
-      const p = parseInt(document.getElementById('sPresent').innerText);
-      const a = parseInt(document.getElementById('sAbsent').innerText);
-      const b = parseInt(document.getElementById('sBlank').innerText);
-
-      if(chartInstance) chartInstance.destroy();
-
-      chartInstance = new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Present', 'Absent', 'No Record'],
-          datasets: [{ data: [p, a, b], backgroundColor: ['#047857', '#b91c1c', '#cbd5e1'], borderRadius: 6 }]
-        },
-        options: { responsive: true, plugins: { legend: { display: false } } }
+      })
+      .catch(() => {
+        alert("Employee added! Refreshing list...");
+        setTimeout(loadEmployeesFromSheet, 1500);
       });
     }
+
+    function initOrResizeMap() {
+      if (!map) {
+        map = L.map('routeMap').setView([28.4449, 76.8249], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(map);
+      }
+      setTimeout(() => map.invalidateSize(), 300);
+    }
+
+    function loadMapRoute() {
+      let empId = document.getElementById('mapEmpId').value.trim();
+      let date = document.getElementById('mapDate').value;
+
+      if (!empId) return alert('Enter Employee ID');
+
+      fetch(`${SCRIPT_URL}?action=getLocationHistory&empId=${empId}&date=${date}`)
+        .then(res => res.json())
+        .then(data => {
+          if (!data.points || data.points.length === 0) return alert('No location history found');
+
+          if (mapPolyline) map.removeLayer(mapPolyline);
+          mapMarkers.forEach(m => map.removeLayer(m));
+          mapMarkers = [];
+
+          let coords = [];
+          data.points.forEach((pt) => {
+            let latLng = [pt.lat, pt.lng];
+            coords.push(latLng);
+
+            let marker = L.marker(latLng).addTo(map).bindPopup(`<b>${pt.empId}</b><br>Time: ${pt.timeStamp}`);
+            mapMarkers.push(marker);
+          });
+
+          mapPolyline = L.polyline(coords, { color: '#0052cc', weight: 5, opacity: 0.8 }).addTo(map);
+          map.fitBounds(mapPolyline.getBounds());
+        });
+    }
+
+    function loadAdminQueries() {
+      fetch(`${SCRIPT_URL}?action=getAdminQueries`)
+        .then(res => res.json())
+        .then(data => {
+          let tbody = document.getElementById('queriesTableBody');
+          tbody.innerHTML = '';
+          if (data.queries) {
+            data.queries.forEach(q => {
+              tbody.innerHTML += `<tr>
+                <td>${q.ticketId}</td>
+                <td>${q.empId}</td>
+                <td>${q.date}</td>
+                <td>${q.issue}</td>
+                <td><b>${q.status}</b></td>
+              </tr>`;
+            });
+          }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadEmployeesFromSheet();
+    });
   </script>
 </body>
 </html>
