@@ -8,28 +8,35 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --navy-bg: #0b1329;
-      --yellow-accent: #ffb703;
-      --body-bg: #cbd5e1;
+      /* MODERN PROFESSIONAL COLOR PALETTE */
+      --navy-dark: #0f172a;
+      --indigo-primary: #4f46e5;
+      --indigo-dark: #3730a3;
+      --yellow-accent: #f59e0b;
+      --yellow-light: #fffbeb;
+      --body-bg: #f1f5f9;
       --card-bg: #ffffff;
-      --text-dark: #0f172a;
+      --text-dark: #1e293b;
       --text-muted: #64748b;
-      --border-color: #cbd5e1;
-      --solid-green: #047857;
-      --solid-red: #b91c1c;
-      --disabled-bg: #f1f5f9;
+      --border-color: #e2e8f0;
+      
+      --solid-green: #10b981;
+      --green-light: #ecfdf5;
+      --solid-red: #ef4444;
+      --red-light: #fef2f2;
+      --disabled-bg: #e2e8f0;
       --disabled-text: #94a3b8;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    html, body { width: 100%; height: 100%; overflow-x: hidden; background: var(--navy-bg); }
+    html, body { width: 100%; height: 100%; overflow-x: hidden; background: var(--body-bg); color: var(--text-dark); }
 
-    /* RESPONSIVE LOGIN CONTAINER */
+    /* LOGIN CONTAINER */
     .login-container { 
       display: flex; 
       width: 100vw; 
       min-height: 100vh; 
-      background: var(--navy-bg); 
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); 
     }
 
     /* DESKTOP VIEW */
@@ -43,12 +50,19 @@
         padding: 60px; 
         color: #fff; 
       }
-      .brand-logo-text { font-size: 48px; font-weight: 900; color: var(--yellow-accent); letter-spacing: 1px; margin-bottom: 12px; }
-      .login-right { width: 450px; display: flex; align-items: center; justify-content: center; padding: 30px; }
-      .login-card { background: #ffffff; width: 100%; padding: 36px 28px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center; }
+      .brand-logo-text { font-size: 52px; font-weight: 900; color: var(--yellow-accent); letter-spacing: 1px; margin-bottom: 8px; }
+      .login-right { width: 480px; display: flex; align-items: center; justify-content: center; padding: 30px; }
+      .login-card { 
+        background: #ffffff; 
+        width: 100%; 
+        padding: 40px 32px; 
+        border-radius: 28px; 
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); 
+        text-align: center; 
+      }
     }
 
-    /* MOBILE VIEW FIX (VERTICAL STACK - NO HORIZONTAL SCROLL) */
+    /* MOBILE VIEW FIX */
     @media (max-width: 768px) {
       .login-container { 
         flex-direction: column; 
@@ -62,184 +76,237 @@
         padding: 10px 0 20px 0; 
         color: #fff; 
       }
-      .brand-logo-text { font-size: 34px; font-weight: 900; color: var(--yellow-accent); }
+      .brand-logo-text { font-size: 38px; font-weight: 900; color: var(--yellow-accent); }
       .login-left h1 { font-size: 22px !important; font-weight: 800; }
       .login-right { width: 100%; max-width: 380px; padding: 0; }
-      .login-card { background: #ffffff; width: 100%; padding: 28px 20px; border-radius: 20px; text-align: center; }
+      .login-card { background: #ffffff; width: 100%; padding: 28px 20px; border-radius: 24px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); }
     }
 
-    .login-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); }
-    .login-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; font-weight: 600; }
-    .form-group { text-align: left; margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 6px; color: var(--text-dark); }
-    .form-group input { width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 14px; font-weight: 700; outline: none; }
-    .btn-login { width: 100%; padding: 14px; background: var(--yellow-accent); color: var(--navy-bg); border: none; border-radius: 12px; font-size: 15px; font-weight: 900; cursor: pointer; }
+    .login-card h2 { font-size: 24px; font-weight: 800; margin-bottom: 4px; color: var(--navy-dark); }
+    .login-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; font-weight: 600; }
+    .form-group { text-align: left; margin-bottom: 18px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 6px; color: var(--text-dark); text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-group input { width: 100%; padding: 14px; border: 2px solid var(--border-color); border-radius: 14px; font-size: 14px; font-weight: 700; outline: none; transition: all 0.2s; }
+    .form-group input:focus { border-color: var(--indigo-primary); }
+    
+    .btn-login { 
+      width: 100%; 
+      padding: 15px; 
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
+      color: #ffffff; 
+      border: none; 
+      border-radius: 14px; 
+      font-size: 16px; 
+      font-weight: 900; 
+      cursor: pointer; 
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+      transition: all 0.2s;
+    }
+    .btn-login:active { transform: scale(0.98); }
 
     /* MOBILE STAFF PANEL SCREEN */
     .app-viewport { display: none; width: 100vw; height: 100vh; background: #cbd5e1; align-items: center; justify-content: center; padding: 0; }
-    .mobile-frame { width: 100%; max-width: 420px; height: 100vh; max-height: 920px; background: #fff; position: relative; display: flex; flex-direction: column; overflow: hidden; }
+    .mobile-frame { width: 100%; max-width: 420px; height: 100vh; max-height: 920px; background: #ffffff; position: relative; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
 
     @media (min-width: 500px) {
-      .mobile-frame { height: 95vh; border-radius: 28px; border: 2px solid var(--border-color); }
+      .mobile-frame { height: 95vh; border-radius: 32px; border: 1px solid var(--border-color); }
     }
 
-    /* HEADER WITH HAMBURGER MENU / 3-DOTS BUTTON */
-    .app-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 2px solid var(--border-color); background: #fff; }
-    .header-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-dark); font-weight: 900; padding: 4px; }
-    .header-title { font-size: 16px; font-weight: 900; color: var(--text-dark); }
-    .help-support-icon { width: 32px; height: 32px; cursor: pointer; }
+    /* HEADER WITH HAMBURGER MENU & HELP ICON */
+    .app-header { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 16px 20px; 
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); 
+      color: #ffffff;
+    }
+    .header-btn { 
+      background: rgba(255, 255, 255, 0.15); 
+      border: none; 
+      font-size: 20px; 
+      cursor: pointer; 
+      color: #ffffff; 
+      font-weight: 900; 
+      padding: 8px 12px; 
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+    }
+    .header-title { font-size: 16px; font-weight: 800; letter-spacing: 0.5px; }
+    .help-support-icon { width: 34px; height: 34px; cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
 
     /* STAFF SCREEN CONTENT */
     .status-content { 
-      padding: 16px 20px 80px 20px; /* Space reserved for bottom footer */
+      padding: 20px;
+      padding-bottom: 90px;
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       flex: 1; 
       text-align: center; 
       overflow-y: auto;
+      background: #f8fafc;
     }
-    .today-date-text { font-size: 20px; font-weight: 900; color: var(--text-dark); }
-    .today-day-text { font-size: 12px; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; }
+    .today-date-text { font-size: 22px; font-weight: 900; color: var(--navy-dark); margin-top: 4px; }
+    .today-day-text { font-size: 13px; color: var(--indigo-primary); font-weight: 800; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; }
 
     /* CAMERA / PHOTO CIRCLE */
     .profile-photo-circle { 
-      width: 125px; 
-      height: 125px; 
+      width: 135px; 
+      height: 135px; 
       border-radius: 50%; 
-      border: 4px solid #0f172a; 
+      border: 4px solid var(--indigo-primary); 
       overflow: hidden; 
-      margin-bottom: 8px; 
+      margin-bottom: 12px; 
       position: relative; 
       background: #000; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.3);
     }
     .profile-photo-circle video, .profile-photo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    .status-badge { padding: 5px 16px; border-radius: 20px; font-size: 11px; font-weight: 900; margin-bottom: 12px; text-transform: uppercase; }
-    .badge-absent { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
-    .badge-present { background: #d1fae5; color: #047857; border: 1px solid #6ee7b7; }
+    .status-badge { padding: 6px 18px; border-radius: 20px; font-size: 12px; font-weight: 900; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; }
+    .badge-absent { background: var(--red-light); color: var(--solid-red); border: 1.5px solid #fca5a5; }
+    .badge-present { background: var(--green-light); color: var(--solid-green); border: 1.5px solid #6ee7b7; }
 
     /* PUNCH ACTION BUTTON */
     .btn-punch-action { 
       width: 100%; 
-      padding: 14px; 
+      padding: 16px; 
       border: none; 
-      border-radius: 14px; 
-      font-size: 15px; 
+      border-radius: 16px; 
+      font-size: 16px; 
       font-weight: 900; 
       color: #fff; 
       cursor: pointer; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
-      gap: 8px; 
-      margin-bottom: 12px;
+      gap: 10px; 
+      margin-bottom: 16px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s;
     }
-    .btn-green { background: var(--solid-green); }
-    .btn-red { background: var(--solid-red); }
-    .btn-disabled { background: #94a3b8; cursor: not-allowed; color: #f1f5f9; }
+    .btn-punch-action:active { transform: scale(0.98); }
+    .btn-green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    .btn-red { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+    .btn-disabled { background: #94a3b8; cursor: not-allowed; color: #f1f5f9; box-shadow: none; }
 
     /* CHECK IN/OUT TIME CARD */
     .check-times-box { 
       width: 100%; 
-      background: #f8fafc; 
-      border-radius: 16px; 
-      padding: 14px 16px; 
-      border: 2px solid var(--border-color); 
+      background: #ffffff; 
+      border-radius: 20px; 
+      padding: 16px 20px; 
+      border: 1px solid var(--border-color); 
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }
-    .time-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; margin-bottom: 6px; }
+    .time-row { display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; margin-bottom: 8px; }
     .time-row:last-child { margin-bottom: 0; }
 
-    /* BOTTOM APP FOOTER WITH CIRCULAR LOGOUT BUTTON */
+    /* BOTTOM APP FOOTER */
     .app-footer {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 60px;
+      height: 70px;
       background: #ffffff;
       border-top: 2px solid var(--border-color);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 18px;
+      padding: 0 20px;
       z-index: 10;
     }
 
     .footer-left-info {
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 800;
-      color: var(--text-dark);
+      color: var(--navy-dark);
     }
 
-    /* CIRCLE LOGOUT BUTTON AT FOOTER CORNER */
-    .btn-circle-logout {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: #fee2e2;
-      border: 2px solid #fca5a5;
-      color: #b91c1c;
+    /* MATCHING YELLOW POWER LOGOUT BUTTON */
+    .btn-power-logout {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: var(--yellow-light);
+      border: 2px solid var(--yellow-accent);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(185, 28, 28, 0.2);
-      transition: transform 0.15s ease;
+      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.25);
+      transition: all 0.2s ease;
+      padding: 0;
     }
-    .btn-circle-logout:active {
+    .btn-power-logout:active {
       transform: scale(0.92);
+      background: var(--yellow-accent);
+    }
+    .btn-power-logout:active svg path {
+      stroke: #ffffff;
     }
 
     /* DASHBOARD VIEW */
-    .dashboard-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #f8fafc; z-index: 300; overflow-y: auto; padding: 20px; }
-    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-    .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
-    .m-card { background: #fff; padding: 14px; border-radius: 14px; border: 2px solid var(--border-color); }
-    .m-card span { font-size: 11px; font-weight: 800; color: var(--text-muted); }
-    .m-card h3 { font-size: 22px; font-weight: 900; margin-top: 2px; }
+    .dashboard-view { 
+      display: none; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100vw; 
+      height: 100vh; 
+      background: #f8fafc; 
+      z-index: 300; 
+      overflow-y: auto; 
+      padding: 24px; 
+    }
+    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-bottom: 20px; }
+    .m-card { background: #fff; padding: 16px; border-radius: 18px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .m-card span { font-size: 12px; font-weight: 800; color: var(--text-muted); }
+    .m-card h3 { font-size: 24px; font-weight: 900; margin-top: 4px; }
 
-    .dash-grid-layout { display: grid; grid-template-columns: 2.5fr 1fr; gap: 16px; }
+    .dash-grid-layout { display: grid; grid-template-columns: 2.5fr 1fr; gap: 20px; }
     @media (max-width: 900px) { .dash-grid-layout { grid-template-columns: 1fr; } }
 
     /* CALENDAR GRID */
-    .cal-box { background: #fff; padding: 16px; border-radius: 18px; border: 2px solid var(--border-color); }
-    .cal-grid-view { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 12px; text-align: center; }
-    .cal-head { font-size: 12px; font-weight: 900; color: var(--text-dark); padding-bottom: 4px; }
+    .cal-box { background: #fff; padding: 20px; border-radius: 24px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .cal-grid-view { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 16px; text-align: center; }
+    .cal-head { font-size: 13px; font-weight: 900; color: var(--indigo-primary); padding-bottom: 8px; border-bottom: 2px solid var(--yellow-accent); margin-bottom: 6px; }
     
     .cal-date-cell { 
-      border-radius: 8px; 
-      padding: 8px 2px; 
-      min-height: 52px; 
+      border-radius: 12px; 
+      padding: 10px 2px; 
+      min-height: 56px; 
       font-size: 11px; 
       font-weight: 800; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       justify-content: center; 
-      gap: 2px; 
+      gap: 3px; 
+      transition: all 0.2s;
     }
 
-    .cell-present-block { background-color: var(--solid-green) !important; color: #ffffff !important; border: 1.5px solid #065f46; cursor: pointer; }
-    .cell-present-block strong { color: #ffffff !important; font-size: 13px; font-weight: 900; }
+    .cell-present-block { background-color: var(--solid-green) !important; color: #ffffff !important; box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3); cursor: pointer; }
+    .cell-present-block strong { color: #ffffff !important; font-size: 14px; font-weight: 900; }
 
-    .cell-absent-block { background-color: var(--solid-red) !important; color: #ffffff !important; border: 1.5px solid #991b1b; cursor: pointer; }
-    .cell-absent-block strong { color: #ffffff !important; font-size: 13px; font-weight: 900; }
+    .cell-absent-block { background-color: var(--solid-red) !important; color: #ffffff !important; box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3); cursor: pointer; }
+    .cell-absent-block strong { color: #ffffff !important; font-size: 14px; font-weight: 900; }
 
     .cell-disabled-block { background-color: var(--disabled-bg) !important; color: var(--disabled-text) !important; border: 1px solid var(--border-color); cursor: not-allowed; opacity: 0.7; }
 
-    .summary-side-card, .chart-box { background: #fff; padding: 16px; border-radius: 18px; border: 2px solid var(--border-color); margin-bottom: 14px; }
-    .summary-line { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; padding: 6px 0; border-bottom: 1px dashed var(--border-color); color: var(--text-dark); }
+    .summary-side-card, .chart-box { background: #fff; padding: 20px; border-radius: 24px; border: 1px solid var(--border-color); margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .summary-line { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; padding: 8px 0; border-bottom: 1px dashed var(--border-color); color: var(--text-dark); }
 
     /* MODAL WINDOWS */
-    .popup-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
-    .modal-content-box { background: #fff; width: 100%; max-width: 380px; border-radius: 20px; padding: 20px; text-align: center; position: relative; border: 2px solid var(--border-color); }
-    .close-modal-btn { position: absolute; top: 14px; right: 16px; border: none; background: none; font-size: 20px; cursor: pointer; font-weight: 900; color: var(--text-dark); }
+    .popup-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
+    .modal-content-box { background: #fff; width: 100%; max-width: 400px; border-radius: 28px; padding: 24px; text-align: center; position: relative; border: 1px solid var(--border-color); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+    .close-modal-btn { position: absolute; top: 16px; right: 20px; border: none; background: none; font-size: 22px; cursor: pointer; font-weight: 900; color: var(--text-dark); }
   </style>
 </head>
 <body>
@@ -277,12 +344,12 @@
         <!-- HELP ICON -->
         <div onclick="openHelpModal()" class="help-support-icon">
           <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="32" cy="32" r="30" fill="#2563EB"/>
+            <circle cx="32" cy="32" r="30" fill="#4F46E5"/>
             <path d="M20 44C20 37.3726 25.3726 32 32 32C38.6274 32 44 37.3726 44 44" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
             <circle cx="32" cy="22" r="7" fill="#FFFFFF"/>
-            <path d="M16 26C16 20 20 16 32 16C44 16 48 20 48 26" stroke="#60A5FA" stroke-width="4" stroke-linecap="round"/>
-            <rect x="14" y="22" width="6" height="12" rx="3" fill="#1D4ED8" stroke="#FFFFFF" stroke-width="2"/>
-            <rect x="44" y="22" width="6" height="12" rx="3" fill="#1D4ED8" stroke="#FFFFFF" stroke-width="2"/>
+            <path d="M16 26C16 20 20 16 32 16C44 16 48 20 48 26" stroke="#818CF8" stroke-width="4" stroke-linecap="round"/>
+            <rect x="14" y="22" width="6" height="12" rx="3" fill="#3730A3" stroke="#FFFFFF" stroke-width="2"/>
+            <rect x="44" y="22" width="6" height="12" rx="3" fill="#3730A3" stroke="#FFFFFF" stroke-width="2"/>
             <path d="M46 32C46 37 40 39 36 39" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
           </svg>
         </div>
@@ -290,8 +357,8 @@
 
       <div class="status-content">
         <div>
-          <div class="today-date-text" id="todayDateTxt">21 Aug 2026</div>
-          <div class="today-day-text" id="todayDayTxt">Friday</div>
+          <div class="today-date-text" id="todayDateTxt">22 Aug 2026</div>
+          <div class="today-day-text" id="todayDayTxt">Saturday</div>
         </div>
 
         <!-- CAMERA CIRCLE -->
@@ -301,7 +368,7 @@
         </div>
 
         <div style="width:100%;">
-          <div style="font-size:11px; font-weight:800; color:var(--text-muted); margin-bottom:2px;">Status</div>
+          <div style="font-size:11px; font-weight:800; color:var(--text-muted); margin-bottom:2px; text-transform:uppercase;">Status</div>
           <div id="statusBadge" class="status-badge badge-absent">Absent</div>
 
           <!-- PUNCH ACTION BUTTON -->
@@ -323,14 +390,18 @@
         </div>
       </div>
 
-      <!-- FOOTER WITH CIRCLE LOGOUT BUTTON AT RIGHT CORNER -->
+      <!-- FOOTER WITH MATCHED YELLOW THEME POWER LOGOUT BUTTON -->
       <div class="app-footer">
         <div class="footer-left-info">
           <div>Rohit Kumar</div>
-          <div style="font-size:10px; color:var(--text-muted);">Emp ID: ARC-8021</div>
+          <div style="font-size:11px; color:var(--text-muted);">Emp ID: ARC-8021</div>
         </div>
-        <button class="btn-circle-logout" onclick="logoutUser()" title="Logout">
-          🚪
+        <button class="btn-power-logout" onclick="logoutUser()" title="Logout">
+          <!-- POWER ICON -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3V12" stroke="#d97706" stroke-width="3" stroke-linecap="round"/>
+            <path d="M18.36 6.64A9 9 0 1 1 5.64 6.64" stroke="#d97706" stroke-width="3" stroke-linecap="round"/>
+          </svg>
         </button>
       </div>
     </div>
@@ -340,10 +411,10 @@
   <div class="dashboard-view" id="dashboardView">
     <div class="dash-header">
       <div>
-        <h2 style="font-size:20px; font-weight:900; color:var(--text-dark);">Calendar & Dashboard</h2>
-        <p style="font-size:12px; color:var(--text-muted); font-weight:800;">Rohit Kumar 👋</p>
+        <h2 style="font-size:22px; font-weight:900; color:var(--navy-dark);">Calendar & Dashboard</h2>
+        <p style="font-size:13px; color:var(--text-muted); font-weight:700;">Rohit Kumar 👋</p>
       </div>
-      <button onclick="closeDashboardView()" style="background:var(--navy-bg); color:#fff; border:none; padding:8px 16px; border-radius:10px; font-weight:900; cursor:pointer;">Close ✕</button>
+      <button onclick="closeDashboardView()" style="background:var(--indigo-primary); color:#fff; border:none; padding:10px 20px; border-radius:12px; font-weight:900; cursor:pointer; box-shadow:0 4px 10px rgba(79, 70, 229, 0.3);">Close ✕</button>
     </div>
 
     <div class="metrics-row">
@@ -353,23 +424,23 @@
     </div>
 
     <div class="dash-grid-layout">
-      <!-- CALENDAR BOX -->
+      <!-- CALENDAR BOX WITH FULL WEEK DAY NAMES -->
       <div class="cal-box">
-        <h3 style="font-size:16px; font-weight:900; color:var(--text-dark);" id="calMonthYear">August 2026</h3>
+        <h3 style="font-size:18px; font-weight:900; color:var(--navy-dark);" id="calMonthYear">August 2026</h3>
         <div class="cal-grid-view" id="calGridView"></div>
       </div>
 
       <!-- SUMMARY & CHART -->
       <div>
         <div class="summary-side-card">
-          <h4 style="font-size:14px; font-weight:900; margin-bottom:10px; color:var(--text-dark);">Monthly Breakdown</h4>
+          <h4 style="font-size:15px; font-weight:900; margin-bottom:12px; color:var(--navy-dark);">Monthly Breakdown</h4>
           <div class="summary-line"><span>🟩 Solid Present</span><strong style="color:var(--solid-green);" id="sPresent">0</strong></div>
           <div class="summary-line"><span>🟥 Solid Absent</span><strong style="color:var(--solid-red);" id="sAbsent">0</strong></div>
           <div class="summary-line"><span>⬜ No Record</span><strong style="color:var(--disabled-text);" id="sBlank">0</strong></div>
         </div>
 
         <div class="chart-box">
-          <h4 style="font-size:14px; font-weight:900; margin-bottom:8px; color:var(--text-dark);">Attendance Status</h4>
+          <h4 style="font-size:15px; font-weight:900; margin-bottom:12px; color:var(--navy-dark);">Attendance Status</h4>
           <canvas id="miniBarChart" height="180"></canvas>
         </div>
       </div>
@@ -380,14 +451,14 @@
   <div class="popup-modal" id="dateDetailModal">
     <div class="modal-content-box">
       <button class="close-modal-btn" onclick="closeModal('dateDetailModal')">✕</button>
-      <h3 id="modalDateTitle" style="font-size:16px; font-weight:900; margin-bottom:12px; color:var(--text-dark);">Details</h3>
+      <h3 id="modalDateTitle" style="font-size:18px; font-weight:900; margin-bottom:16px; color:var(--navy-dark);">Details</h3>
       
-      <div style="width:100px; height:100px; border-radius:50%; margin:0 auto 14px auto; overflow:hidden; border:4px solid #0f172a; background:#e2e8f0; display:flex; align-items:center; justify-content:center;">
+      <div style="width:110px; height:110px; border-radius:50%; margin:0 auto 16px auto; overflow:hidden; border:4px solid var(--indigo-primary); background:#e2e8f0; display:flex; align-items:center; justify-content:center;">
         <img id="modalCapturedPhoto" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
-        <span id="noPhotoText" style="font-size:11px; font-weight:800; color:var(--text-muted);">No Photo</span>
+        <span id="noPhotoText" style="font-size:12px; font-weight:800; color:var(--text-muted);">No Photo</span>
       </div>
 
-      <div style="text-align:left; background:#f8fafc; padding:14px; border-radius:12px; font-weight:800; font-size:12px; line-height:2; border:1px solid var(--border-color);">
+      <div style="text-align:left; background:#f8fafc; padding:16px; border-radius:16px; font-weight:800; font-size:13px; line-height:2; border:1px solid var(--border-color);">
         <div>Status: <span id="modalStatus" style="font-weight:900;">--</span></div>
         <div>Check In: <span id="modalInTime" style="color:var(--solid-green);">--</span></div>
         <div>Check Out: <span id="modalOutTime" style="color:var(--solid-red);">--</span></div>
@@ -400,13 +471,13 @@
   <div class="popup-modal" id="helpModal">
     <div class="modal-content-box">
       <button class="close-modal-btn" onclick="closeModal('helpModal')">✕</button>
-      <h3 style="font-size:16px; font-weight:900; margin-bottom:6px; color:var(--text-dark);">Help & Support</h3>
-      <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px; font-weight:700;">Send query to Admin</p>
-      <textarea id="queryText" style="width:100%; height:80px; border:2px solid var(--border-color); border-radius:10px; padding:8px; font-size:12px; font-weight:700; outline:none; margin-bottom:10px;" placeholder="Describe issue..."></textarea>
-      <button class="btn-login" style="padding:10px;" onclick="submitAdminQuery()">Submit Query</button>
+      <h3 style="font-size:18px; font-weight:900; margin-bottom:6px; color:var(--navy-dark);">Help & Support</h3>
+      <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px; font-weight:700;">Send query to Admin</p>
+      <textarea id="queryText" style="width:100%; height:90px; border:2px solid var(--border-color); border-radius:12px; padding:10px; font-size:13px; font-weight:700; outline:none; margin-bottom:14px;" placeholder="Describe issue..."></textarea>
+      <button class="btn-login" style="padding:12px;" onclick="submitAdminQuery()">Submit Query</button>
       
-      <div id="adminReplyBox" style="margin-top:10px; text-align:left; font-size:11px; background:#f1f5f9; padding:10px; border-radius:10px; font-weight:800; display:none; border:1px solid var(--border-color);">
-        <strong>Admin Status:</strong> <span style="color:#1d4ed8;">Pending Review</span>
+      <div id="adminReplyBox" style="margin-top:12px; text-align:left; font-size:12px; background:#f1f5f9; padding:12px; border-radius:12px; font-weight:800; display:none; border:1px solid var(--border-color);">
+        <strong>Admin Status:</strong> <span style="color:#4f46e5;">Pending Review</span>
       </div>
     </div>
   </div>
@@ -521,6 +592,7 @@
 
       document.getElementById('calMonthYear').innerText = `${now.toLocaleString('en-US', { month: 'long' })} ${year}`;
 
+      /* FULL WEEK DAY NAMES */
       const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       days.forEach(d => calGrid.innerHTML += `<div class="cal-head">${d}</div>`);
 
@@ -628,7 +700,7 @@
         type: 'bar',
         data: {
           labels: ['Present', 'Absent', 'No Record'],
-          datasets: [{ data: [p, a, b], backgroundColor: ['#047857', '#b91c1c', '#cbd5e1'], borderRadius: 6 }]
+          datasets: [{ data: [p, a, b], backgroundColor: ['#10b981', '#ef4444', '#cbd5e1'], borderRadius: 8 }]
         },
         options: { responsive: true, plugins: { legend: { display: false } } }
       });
