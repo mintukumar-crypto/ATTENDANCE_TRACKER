@@ -14,6 +14,7 @@
     input { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 14px; outline: none; }
     button { width: 100%; padding: 14px; border: none; border-radius: 12px; background: #2563eb; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; }
     button:hover { background: #1d4ed8; }
+    button:disabled { background: #94a3b8; cursor: not-allowed; }
     .btn-out { background: #dc2626; display: none; margin-top: 10px; }
     .btn-out:hover { background: #b91c1c; }
     
@@ -28,6 +29,7 @@
     .history-table th { background: #f8fafc; color: #64748b; font-size: 11px; text-transform: uppercase; padding: 10px 8px; text-align: left; }
     .history-table td { padding: 10px 8px; font-size: 12px; border-bottom: 1px solid #f1f5f9; color: #334155; }
     .thumb-img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; border: 1px solid #2563eb; display: block; margin-top: 4px; }
+    #statusMsg { font-size: 12px; color: #2563eb; font-weight: 600; text-align: center; margin-top: 8px; }
   </style>
 </head>
 <body>
@@ -56,6 +58,7 @@
 
         <button id="btnIn" onclick="handlePunch('punchIn')">Punch IN</button>
         <button id="btnOut" class="btn-out" onclick="handlePunch('punchOut')">Punch OUT</button>
+        <div id="statusMsg"></div>
 
         <div class="history-section">
           <div class="history-title">
@@ -83,15 +86,27 @@
 
   <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmZTB0kT0aiMhu0ah1cICCo-MwWdrUS_CsRX6WGHIsLINWL3kkF6Bv7g4zsjiIqF-h/exec';
-    let currentEmpId = '', userLocation = { lat: '', lng: '' };
+    let currentEmpId = '';
 
-    function getLocationPromise() {
+    // Accurate & Mandatory GPS Fetch
+    function getAccurateLocation() {
       return new Promise((resolve) => {
-        if (!navigator.geolocation) return resolve({ lat: '', lng: '' });
+        if (!navigator.geolocation) {
+          alert("GPS Support Not Available!");
+          return resolve(null);
+        }
         navigator.geolocation.getCurrentPosition(
-          pos => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-          err => resolve({ lat: '', lng: '' }),
-          { enableHighAccuracy: true, timeout: 5000 }
+          (pos) => {
+            resolve({
+              lat: pos.coords.latitude,
+              lng: pos.coords.longitude
+            });
+          },
+          (err) => {
+            alert("Location Permission Denied! Mobile/Browser Settings se Location Access Allow karein.");
+            resolve(null);
+          },
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
         );
       });
     }
@@ -109,8 +124,6 @@
         document.getElementById('loginBox').style.display = 'none';
         document.getElementById('actionBox').style.display = 'block';
         document.getElementById('welcomeUser').innerText = 'Welcome, ' + data.name;
-        
-        userLocation = await getLocationPromise();
         loadMyRecords();
       } else { alert(data.message); }
     }
@@ -145,12 +158,37 @@
     }
 
     async function handlePunch(type) {
-      userLocation = await getLocationPromise();
-      const photoBase64 = await capturePhoto();
-      if (!photoBase64) return alert("Photo missing!");
+      const btnIn = document.getElementById('btnIn');
+      const btnOut = document.getElementById('btnOut');
+      const statusMsg = document.getElementById('statusMsg');
 
-      const mapRoute = userLocation.lat ? `https://www.google.com/maps?q=${userLocation.lat},${userLocation.lng}` : '';
+      btnIn.disabled = true;
+      btnOut.disabled = true;
+      statusMsg.innerText = "Fetching GPS Location...";
+
+      // Fetch GPS first and wait for response
+      const coords = await getAccurateLocation();
       
+      if (!coords) {
+        statusMsg.innerText = "";
+        btnIn.disabled = false;
+        btnOut.disabled = false;
+        return alert("GPS Location mandatory hai attendance ke liye!");
+      }
+
+      statusMsg.innerText = "Capturing Photo...";
+      const photoBase64 = await capturePhoto();
+      
+      if (!photoBase64) {
+        statusMsg.innerText = "";
+        btnIn.disabled = false;
+        btnOut.disabled = false;
+        return alert("Photo capture failed!");
+      }
+
+      statusMsg.innerText = "Saving Attendance...";
+      const mapRoute = `https://www.google.com/maps?q=${coords.lat},${coords.lng}`;
+
       const res = await fetch(GOOGLE_SCRIPT_URL, { 
         method: 'POST', 
         body: JSON.stringify({ 
@@ -158,19 +196,23 @@
           empId: currentEmpId, 
           photoUrl: photoBase64, 
           mapRoute: mapRoute,
-          lat: userLocation.lat,
-          lng: userLocation.lng
+          lat: coords.lat,
+          lng: coords.lng
         }) 
       });
       const data = await res.json();
 
+      statusMsg.innerText = "";
+      btnIn.disabled = false;
+      btnOut.disabled = false;
+
       if (data.success) {
         if (type === 'punchIn') {
-          document.getElementById('btnIn').style.display = 'none';
-          document.getElementById('btnOut').style.display = 'block';
+          btnIn.style.display = 'none';
+          btnOut.style.display = 'block';
           alert('Punched IN Successfully!');
         } else {
-          document.getElementById('btnOut').style.display = 'none';
+          btnOut.style.display = 'none';
           alert('Punched OUT Successfully!');
         }
         loadMyRecords();
