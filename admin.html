@@ -3,148 +3,197 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Enterprise Admin Console</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <title>Staff Portal - Attendance</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
-    body { background: #f8fafc; color: #0f172a; padding: 25px; }
-    .header { margin-bottom: 25px; }
-    .header h2 { font-size: 24px; font-weight: 800; color: #0f172a; }
-    .card { background: #ffffff; padding: 20px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; margin-bottom: 20px; }
-    .filter-bar { display: flex; gap: 15px; align-items: center; }
-    select, button { padding: 12px 18px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; }
-    select { background: #f8fafc; min-width: 240px; }
-    button { background: #2563eb; color: white; font-weight: 600; border: none; cursor: pointer; transition: 0.2s; }
+    body { background: #f0f3f8; color: #1e293b; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 15px; }
+    .app-card { background: #ffffff; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.06); width: 100%; max-width: 460px; overflow: hidden; border: 1px solid #e2e8f0; }
+    .app-header { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white; padding: 25px; text-align: center; }
+    .app-header h2 { font-size: 20px; font-weight: 700; }
+    .app-body { padding: 20px; }
+    input { width: 100%; padding: 14px; margin-bottom: 12px; border: 1px solid #cbd5e1; border-radius: 12px; font-size: 14px; outline: none; }
+    button { width: 100%; padding: 14px; border: none; border-radius: 12px; background: #2563eb; color: #fff; font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.2s; }
     button:hover { background: #1d4ed8; }
+    .btn-out { background: #dc2626; display: none; margin-top: 10px; }
+    .btn-out:hover { background: #b91c1c; }
     
-    .grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; }
-    @media (max-width: 1024px) { .grid { grid-template-columns: 1fr; } }
-    
-    table { width: 100%; border-collapse: collapse; text-align: left; }
-    th { padding: 12px; font-size: 11px; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #f1f5f9; }
-    td { padding: 12px; font-size: 13px; color: #334155; border-bottom: 1px solid #f1f5f9; }
-    .thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; border: 1px solid #2563eb; display: block; margin-top: 5px; }
-    .btn-map { background: #eff6ff; color: #2563eb; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; }
-    .btn-map:hover { background: #dbeafe; }
-    #map { height: 450px; border-radius: 16px; border: 1px solid #cbd5e1; }
+    #cameraBox { display: none; margin: 15px 0; background: #000; border-radius: 16px; overflow: hidden; position: relative; }
+    video { width: 100%; height: 220px; object-fit: cover; }
+    #timer { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 52px; color: white; font-weight: 800; text-shadow: 0 0 12px rgba(0,0,0,0.8); }
+    canvas { display: none; }
+
+    .history-section { margin-top: 25px; border-top: 1px dashed #e2e8f0; padding-top: 20px; }
+    .history-title { font-weight: 700; font-size: 15px; color: #0f172a; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .history-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .history-table th { background: #f8fafc; color: #64748b; font-size: 11px; text-transform: uppercase; padding: 10px 8px; text-align: left; }
+    .history-table td { padding: 10px 8px; font-size: 12px; border-bottom: 1px solid #f1f5f9; color: #334155; }
+    .thumb-img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; border: 1px solid #2563eb; display: block; margin-top: 4px; }
   </style>
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 
-  <div class="header">
-    <h2>Enterprise Attendance & Track Control</h2>
-  </div>
-
-  <div class="card filter-bar">
-    <select id="empSelect"><option value="ALL">All Employees</option></select>
-    <button onclick="fetchRecords()">Search Records</button>
-  </div>
-
-  <div class="grid">
-    <div class="card" style="overflow-x:auto;">
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Emp ID</th>
-            <th>Punch In</th>
-            <th>Punch Out</th>
-            <th>Route Line</th>
-          </tr>
-        </thead>
-        <tbody id="tableBody">
-          <tr><td colspan="5" style="text-align:center;">Click Search Records to view data</td></tr>
-        </tbody>
-      </table>
+  <div class="app-card">
+    <div class="app-header">
+      <h2>Attendance Portal</h2>
     </div>
+    
+    <div class="app-body">
+      <div id="loginBox">
+        <input type="text" id="empId" placeholder="Employee ID">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="loginUser()">Sign In</button>
+      </div>
 
-    <div class="card">
-      <h3 style="color:#0f172a; margin-bottom:15px; font-size:16px;">Route Track Map</h3>
-      <div id="map"></div>
+      <div id="actionBox" style="display:none;">
+        <h3 id="welcomeUser" style="color:#0f172a; font-size: 16px; font-weight:700;">Welcome</h3>
+        <p style="color:#64748b; font-size:12px; margin-bottom:15px;">Mark your daily attendance below</p>
+
+        <div id="cameraBox">
+          <video id="webcam" autoplay playsinline></video>
+          <div id="timer">3</div>
+        </div>
+        <canvas id="canvas" width="320" height="240"></canvas>
+
+        <button id="btnIn" onclick="handlePunch('punchIn')">Punch IN</button>
+        <button id="btnOut" class="btn-out" onclick="handlePunch('punchOut')">Punch OUT</button>
+
+        <div class="history-section">
+          <div class="history-title">
+            <span>My Attendance Records</span>
+            <button onclick="loadMyRecords()" style="width:auto; padding:6px 12px; font-size:11px; background:#f1f5f9; color:#334155;">Refresh</button>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="history-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>In</th>
+                  <th>Out</th>
+                </tr>
+              </thead>
+              <tbody id="myHistoryBody">
+                <tr><td colspan="3" style="text-align:center;">Loading logs...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyXtBaxacajp-ETxTvgx6UgtMeqwnWWtNmUvL78xQ6TziRjpiOsL6zyVqOsBRdzR2vn/exec';
-    let map = null, routeLine = null, markerGroup = null;
+    let currentEmpId = '', userLocation = { lat: '', lng: '' };
 
-    // Classic Red & Green Marker Icons
-    const redIcon = L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-      iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-    });
-
-    const greenIcon = L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-      iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
-    });
-
-    async function loadEmployees() {
-      const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAllEmployees`);
-      const data = await res.json();
-      if (data.success) {
-        const select = document.getElementById('empSelect');
-        data.employees.forEach(e => select.innerHTML += `<option value="${e.id}">${e.name} (${e.id})</option>`);
+    function fetchCurrentLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => { 
+          userLocation = { lat: pos.coords.latitude, lng: pos.coords.longitude }; 
+        }, err => {}, { enableHighAccuracy: true });
       }
     }
 
-    async function fetchRecords() {
-      const empId = document.getElementById('empSelect').value;
-      const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAttendanceRecords&empId=${empId}`);
+    async function loginUser() {
+      const empId = document.getElementById('empId').value.trim();
+      const password = document.getElementById('password').value.trim();
+      if (!empId || !password) return alert('Enter credentials!');
+
+      const res = await fetch(GOOGLE_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'validateUser', empId, password }) });
       const data = await res.json();
-      const tbody = document.getElementById('tableBody');
-      tbody.innerHTML = '';
+
+      if (data.success) {
+        currentEmpId = empId;
+        document.getElementById('loginBox').style.display = 'none';
+        document.getElementById('actionBox').style.display = 'block';
+        document.getElementById('welcomeUser').innerText = 'Welcome, ' + data.name;
+        
+        fetchCurrentLocation();
+        loadMyRecords();
+      } else { alert(data.message); }
+    }
+
+    async function capturePhoto() {
+      const cameraBox = document.getElementById('cameraBox'), video = document.getElementById('webcam'), timer = document.getElementById('timer'), canvas = document.getElementById('canvas');
+      cameraBox.style.display = 'block';
+      
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        video.srcObject = stream; await video.play();
+
+        return new Promise((resolve) => {
+          let count = 3; timer.innerText = count;
+          const countdown = setInterval(() => {
+            count--;
+            if (count > 0) { timer.innerText = count; } 
+            else {
+              clearInterval(countdown);
+              canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+              stream.getTracks().forEach(t => t.stop());
+              cameraBox.style.display = 'none';
+              resolve(canvas.toDataURL('image/jpeg', 0.6));
+            }
+          }, 1000);
+        });
+      } catch (err) {
+        alert('Camera Permission Required!');
+        cameraBox.style.display = 'none';
+        return '';
+      }
+    }
+
+    async function handlePunch(type) {
+      fetchCurrentLocation();
+      const photoBase64 = await capturePhoto();
+      if (!photoBase64) return alert("Photo missing!");
+
+      const mapRoute = userLocation.lat ? `https://www.google.com/maps?q=${userLocation.lat},${userLocation.lng}` : '';
+      const res = await fetch(GOOGLE_SCRIPT_URL, { 
+        method: 'POST', 
+        body: JSON.stringify({ 
+          action: type, 
+          empId: currentEmpId, 
+          photoUrl: photoBase64, 
+          mapRoute: mapRoute,
+          lat: userLocation.lat,
+          lng: userLocation.lng
+        }) 
+      });
+      const data = await res.json();
+
+      if (data.success) {
+        if (type === 'punchIn') {
+          document.getElementById('btnIn').style.display = 'none';
+          document.getElementById('btnOut').style.display = 'block';
+          alert('Punched IN Successfully!');
+        } else {
+          document.getElementById('btnOut').style.display = 'none';
+          alert('Punched OUT Successfully!');
+        }
+        loadMyRecords();
+      } else { alert(data.message); }
+    }
+
+    async function loadMyRecords() {
+      const tbody = document.getElementById('myHistoryBody');
+      const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAttendanceRecords&empId=${currentEmpId}`);
+      const data = await res.json();
 
       if (data.success && data.records.length > 0) {
+        tbody.innerHTML = '';
         data.records.forEach(r => {
-          let inImg = r.inPhoto && r.inPhoto.startsWith('http') ? `<br><a href="${r.inPhoto}" target="_blank"><img src="${r.inPhoto}" class="thumb"></a>` : '<br><span style="font-size:11px;color:#94a3b8;">No Photo</span>';
-          let outImg = r.outPhoto && r.outPhoto.startsWith('http') ? `<br><a href="${r.outPhoto}" target="_blank"><img src="${r.outPhoto}" class="thumb"></a>` : '<br><span style="font-size:11px;color:#94a3b8;">No Photo</span>';
+          let inImg = r.inPhoto && r.inPhoto.startsWith('http') ? `<br><a href="${r.inPhoto}" target="_blank"><img src="${r.inPhoto}" class="thumb-img"></a>` : '';
+          let outImg = r.outPhoto && r.outPhoto.startsWith('http') ? `<br><a href="${r.outPhoto}" target="_blank"><img src="${r.outPhoto}" class="thumb-img"></a>` : '';
 
           tbody.innerHTML += `
             <tr>
               <td><b>${r.date}</b></td>
-              <td><b>${r.empId}</b></td>
               <td>${r.inTime || '-'}${inImg}</td>
               <td>${r.outTime || '-'}${outImg}</td>
-              <td><button class="btn-map" onclick="viewRoute('${r.empId}')">View Map</button></td>
             </tr>
           `;
         });
-      } else { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No records found</td></tr>'; }
+      } else { tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No records found.</td></tr>'; }
     }
-
-    async function viewRoute(empId) {
-      const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getEmployeeRoute&empId=${empId}`);
-      const data = await res.json();
-
-      if (data.success && data.points.length > 0) {
-        const latLngs = data.points.map(p => [p.lat, p.lng]);
-        
-        if (!map) {
-          map = L.map('map').setView(latLngs[0], 14);
-          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-          markerGroup = L.layerGroup().addTo(map);
-        } else {
-          markerGroup.clearLayers();
-        }
-
-        if (routeLine) map.removeLayer(routeLine);
-        routeLine = L.polyline(latLngs, { color: '#2563eb', weight: 5, opacity: 0.8 }).addTo(map);
-
-        // Start Point (Green Cone Marker)
-        L.marker(latLngs[0], { icon: greenIcon }).addTo(markerGroup).bindPopup('<b>Punch IN Location</b>');
-        
-        // End Point (Red Cone Marker)
-        L.marker(latLngs[latLngs.length - 1], { icon: redIcon }).addTo(markerGroup).bindPopup('<b>Current / Punch OUT Location</b>');
-
-        map.fitBounds(routeLine.getBounds());
-      } else { alert('GPS Location points nahi mile!'); }
-    }
-
-    window.onload = loadEmployees;
   </script>
 </body>
 </html>
