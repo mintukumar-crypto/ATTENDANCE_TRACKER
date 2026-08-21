@@ -3,254 +3,354 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARCOS DESK v10.8 - Admin Control Center</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <title>ARCOS - Admin Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --arcos-black: #000000;
-      --arcos-yellow: #FFC000;
-      --arcos-yellow-dark: #E0A800;
-      --bg-dark: #0A0A0A;
-      --card-bg: #121212;
-      --border-color: #262626;
-      --text-white: #FFFFFF;
-      --text-muted: #8E8E8E;
-      --green-success: #10B981;
+      --navy-sidebar: #0b1329;
+      --yellow-accent: #ffb703;
+      --body-bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text-dark: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --green-solid: #047857;
+      --red-solid: #b91c1c;
+      --orange-solid: #d97706;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    
-    body { 
-      background: var(--arcos-black); 
-      color: var(--text-white); 
-      min-height: 100vh; 
+    body { background: var(--body-bg); color: var(--text-dark); display: flex; height: 100vh; overflow: hidden; }
+
+    /* SIDEBAR SYSTEM */
+    .admin-sidebar {
+      width: 240px;
+      background: var(--navy-sidebar);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      flex-shrink: 0;
     }
 
-    /* Admin Navbar - ARCOS DESK V10.8 Style */
-    .navbar {
-      background: var(--arcos-black);
-      color: var(--text-white);
-      padding: 18px 30px;
+    .brand-area {
+      padding: 24px 20px;
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--yellow-accent);
+      letter-spacing: 1px;
+    }
+
+    .nav-list {
+      list-style: none;
+      padding: 0 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-item {
+      padding: 12px 16px;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+
+    .nav-item:hover { color: #ffffff; background: rgba(255,255,255,0.05); }
+
+    .nav-item.active {
+      background: var(--yellow-accent);
+      color: var(--navy-sidebar);
+      font-weight: 900;
+    }
+
+    /* MAIN CONTENT AREA */
+    .main-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .top-header {
+      background: #ffffff;
+      padding: 16px 28px;
+      border-bottom: 1.5px solid var(--border-color);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 3px solid var(--arcos-yellow);
     }
-    
-    .nav-brand { display: flex; align-items: center; gap: 14px; }
-    .nav-brand h1 { 
-      font-size: 20px; 
-      font-weight: 900; 
-      letter-spacing: 0.5px; 
-      color: var(--text-white);
-    }
-    .nav-brand h1 span { color: var(--arcos-yellow); }
 
-    /* Tabs Bar */
-    .tab-bar {
-      background: var(--bg-dark);
-      border-bottom: 1px solid var(--border-color);
-      padding: 0 30px;
+    .page-title-text { font-size: 18px; font-weight: 800; }
+    .user-profile-badge { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; }
+    .avatar-circle { width: 32px; height: 32px; border-radius: 50%; background: #cbd5e1; }
+
+    .page-container { padding: 24px 28px; }
+
+    /* CONTENT TABS */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* METRIC CARDS */
+    .metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .metric-card {
+      background: #ffffff;
+      padding: 18px;
+      border-radius: 14px;
+      border: 1.5px solid var(--border-color);
+    }
+    .metric-card span { font-size: 12px; font-weight: 700; color: var(--text-muted); }
+    .metric-card h2 { font-size: 28px; font-weight: 900; margin-top: 4px; }
+
+    /* DATA TABLES */
+    .table-card {
+      background: #ffffff;
+      border-radius: 14px;
+      border: 1.5px solid var(--border-color);
+      overflow: hidden;
+      margin-top: 16px;
+    }
+
+    .table-header-tools {
+      padding: 16px;
       display: flex;
-      gap: 20px;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1.5px solid var(--border-color);
     }
-    
-    .tab-item {
-      padding: 16px 14px;
+
+    .action-btn {
+      background: var(--yellow-accent);
+      color: var(--navy-sidebar);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
       font-weight: 800;
-      font-size: 13px;
-      color: var(--text-muted);
+      font-size: 12px;
       cursor: pointer;
-      border-bottom: 3px solid transparent;
-      letter-spacing: 0.5px;
-      transition: all 0.2s;
     }
 
-    .tab-item.active { 
-      color: var(--arcos-yellow); 
-      border-bottom-color: var(--arcos-yellow); 
-      background: rgba(255, 192, 0, 0.05);
-    }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th { background: #f8fafc; padding: 12px 16px; font-weight: 800; color: var(--text-muted); border-bottom: 1px solid var(--border-color); }
+    td { padding: 12px 16px; font-weight: 700; border-bottom: 1px solid var(--border-color); }
 
-    .tab-item:hover:not(.active) {
-      color: var(--text-white);
-    }
-
-    /* Container & Card Layout */
-    .container { padding: 30px; max-width: 1250px; margin: 0 auto; }
-    
-    .card { 
-      background: var(--card-bg); 
-      border-radius: 14px; 
-      border: 1px solid var(--border-color); 
-      padding: 24px; 
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-
-    .card h3 {
-      color: var(--arcos-yellow);
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 15px;
-      letter-spacing: 0.5px;
-      border-left: 4px solid var(--arcos-yellow);
-      padding-left: 10px;
-    }
-
-    /* Table Styling */
-    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    
-    th { 
-      background: var(--arcos-yellow); 
-      padding: 14px 12px; 
-      text-align: left; 
-      font-size: 11px; 
-      text-transform: uppercase; 
-      color: var(--arcos-black); 
-      font-weight: 900;
-      letter-spacing: 0.5px;
-    }
-    
-    td { 
-      padding: 14px 12px; 
-      font-size: 13px; 
-      border-bottom: 1px solid var(--border-color); 
-      color: var(--text-white);
-    }
-
-    tr:hover {
-      background: rgba(255, 192, 0, 0.02);
-    }
-
-    /* Badges */
-    .badge-open { 
-      background: rgba(255, 192, 0, 0.15); 
-      color: var(--arcos-yellow); 
-      border: 1px solid var(--arcos-yellow);
-      padding: 4px 8px; 
-      border-radius: 6px; 
-      font-weight: 800; 
-      font-size: 10px; 
-    }
-    
-    .badge-resolved { 
-      background: rgba(16, 185, 129, 0.15); 
-      color: var(--green-success); 
-      border: 1px solid var(--green-success);
-      padding: 4px 8px; 
-      border-radius: 6px; 
-      font-weight: 800; 
-      font-size: 10px; 
-    }
-
-    /* Action Buttons */
-    .btn-resolve { 
-      padding: 8px 14px; 
-      background: var(--arcos-yellow); 
-      color: var(--arcos-black); 
-      border: none; 
-      border-radius: 6px; 
-      font-weight: 800; 
+    .status-tag {
+      padding: 4px 10px;
+      border-radius: 12px;
       font-size: 11px;
-      cursor: pointer; 
-      text-transform: uppercase;
-      transition: all 0.2s;
+      font-weight: 800;
+      display: inline-block;
     }
+    .tag-present { background: #d1fae5; color: var(--green-solid); }
+    .tag-absent { background: #fee2e2; color: var(--red-solid); }
+    .tag-pending { background: #fef3c7; color: var(--orange-solid); }
 
-    .btn-resolve:hover {
-      background: var(--arcos-yellow-dark);
-      transform: translateY(-1px);
-    }
+    /* CHARTS GRID */
+    .dashboard-charts { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 24px; }
+    .chart-box { background: #fff; padding: 18px; border-radius: 14px; border: 1.5px solid var(--border-color); }
   </style>
 </head>
 <body>
 
-  <!-- Top Navbar -->
-  <div class="navbar">
-    <div class="nav-brand">
-      <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
-        <path d="M50 15 C30 15 20 35 20 50 C20 70 35 85 50 85 C65 85 80 70 80 50" stroke="#FFC000" stroke-width="12" stroke-linecap="round"/>
-        <circle cx="50" cy="50" r="8" fill="#ffffff"/>
-      </svg>
-      <h1>ARCOS <span>DESK v10.8</span> - CONTROL CENTER</h1>
+  <!-- ADMIN SIDEBAR -->
+  <aside class="admin-sidebar">
+    <div class="brand-area">ARCOS</div>
+    <ul class="nav-list">
+      <li class="nav-item active" onclick="switchAdminTab('dashboard', this)"><span>📊</span> Dashboard</li>
+      <li class="nav-item" onclick="switchAdminTab('attendance', this)"><span>📋</span> Attendance</li>
+      <li class="nav-item" onclick="switchAdminTab('employees', this)"><span>👥</span> Employees</li>
+      <li class="nav-item" onclick="switchAdminTab('shifts', this)"><span>⏱️</span> Shifts</li>
+      <li class="nav-item" onclick="switchAdminTab('reports', this)"><span>📈</span> Reports</li>
+      <li class="nav-item" onclick="switchAdminTab('leaves', this)"><span>📅</span> Leaves</li>
+      <li class="nav-item" onclick="switchAdminTab('holidays', this)"><span>🎉</span> Holidays</li>
+      <li class="nav-item" onclick="switchAdminTab('settings', this)"><span>⚙️</span> Settings</li>
+    </ul>
+  </aside>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="main-wrapper">
+    <header class="top-header">
+      <div class="page-title-text" id="topNavTitle">Attendance Management System</div>
+      <div class="user-profile-badge">
+        <span>Welcome, <strong>Admin</strong></span>
+        <div class="avatar-circle"></div>
+      </div>
+    </header>
+
+    <div class="page-container">
+      
+      <!-- 1. DASHBOARD -->
+      <section id="dashboard" class="tab-content active">
+        <div style="margin-bottom:16px;">
+          <h2 style="font-size:20px; font-weight:900;">Good Morning, Admin!</h2>
+          <p style="font-size:12px; color:var(--text-muted); font-weight:700;">Here's what's happening today.</p>
+        </div>
+
+        <div class="metrics-grid">
+          <div class="metric-card"><span>Total Employees</span><h2>523</h2></div>
+          <div class="metric-card"><span>Present Today</span><h2 style="color:var(--green-solid);">438</h2></div>
+          <div class="metric-card"><span>Absent Today</span><h2 style="color:var(--red-solid);">85</h2></div>
+          <div class="metric-card"><span>Late Comers</span><h2 style="color:var(--orange-solid);">23</h2></div>
+        </div>
+
+        <div class="dashboard-charts">
+          <div class="chart-box">
+            <h4 style="font-size:14px; font-weight:800; margin-bottom:12px;">Attendance Overview</h4>
+            <canvas id="overviewChart" height="120"></canvas>
+          </div>
+          <div class="chart-box">
+            <h4 style="font-size:14px; font-weight:800; margin-bottom:12px;">Shift Distribution</h4>
+            <canvas id="shiftChart" height="180"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. ATTENDANCE MARKING -->
+      <section id="attendance" class="tab-content">
+        <h2 style="font-size:18px; font-weight:900; margin-bottom:16px;">Mark Attendance</h2>
+        <div class="table-card">
+          <div class="table-header-tools">
+            <input type="text" placeholder="Search employee..." style="padding:8px 12px; border:1px solid var(--border-color); border-radius:8px; font-weight:700;">
+            <button class="action-btn">+ Bulk Import</button>
+          </div>
+          <table>
+            <thead>
+              <tr><th>Employee ID</th><th>Name</th><th>Shift</th><th>Check In</th><th>Check Out</th><th>Status</th><th>Action</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>EMP001</td><td>Rohit Kumar</td><td>A Shift</td><td>09:01 AM</td><td>--</td><td><span class="status-tag tag-present">Present</span></td><td><button class="action-btn">Mark Out</button></td></tr>
+              <tr><td>EMP002</td><td>Anjali Sharma</td><td>A Shift</td><td>09:05 AM</td><td>--</td><td><span class="status-tag tag-present">Present</span></td><td><button class="action-btn">Mark Out</button></td></tr>
+              <tr><td>EMP003</td><td>Vikram Singh</td><td>A Shift</td><td>--</td><td>--</td><td><span class="status-tag tag-absent">Absent</span></td><td><button class="action-btn">Mark In</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 3. EMPLOYEES -->
+      <section id="employees" class="tab-content">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 style="font-size:18px; font-weight:900;">Employees</h2>
+          <button class="action-btn">+ Add Employee</button>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr><th>Emp ID</th><th>Name</th><th>Designation</th><th>Department</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>EMP001</td><td>Rohit Kumar</td><td>Manager</td><td>Operations</td><td><span class="status-tag tag-present">Active</span></td></tr>
+              <tr><td>EMP002</td><td>Anjali Sharma</td><td>Supervisor</td><td>HR</td><td><span class="status-tag tag-present">Active</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 4. SHIFTS -->
+      <section id="shifts" class="tab-content">
+        <h2 style="font-size:18px; font-weight:900; margin-bottom:16px;">Shift Management</h2>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr><th>Shift Name</th><th>Start Time</th><th>End Time</th><th>Late Limit</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>A SHIFT</td><td>06:00 AM</td><td>02:00 PM</td><td>15 Mins</td></tr>
+              <tr><td>B SHIFT</td><td>02:00 PM</td><td>10:00 PM</td><td>15 Mins</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 5. REPORTS -->
+      <section id="reports" class="tab-content">
+        <h2 style="font-size:18px; font-weight:900;">Attendance Reports</h2>
+        <div class="metrics-grid" style="margin-top:16px;">
+          <div class="metric-card"><span>Total Present Rate</span><h2>83.75%</h2></div>
+        </div>
+      </section>
+
+      <!-- 6. LEAVES -->
+      <section id="leaves" class="tab-content">
+        <h2 style="font-size:18px; font-weight:900; margin-bottom:16px;">Leave Requests</h2>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr><th>Emp ID</th><th>Name</th><th>Leave Type</th><th>Days</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>EMP001</td><td>Rohit Kumar</td><td>Casual Leave</td><td>2</td><td><span class="status-tag tag-pending">Pending</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 7. HOLIDAYS -->
+      <section id="holidays" class="tab-content">
+        <h2 style="font-size:18px; font-weight:900; margin-bottom:16px;">Holidays List</h2>
+        <div class="table-card">
+          <table>
+            <thead>
+              <tr><th>Holiday Name</th><th>Date</th><th>Day</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>New Year</td><td>01/01/2026</td><td>Thursday</td></tr>
+              <tr><td>Independence Day</td><td>15/08/2026</td><td>Saturday</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 8. SETTINGS -->
+      <section id="settings" class="tab-content">
+        <h2 style="font-size:18px; font-weight:900; margin-bottom:16px;">System Settings</h2>
+        <div class="chart-box" style="max-width:500px;">
+          <div style="margin-bottom:12px;">
+            <label style="font-size:12px; font-weight:800; display:block; margin-bottom:4px;">Company Name</label>
+            <input type="text" value="Arcos Solutions" style="width:100%; padding:8px; border:1px solid var(--border-color); border-radius:6px; font-weight:700;">
+          </div>
+          <button class="action-btn">Save Changes</button>
+        </div>
+      </section>
+
     </div>
-  </div>
+  </main>
 
-  <!-- Tabs Navigation -->
-  <div class="tab-bar">
-    <div class="tab-item active" onclick="switchTab('queries')">🚨 STAFF QUERIES</div>
-  </div>
-
-  <!-- Main Work Area -->
-  <div class="container">
-    <div class="card" id="queriesSection">
-      <h3>Staff Raised Queries & Attendance Tickets</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Ticket ID</th>
-            <th>Emp ID</th>
-            <th>Target Date</th>
-            <th>Issue Note</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="queriesBody">
-          <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Loading queries...</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Backend Integration Logic -->
   <script>
-    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmZTB0kT0aiMhu0ah1cICCo-MwWdrUS_CsRX6WGHIsLINWL3kkF6Bv7g4zsjiIqF-h/exec';
+    function switchAdminTab(tabId, element) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
 
-    async function loadQueries() {
-      const tbody = document.getElementById('queriesBody');
-      try {
-        const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAdminQueries`);
-        const data = await res.json();
+      document.getElementById(tabId).classList.add('active');
+      element.classList.add('active');
+    }
 
-        if (data.success && data.queries.length > 0) {
-          tbody.innerHTML = '';
-          data.queries.forEach(q => {
-            let badge = q.status === 'OPEN' ? `<span class="badge-open">OPEN</span>` : `<span class="badge-resolved">RESOLVED</span>`;
-            let actionBtn = q.status === 'OPEN' ? `<button class="btn-resolve" onclick="resolveTicket('${q.ticketId}')">Mark Resolved</button>` : 'N/A';
-
-            tbody.innerHTML += `
-              <tr>
-                <td><b style="color: var(--arcos-yellow);">${q.ticketId}</b></td>
-                <td>${q.empId}</td>
-                <td>${q.date}</td>
-                <td>${q.issue}</td>
-                <td>${badge}</td>
-                <td>${actionBtn}</td>
-              </tr>
-            `;
-          });
-        } else { 
-          tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No pending queries found.</td></tr>'; 
+    // DASHBOARD CHARTS INIT
+    window.onload = function() {
+      const ctx1 = document.getElementById('overviewChart').getContext('2d');
+      new Chart(ctx1, {
+        type: 'line',
+        data: {
+          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+          datasets: [{ label: 'Present', data: [400, 420, 438, 410, 425, 390], borderColor: '#047857', tension: 0.3 }]
         }
-      } catch (err) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #EF4444;">Error loading queries. Check URL / Connection.</td></tr>';
-      }
-    }
-
-    async function resolveTicket(ticketId) {
-      const res = await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'resolveQuery', ticketId: ticketId })
       });
-      const data = await res.json();
-      if (data.success) {
-        alert("Ticket Marked Resolved!");
-        loadQueries();
-      }
-    }
 
-    loadQueries();
+      const ctx2 = document.getElementById('shiftChart').getContext('2d');
+      new Chart(ctx2, {
+        type: 'doughnut',
+        data: {
+          labels: ['A Shift', 'B Shift', 'C Shift'],
+          datasets: [{ data: [250, 150, 123], backgroundColor: ['#ffb703', '#0b1329', '#64748b'] }]
+        }
+      });
+    };
   </script>
 </body>
 </html>
