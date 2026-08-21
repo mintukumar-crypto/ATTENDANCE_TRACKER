@@ -3,82 +3,185 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ARCOS - Corporate Admin Control Panel</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>ARCOS DESK v10.8 - Admin Control Center</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-yellow: #f59e0b;
-      --dark-yellow: #d97706;
-      --bg-slate: #0f172a;
-      --card-bg: #ffffff;
-      --text-dark: #1e293b;
-      --border: #e2e8f0;
+      --arcos-black: #000000;
+      --arcos-yellow: #FFC000;
+      --arcos-yellow-dark: #E0A800;
+      --bg-dark: #0A0A0A;
+      --card-bg: #121212;
+      --border-color: #262626;
+      --text-white: #FFFFFF;
+      --text-muted: #8E8E8E;
+      --green-success: #10B981;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { background: #f8fafc; color: var(--text-dark); min-height: 100vh; }
+    
+    body { 
+      background: var(--arcos-black); 
+      color: var(--text-white); 
+      min-height: 100vh; 
+    }
 
-    /* Admin Navbar */
+    /* Admin Navbar - ARCOS DESK V10.8 Style */
     .navbar {
-      background: #0f172a;
-      color: #fff;
-      padding: 16px 30px;
+      background: var(--arcos-black);
+      color: var(--text-white);
+      padding: 18px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 4px solid var(--primary-yellow);
+      border-bottom: 3px solid var(--arcos-yellow);
     }
     
-    .nav-brand { display: flex; align-items: center; gap: 12px; }
-    .nav-brand h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
+    .nav-brand { display: flex; align-items: center; gap: 14px; }
+    .nav-brand h1 { 
+      font-size: 20px; 
+      font-weight: 900; 
+      letter-spacing: 0.5px; 
+      color: var(--text-white);
+    }
+    .nav-brand h1 span { color: var(--arcos-yellow); }
 
-    /* Tabs */
+    /* Tabs Bar */
     .tab-bar {
-      background: #fff;
-      border-bottom: 1px solid var(--border);
+      background: var(--bg-dark);
+      border-bottom: 1px solid var(--border-color);
       padding: 0 30px;
       display: flex;
       gap: 20px;
     }
+    
     .tab-item {
-      padding: 16px 10px;
-      font-weight: 700;
-      font-size: 14px;
-      color: #64748b;
+      padding: 16px 14px;
+      font-weight: 800;
+      font-size: 13px;
+      color: var(--text-muted);
       cursor: pointer;
       border-bottom: 3px solid transparent;
+      letter-spacing: 0.5px;
+      transition: all 0.2s;
     }
-    .tab-item.active { color: var(--dark-yellow); border-bottom-color: var(--primary-yellow); }
 
-    .container { padding: 30px; max-width: 1200px; margin: 0 auto; }
-    .card { background: #fff; border-radius: 20px; border: 1px solid var(--border); padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+    .tab-item.active { 
+      color: var(--arcos-yellow); 
+      border-bottom-color: var(--arcos-yellow); 
+      background: rgba(255, 192, 0, 0.05);
+    }
 
+    .tab-item:hover:not(.active) {
+      color: var(--text-white);
+    }
+
+    /* Container & Card Layout */
+    .container { padding: 30px; max-width: 1250px; margin: 0 auto; }
+    
+    .card { 
+      background: var(--card-bg); 
+      border-radius: 14px; 
+      border: 1px solid var(--border-color); 
+      padding: 24px; 
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .card h3 {
+      color: var(--arcos-yellow);
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 15px;
+      letter-spacing: 0.5px;
+      border-left: 4px solid var(--arcos-yellow);
+      padding-left: 10px;
+    }
+
+    /* Table Styling */
     table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-    th { background: #f8fafc; padding: 12px; text-align: left; font-size: 11px; text-transform: uppercase; color: #64748b; border-bottom: 1px solid var(--border); }
-    td { padding: 12px; font-size: 13px; border-bottom: 1px solid var(--border); }
+    
+    th { 
+      background: var(--arcos-yellow); 
+      padding: 14px 12px; 
+      text-align: left; 
+      font-size: 11px; 
+      text-transform: uppercase; 
+      color: var(--arcos-black); 
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+    
+    td { 
+      padding: 14px 12px; 
+      font-size: 13px; 
+      border-bottom: 1px solid var(--border-color); 
+      color: var(--text-white);
+    }
 
-    .badge-open { background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 6px; font-weight: 800; font-size: 10px; }
-    .badge-resolved { background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 6px; font-weight: 800; font-size: 10px; }
+    tr:hover {
+      background: rgba(255, 192, 0, 0.02);
+    }
 
-    .btn-resolve { padding: 6px 12px; background: #10b981; color: #fff; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; }
+    /* Badges */
+    .badge-open { 
+      background: rgba(255, 192, 0, 0.15); 
+      color: var(--arcos-yellow); 
+      border: 1px solid var(--arcos-yellow);
+      padding: 4px 8px; 
+      border-radius: 6px; 
+      font-weight: 800; 
+      font-size: 10px; 
+    }
+    
+    .badge-resolved { 
+      background: rgba(16, 185, 129, 0.15); 
+      color: var(--green-success); 
+      border: 1px solid var(--green-success);
+      padding: 4px 8px; 
+      border-radius: 6px; 
+      font-weight: 800; 
+      font-size: 10px; 
+    }
+
+    /* Action Buttons */
+    .btn-resolve { 
+      padding: 8px 14px; 
+      background: var(--arcos-yellow); 
+      color: var(--arcos-black); 
+      border: none; 
+      border-radius: 6px; 
+      font-weight: 800; 
+      font-size: 11px;
+      cursor: pointer; 
+      text-transform: uppercase;
+      transition: all 0.2s;
+    }
+
+    .btn-resolve:hover {
+      background: var(--arcos-yellow-dark);
+      transform: translateY(-1px);
+    }
   </style>
 </head>
 <body>
 
+  <!-- Top Navbar -->
   <div class="navbar">
     <div class="nav-brand">
       <svg width="32" height="32" viewBox="0 0 100 100" fill="none">
-        <path d="M50 15 C30 15 20 35 20 50 C20 70 35 85 50 85 C65 85 80 70 80 50" stroke="#f59e0b" stroke-width="12" stroke-linecap="round"/>
+        <path d="M50 15 C30 15 20 35 20 50 C20 70 35 85 50 85 C65 85 80 70 80 50" stroke="#FFC000" stroke-width="12" stroke-linecap="round"/>
         <circle cx="50" cy="50" r="8" fill="#ffffff"/>
       </svg>
-      <h1>ARCOS ADMIN CONTROL CENTER</h1>
+      <h1>ARCOS <span>DESK v10.8</span> - CONTROL CENTER</h1>
     </div>
   </div>
 
+  <!-- Tabs Navigation -->
   <div class="tab-bar">
     <div class="tab-item active" onclick="switchTab('queries')">🚨 STAFF QUERIES</div>
   </div>
 
+  <!-- Main Work Area -->
   <div class="container">
     <div class="card" id="queriesSection">
       <h3>Staff Raised Queries & Attendance Tickets</h3>
@@ -94,38 +197,45 @@
           </tr>
         </thead>
         <tbody id="queriesBody">
-          <tr><td colspan="6">Loading queries...</td></tr>
+          <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Loading queries...</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
+  <!-- Backend Integration Logic -->
   <script>
     const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmZTB0kT0aiMhu0ah1cICCo-MwWdrUS_CsRX6WGHIsLINWL3kkF6Bv7g4zsjiIqF-h/exec';
 
     async function loadQueries() {
       const tbody = document.getElementById('queriesBody');
-      const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAdminQueries`);
-      const data = await res.json();
+      try {
+        const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAdminQueries`);
+        const data = await res.json();
 
-      if (data.success && data.queries.length > 0) {
-        tbody.innerHTML = '';
-        data.queries.forEach(q => {
-          let badge = q.status === 'OPEN' ? `<span class="badge-open">OPEN</span>` : `<span class="badge-resolved">RESOLVED</span>`;
-          let actionBtn = q.status === 'OPEN' ? `<button class="btn-resolve" onclick="resolveTicket('${q.ticketId}')">Mark Resolved</button>` : 'N/A';
+        if (data.success && data.queries.length > 0) {
+          tbody.innerHTML = '';
+          data.queries.forEach(q => {
+            let badge = q.status === 'OPEN' ? `<span class="badge-open">OPEN</span>` : `<span class="badge-resolved">RESOLVED</span>`;
+            let actionBtn = q.status === 'OPEN' ? `<button class="btn-resolve" onclick="resolveTicket('${q.ticketId}')">Mark Resolved</button>` : 'N/A';
 
-          tbody.innerHTML += `
-            <tr>
-              <td><b>${q.ticketId}</b></td>
-              <td>${q.empId}</td>
-              <td>${q.date}</td>
-              <td>${q.issue}</td>
-              <td>${badge}</td>
-              <td>${actionBtn}</td>
-            </tr>
-          `;
-        });
-      } else { tbody.innerHTML = '<tr><td colspan="6">No pending queries found.</td></tr>'; }
+            tbody.innerHTML += `
+              <tr>
+                <td><b style="color: var(--arcos-yellow);">${q.ticketId}</b></td>
+                <td>${q.empId}</td>
+                <td>${q.date}</td>
+                <td>${q.issue}</td>
+                <td>${badge}</td>
+                <td>${actionBtn}</td>
+              </tr>
+            `;
+          });
+        } else { 
+          tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted);">No pending queries found.</td></tr>'; 
+        }
+      } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #EF4444;">Error loading queries. Check URL / Connection.</td></tr>';
+      }
     }
 
     async function resolveTicket(ticketId) {
