@@ -8,24 +8,24 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      /* MODERN PROFESSIONAL COLOR PALETTE */
-      --navy-dark: #0f172a;
-      --indigo-primary: #4f46e5;
-      --indigo-dark: #3730a3;
-      --yellow-accent: #f59e0b;
-      --yellow-light: #fffbeb;
-      --body-bg: #f1f5f9;
+      /* YELLOW & WHITE THEME PALETTE */
+      --yellow-primary: #f59e0b;
+      --yellow-dark: #d97706;
+      --yellow-light: #fef3c7;
+      --yellow-soft-bg: #fffbeb;
+      --body-bg: #ffffff;
       --card-bg: #ffffff;
-      --text-dark: #1e293b;
-      --text-muted: #64748b;
-      --border-color: #e2e8f0;
+      --text-black: #000000;
+      --text-dark: #18181b;
+      --text-muted: #71717a;
+      --border-color: #e4e4e7;
       
       --solid-green: #10b981;
       --green-light: #ecfdf5;
       --solid-red: #ef4444;
       --red-light: #fef2f2;
-      --disabled-bg: #e2e8f0;
-      --disabled-text: #94a3b8;
+      --disabled-bg: #f4f4f5;
+      --disabled-text: #a1a1aa;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -36,7 +36,7 @@
       display: flex; 
       width: 100vw; 
       min-height: 100vh; 
-      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%); 
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
     }
 
     /* DESKTOP VIEW */
@@ -48,17 +48,18 @@
         flex-direction: column; 
         justify-content: center; 
         padding: 60px; 
-        color: #fff; 
+        color: #000; 
       }
-      .brand-logo-text { font-size: 52px; font-weight: 900; color: var(--yellow-accent); letter-spacing: 1px; margin-bottom: 8px; }
+      .brand-logo-text { font-size: 52px; font-weight: 900; color: #000000; letter-spacing: 1px; margin-bottom: 8px; }
       .login-right { width: 480px; display: flex; align-items: center; justify-content: center; padding: 30px; }
       .login-card { 
         background: #ffffff; 
         width: 100%; 
         padding: 40px 32px; 
         border-radius: 28px; 
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35); 
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2); 
         text-align: center; 
+        border: 2px solid var(--yellow-primary);
       }
     }
 
@@ -74,66 +75,66 @@
         width: 100%; 
         text-align: center; 
         padding: 10px 0 20px 0; 
-        color: #fff; 
+        color: #000; 
       }
-      .brand-logo-text { font-size: 38px; font-weight: 900; color: var(--yellow-accent); }
-      .login-left h1 { font-size: 22px !important; font-weight: 800; }
+      .brand-logo-text { font-size: 38px; font-weight: 900; color: #000000; }
+      .login-left h1 { font-size: 22px !important; font-weight: 800; color: #000000; }
       .login-right { width: 100%; max-width: 380px; padding: 0; }
-      .login-card { background: #ffffff; width: 100%; padding: 28px 20px; border-radius: 24px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); }
+      .login-card { background: #ffffff; width: 100%; padding: 28px 20px; border-radius: 24px; text-align: center; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15); border: 2px solid var(--yellow-primary); }
     }
 
-    .login-card h2 { font-size: 24px; font-weight: 800; margin-bottom: 4px; color: var(--navy-dark); }
+    .login-card h2 { font-size: 24px; font-weight: 900; margin-bottom: 4px; color: var(--text-black); }
     .login-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; font-weight: 600; }
     .form-group { text-align: left; margin-bottom: 18px; }
-    .form-group label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 6px; color: var(--text-dark); text-transform: uppercase; letter-spacing: 0.5px; }
+    .form-group label { display: block; font-size: 12px; font-weight: 900; margin-bottom: 6px; color: var(--text-black); text-transform: uppercase; letter-spacing: 0.5px; }
     .form-group input { width: 100%; padding: 14px; border: 2px solid var(--border-color); border-radius: 14px; font-size: 14px; font-weight: 700; outline: none; transition: all 0.2s; }
-    .form-group input:focus { border-color: var(--indigo-primary); }
+    .form-group input:focus { border-color: var(--yellow-primary); }
     
     .btn-login { 
       width: 100%; 
       padding: 15px; 
-      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
-      color: #ffffff; 
+      background: var(--yellow-primary); 
+      color: #000000; 
       border: none; 
       border-radius: 14px; 
       font-size: 16px; 
       font-weight: 900; 
       cursor: pointer; 
-      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
       transition: all 0.2s;
     }
     .btn-login:active { transform: scale(0.98); }
 
     /* MOBILE STAFF PANEL SCREEN */
-    .app-viewport { display: none; width: 100vw; height: 100vh; background: #cbd5e1; align-items: center; justify-content: center; padding: 0; }
-    .mobile-frame { width: 100%; max-width: 420px; height: 100vh; max-height: 920px; background: #ffffff; position: relative; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+    .app-viewport { display: none; width: 100vw; height: 100vh; background: #f4f4f5; align-items: center; justify-content: center; padding: 0; }
+    .mobile-frame { width: 100%; max-width: 420px; height: 100vh; max-height: 920px; background: #ffffff; position: relative; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15); border: 2px solid var(--border-color); }
 
     @media (min-width: 500px) {
-      .mobile-frame { height: 95vh; border-radius: 32px; border: 1px solid var(--border-color); }
+      .mobile-frame { height: 95vh; border-radius: 32px; }
     }
 
-    /* HEADER WITH HAMBURGER MENU & HELP ICON */
+    /* YELLOW HEADER WITH BLACK FONT */
     .app-header { 
       display: flex; 
       justify-content: space-between; 
       align-items: center; 
       padding: 16px 20px; 
-      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); 
-      color: #ffffff;
+      background: var(--yellow-primary); 
+      color: #000000;
+      border-bottom: 2px solid var(--yellow-dark);
     }
     .header-btn { 
-      background: rgba(255, 255, 255, 0.15); 
-      border: none; 
-      font-size: 20px; 
+      background: #ffffff; 
+      border: 1.5px solid #000000; 
+      font-size: 18px; 
       cursor: pointer; 
-      color: #ffffff; 
+      color: #000000; 
       font-weight: 900; 
-      padding: 8px 12px; 
-      border-radius: 12px;
-      backdrop-filter: blur(4px);
+      padding: 6px 10px; 
+      border-radius: 10px;
     }
-    .header-title { font-size: 16px; font-weight: 800; letter-spacing: 0.5px; }
-    .help-support-icon { width: 34px; height: 34px; cursor: pointer; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+    .header-title { font-size: 17px; font-weight: 900; color: #000000; letter-spacing: 0.5px; }
+    .help-support-icon { width: 34px; height: 34px; cursor: pointer; }
 
     /* STAFF SCREEN CONTENT */
     .status-content { 
@@ -145,42 +146,49 @@
       flex: 1; 
       text-align: center; 
       overflow-y: auto;
-      background: #f8fafc;
+      background: #ffffff;
     }
-    .today-date-text { font-size: 22px; font-weight: 900; color: var(--navy-dark); margin-top: 4px; }
-    .today-day-text { font-size: 13px; color: var(--indigo-primary); font-weight: 800; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; }
+    .today-date-text { font-size: 22px; font-weight: 900; color: var(--text-black); margin-top: 4px; }
+    .today-day-text { font-size: 13px; color: #000000; font-weight: 800; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 1px; }
 
-    /* CAMERA / PHOTO CIRCLE */
+    /* CAMERA / PHOTO PERFECT CIRCLE WITH BLACK BORDER */
     .profile-photo-circle { 
-      width: 135px; 
-      height: 135px; 
+      width: 160px; 
+      height: 160px; 
       border-radius: 50%; 
-      border: 4px solid var(--indigo-primary); 
+      border: 4px solid #000000; 
       overflow: hidden; 
-      margin-bottom: 12px; 
+      margin-bottom: 14px; 
       position: relative; 
-      background: #000; 
+      background: #000000; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
-      box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.3);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      flex-shrink: 0;
     }
-    .profile-photo-circle video, .profile-photo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .profile-photo-circle video, .profile-photo-circle img { 
+      width: 100%; 
+      height: 100%; 
+      object-fit: cover; 
+      border-radius: 50%;
+      display: block; 
+    }
 
     .status-badge { padding: 6px 18px; border-radius: 20px; font-size: 12px; font-weight: 900; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; }
     .badge-absent { background: var(--red-light); color: var(--solid-red); border: 1.5px solid #fca5a5; }
     .badge-present { background: var(--green-light); color: var(--solid-green); border: 1.5px solid #6ee7b7; }
 
-    /* REDUCED SIZE PUNCH ACTION BUTTON */
+    /* COMPACT PUNCH ACTION BUTTON */
     .btn-punch-action { 
       width: 80%; 
-      max-width: 240px;
+      max-width: 220px;
       margin: 0 auto 16px auto;
-      padding: 11px 16px; 
+      padding: 10px 16px; 
       border: none; 
       border-radius: 12px; 
       font-size: 14px; 
-      font-weight: 800; 
+      font-weight: 900; 
       color: #fff; 
       cursor: pointer; 
       display: flex; 
@@ -201,10 +209,10 @@
       background: #ffffff; 
       border-radius: 20px; 
       padding: 16px 20px; 
-      border: 1px solid var(--border-color); 
+      border: 2px solid var(--yellow-primary); 
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }
-    .time-row { display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; margin-bottom: 8px; }
+    .time-row { display: flex; justify-content: space-between; font-size: 14px; font-weight: 900; margin-bottom: 8px; color: var(--text-black); }
     .time-row:last-child { margin-bottom: 0; }
 
     /* BOTTOM APP FOOTER */
@@ -213,7 +221,7 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 70px;
+      height: 65px;
       background: #ffffff;
       border-top: 2px solid var(--border-color);
       display: flex;
@@ -225,31 +233,28 @@
 
     .footer-left-info {
       font-size: 13px;
-      font-weight: 800;
-      color: var(--navy-dark);
+      font-weight: 900;
+      color: var(--text-black);
     }
 
-    /* REDUCED SIZE LOGOUT BUTTON */
+    /* VERY SMALL COMPACT LOGOUT BUTTON */
     .btn-power-logout {
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-      background: var(--yellow-light);
-      border: 1.5px solid var(--yellow-accent);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--yellow-soft-bg);
+      border: 1.5px solid #000000;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(245, 158, 11, 0.2);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       transition: all 0.2s ease;
       padding: 0;
     }
     .btn-power-logout:active {
-      transform: scale(0.92);
-      background: var(--yellow-accent);
-    }
-    .btn-power-logout:active svg path {
-      stroke: #ffffff;
+      transform: scale(0.90);
+      background: var(--yellow-primary);
     }
 
     /* DASHBOARD VIEW */
@@ -260,31 +265,41 @@
       left: 0; 
       width: 100vw; 
       height: 100vh; 
-      background: #f8fafc; 
+      background: #ffffff; 
       z-index: 300; 
       overflow-y: auto; 
       padding: 24px; 
     }
     .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px; margin-bottom: 20px; }
-    .m-card { background: #fff; padding: 16px; border-radius: 18px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-    .m-card span { font-size: 12px; font-weight: 800; color: var(--text-muted); }
+    .m-card { background: #fff; padding: 16px; border-radius: 18px; border: 2px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .m-card span { font-size: 12px; font-weight: 900; color: var(--text-muted); }
     .m-card h3 { font-size: 24px; font-weight: 900; margin-top: 4px; }
 
     .dash-grid-layout { display: grid; grid-template-columns: 2.5fr 1fr; gap: 20px; }
     @media (max-width: 900px) { .dash-grid-layout { grid-template-columns: 1fr; } }
 
-    /* CALENDAR GRID */
-    .cal-box { background: #fff; padding: 20px; border-radius: 24px; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    /* CALENDAR GRID - YELLOW HEADERS & BLACK FONT */
+    .cal-box { background: #fff; padding: 20px; border-radius: 24px; border: 2px solid var(--yellow-primary); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
     .cal-grid-view { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 16px; text-align: center; }
-    .cal-head { font-size: 13px; font-weight: 900; color: var(--indigo-primary); padding-bottom: 8px; border-bottom: 2px solid var(--yellow-accent); margin-bottom: 6px; }
+    
+    .cal-head { 
+      font-size: 13px; 
+      font-weight: 900; 
+      color: #000000; 
+      background-color: var(--yellow-primary); 
+      padding: 8px 0; 
+      border-radius: 8px; 
+      border-bottom: 2px solid #000000; 
+      margin-bottom: 6px; 
+    }
     
     .cal-date-cell { 
       border-radius: 12px; 
       padding: 10px 2px; 
       min-height: 56px; 
       font-size: 11px; 
-      font-weight: 800; 
+      font-weight: 900; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
@@ -301,13 +316,13 @@
 
     .cell-disabled-block { background-color: var(--disabled-bg) !important; color: var(--disabled-text) !important; border: 1px solid var(--border-color); cursor: not-allowed; opacity: 0.7; }
 
-    .summary-side-card, .chart-box { background: #fff; padding: 20px; border-radius: 24px; border: 1px solid var(--border-color); margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-    .summary-line { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; padding: 8px 0; border-bottom: 1px dashed var(--border-color); color: var(--text-dark); }
+    .summary-side-card, .chart-box { background: #fff; padding: 20px; border-radius: 24px; border: 2px solid var(--border-color); margin-bottom: 16px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+    .summary-line { display: flex; justify-content: space-between; font-size: 13px; font-weight: 900; padding: 8px 0; border-bottom: 1px dashed var(--border-color); color: var(--text-black); }
 
     /* MODAL WINDOWS */
-    .popup-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
-    .modal-content-box { background: #fff; width: 100%; max-width: 400px; border-radius: 28px; padding: 24px; text-align: center; position: relative; border: 1px solid var(--border-color); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
-    .close-modal-btn { position: absolute; top: 16px; right: 20px; border: none; background: none; font-size: 22px; cursor: pointer; font-weight: 900; color: var(--text-dark); }
+    .popup-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
+    .modal-content-box { background: #fff; width: 100%; max-width: 400px; border-radius: 28px; padding: 24px; text-align: center; position: relative; border: 2px solid var(--yellow-primary); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); }
+    .close-modal-btn { position: absolute; top: 16px; right: 20px; border: none; background: none; font-size: 22px; cursor: pointer; font-weight: 900; color: var(--text-black); }
   </style>
 </head>
 <body>
@@ -338,6 +353,7 @@
   <!-- MAIN MOBILE STAFF VIEW -->
   <div class="app-viewport" id="appScreen">
     <div class="mobile-frame">
+      <!-- YELLOW HEADER WITH BLACK TEXT -->
       <div class="app-header">
         <button class="header-btn" onclick="openDashboardView()" title="Open Calendar & Dashboard">☰</button>
         <span class="header-title">Today's Status</span>
@@ -345,12 +361,12 @@
         <!-- HELP ICON -->
         <div onclick="openHelpModal()" class="help-support-icon">
           <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="32" cy="32" r="30" fill="#4F46E5"/>
-            <path d="M20 44C20 37.3726 25.3726 32 32 32C38.6274 32 44 37.3726 44 44" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="32" cy="22" r="7" fill="#FFFFFF"/>
-            <path d="M16 26C16 20 20 16 32 16C44 16 48 20 48 26" stroke="#818CF8" stroke-width="4" stroke-linecap="round"/>
-            <rect x="14" y="22" width="6" height="12" rx="3" fill="#3730A3" stroke="#FFFFFF" stroke-width="2"/>
-            <rect x="44" y="22" width="6" height="12" rx="3" fill="#3730A3" stroke="#FFFFFF" stroke-width="2"/>
+            <circle cx="32" cy="32" r="30" fill="#000000"/>
+            <path d="M20 44C20 37.3726 25.3726 32 32 32C38.6274 32 44 37.3726 44 44" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="32" cy="22" r="7" fill="#F59E0B"/>
+            <path d="M16 26C16 20 20 16 32 16C44 16 48 20 48 26" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/>
+            <rect x="14" y="22" width="6" height="12" rx="3" fill="#F59E0B" stroke="#000000" stroke-width="2"/>
+            <rect x="44" y="22" width="6" height="12" rx="3" fill="#F59E0B" stroke="#000000" stroke-width="2"/>
             <path d="M46 32C46 37 40 39 36 39" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round"/>
           </svg>
         </div>
@@ -362,14 +378,14 @@
           <div class="today-day-text" id="todayDayTxt">Saturday</div>
         </div>
 
-        <!-- CAMERA CIRCLE -->
+        <!-- BIG PERFECT CAMERA CIRCLE WITH BLACK BORDER -->
         <div class="profile-photo-circle">
           <video id="liveFeed" autoplay playsinline muted></video>
           <img id="capturedImgView" style="display:none;" alt="Captured">
         </div>
 
         <div style="width:100%;">
-          <div style="font-size:11px; font-weight:800; color:var(--text-muted); margin-bottom:2px; text-transform:uppercase;">Status</div>
+          <div style="font-size:11px; font-weight:900; color:var(--text-black); margin-bottom:2px; text-transform:uppercase;">Status</div>
           <div id="statusBadge" class="status-badge badge-absent">Absent</div>
 
           <!-- COMPACT PUNCH ACTION BUTTON -->
@@ -399,9 +415,9 @@
         </div>
         <button class="btn-power-logout" onclick="logoutUser()" title="Logout">
           <!-- POWER ICON -->
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 3V12" stroke="#d97706" stroke-width="2.5" stroke-linecap="round"/>
-            <path d="M18.36 6.64A9 9 0 1 1 5.64 6.64" stroke="#d97706" stroke-width="2.5" stroke-linecap="round"/>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3V12" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
+            <path d="M18.36 6.64A9 9 0 1 1 5.64 6.64" stroke="#000000" stroke-width="3" stroke-linecap="round"/>
           </svg>
         </button>
       </div>
@@ -412,10 +428,10 @@
   <div class="dashboard-view" id="dashboardView">
     <div class="dash-header">
       <div>
-        <h2 style="font-size:22px; font-weight:900; color:var(--navy-dark);">Calendar & Dashboard</h2>
+        <h2 style="font-size:22px; font-weight:900; color:var(--text-black);">Calendar & Dashboard</h2>
         <p style="font-size:13px; color:var(--text-muted); font-weight:700;">Rohit Kumar 👋</p>
       </div>
-      <button onclick="closeDashboardView()" style="background:var(--indigo-primary); color:#fff; border:none; padding:10px 20px; border-radius:12px; font-weight:900; cursor:pointer; box-shadow:0 4px 10px rgba(79, 70, 229, 0.3);">Close ✕</button>
+      <button onclick="closeDashboardView()" style="background:var(--yellow-primary); color:#000; border:1.5px solid #000; padding:10px 20px; border-radius:12px; font-weight:900; cursor:pointer;">Close ✕</button>
     </div>
 
     <div class="metrics-row">
@@ -425,23 +441,23 @@
     </div>
 
     <div class="dash-grid-layout">
-      <!-- CALENDAR BOX WITH FULL WEEK DAY NAMES -->
+      <!-- CALENDAR BOX WITH YELLOW WEEK HEADERS AND BLACK TEXT -->
       <div class="cal-box">
-        <h3 style="font-size:18px; font-weight:900; color:var(--navy-dark);" id="calMonthYear">August 2026</h3>
+        <h3 style="font-size:18px; font-weight:900; color:var(--text-black);" id="calMonthYear">August 2026</h3>
         <div class="cal-grid-view" id="calGridView"></div>
       </div>
 
       <!-- SUMMARY & CHART -->
       <div>
         <div class="summary-side-card">
-          <h4 style="font-size:15px; font-weight:900; margin-bottom:12px; color:var(--navy-dark);">Monthly Breakdown</h4>
+          <h4 style="font-size:15px; font-weight:900; margin-bottom:12px; color:var(--text-black);">Monthly Breakdown</h4>
           <div class="summary-line"><span>🟩 Solid Present</span><strong style="color:var(--solid-green);" id="sPresent">0</strong></div>
           <div class="summary-line"><span>🟥 Solid Absent</span><strong style="color:var(--solid-red);" id="sAbsent">0</strong></div>
           <div class="summary-line"><span>⬜ No Record</span><strong style="color:var(--disabled-text);" id="sBlank">0</strong></div>
         </div>
 
         <div class="chart-box">
-          <h4 style="font-size:15px; font-weight:900; margin-bottom:12px; color:var(--navy-dark);">Attendance Status</h4>
+          <h4 style="font-size:15px; font-weight:900; margin-bottom:12px; color:var(--text-black);">Attendance Status</h4>
           <canvas id="miniBarChart" height="180"></canvas>
         </div>
       </div>
@@ -452,18 +468,18 @@
   <div class="popup-modal" id="dateDetailModal">
     <div class="modal-content-box">
       <button class="close-modal-btn" onclick="closeModal('dateDetailModal')">✕</button>
-      <h3 id="modalDateTitle" style="font-size:18px; font-weight:900; margin-bottom:16px; color:var(--navy-dark);">Details</h3>
+      <h3 id="modalDateTitle" style="font-size:18px; font-weight:900; margin-bottom:16px; color:var(--text-black);">Details</h3>
       
-      <div style="width:110px; height:110px; border-radius:50%; margin:0 auto 16px auto; overflow:hidden; border:4px solid var(--indigo-primary); background:#e2e8f0; display:flex; align-items:center; justify-content:center;">
+      <div style="width:110px; height:110px; border-radius:50%; margin:0 auto 16px auto; overflow:hidden; border:3px solid #000000; background:#e2e8f0; display:flex; align-items:center; justify-content:center;">
         <img id="modalCapturedPhoto" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
         <span id="noPhotoText" style="font-size:12px; font-weight:800; color:var(--text-muted);">No Photo</span>
       </div>
 
-      <div style="text-align:left; background:#f8fafc; padding:16px; border-radius:16px; font-weight:800; font-size:13px; line-height:2; border:1px solid var(--border-color);">
+      <div style="text-align:left; background:#fffbeb; padding:16px; border-radius:16px; font-weight:900; font-size:13px; line-height:2; border:1px solid var(--yellow-primary); color:#000;">
         <div>Status: <span id="modalStatus" style="font-weight:900;">--</span></div>
         <div>Check In: <span id="modalInTime" style="color:var(--solid-green);">--</span></div>
         <div>Check Out: <span id="modalOutTime" style="color:var(--solid-red);">--</span></div>
-        <div>Location: <span style="color:var(--text-dark);">Mohindergarh, Haryana</span></div>
+        <div>Location: <span>Mohindergarh, Haryana</span></div>
       </div>
     </div>
   </div>
@@ -472,13 +488,13 @@
   <div class="popup-modal" id="helpModal">
     <div class="modal-content-box">
       <button class="close-modal-btn" onclick="closeModal('helpModal')">✕</button>
-      <h3 style="font-size:18px; font-weight:900; margin-bottom:6px; color:var(--navy-dark);">Help & Support</h3>
+      <h3 style="font-size:18px; font-weight:900; margin-bottom:6px; color:var(--text-black);">Help & Support</h3>
       <p style="font-size:12px; color:var(--text-muted); margin-bottom:16px; font-weight:700;">Send query to Admin</p>
       <textarea id="queryText" style="width:100%; height:90px; border:2px solid var(--border-color); border-radius:12px; padding:10px; font-size:13px; font-weight:700; outline:none; margin-bottom:14px;" placeholder="Describe issue..."></textarea>
       <button class="btn-login" style="padding:12px;" onclick="submitAdminQuery()">Submit Query</button>
       
-      <div id="adminReplyBox" style="margin-top:12px; text-align:left; font-size:12px; background:#f1f5f9; padding:12px; border-radius:12px; font-weight:800; display:none; border:1px solid var(--border-color);">
-        <strong>Admin Status:</strong> <span style="color:#4f46e5;">Pending Review</span>
+      <div id="adminReplyBox" style="margin-top:12px; text-align:left; font-size:12px; background:#fffbeb; padding:12px; border-radius:12px; font-weight:800; display:none; border:1px solid var(--yellow-primary); color:#000;">
+        <strong>Admin Status:</strong> <span style="color:#d97706;">Pending Review</span>
       </div>
     </div>
   </div>
@@ -593,7 +609,7 @@
 
       document.getElementById('calMonthYear').innerText = `${now.toLocaleString('en-US', { month: 'long' })} ${year}`;
 
-      /* FULL WEEK DAY NAMES */
+      /* YELLOW HEADERS WITH BLACK FONT FOR WEEKDAYS */
       const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       days.forEach(d => calGrid.innerHTML += `<div class="cal-head">${d}</div>`);
 
@@ -701,7 +717,7 @@
         type: 'bar',
         data: {
           labels: ['Present', 'Absent', 'No Record'],
-          datasets: [{ data: [p, a, b], backgroundColor: ['#10b981', '#ef4444', '#cbd5e1'], borderRadius: 8 }]
+          datasets: [{ data: [p, a, b], backgroundColor: ['#10b981', '#ef4444', '#f59e0b'], borderRadius: 8 }]
         },
         options: { responsive: true, plugins: { legend: { display: false } } }
       });
