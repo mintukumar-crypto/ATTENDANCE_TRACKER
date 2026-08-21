@@ -48,7 +48,7 @@
       .login-card { background: #ffffff; width: 100%; padding: 36px 28px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center; }
     }
 
-    /* MOBILE VIEW FIX (VERTICAL STACK - NO HORIZONTAL SCROLL) */
+    /* MOBILE VIEW FIX */
     @media (max-width: 768px) {
       .login-container { 
         flex-direction: column; 
@@ -83,7 +83,7 @@
       .mobile-frame { height: 95vh; border-radius: 28px; border: 2px solid var(--border-color); }
     }
 
-    /* HEADER WITH HAMBURGER MENU / 3-DOTS BUTTON */
+    /* HEADER */
     .app-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 2px solid var(--border-color); background: #fff; }
     .header-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-dark); font-weight: 900; padding: 4px; }
     .header-title { font-size: 16px; font-weight: 900; color: var(--text-dark); }
@@ -91,7 +91,7 @@
 
     /* STAFF SCREEN CONTENT */
     .status-content { 
-      padding: 16px 20px 80px 20px; /* Space reserved for bottom footer */
+      padding: 16px 20px 80px 20px; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
@@ -102,7 +102,7 @@
     .today-date-text { font-size: 20px; font-weight: 900; color: var(--text-dark); }
     .today-day-text { font-size: 12px; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; }
 
-    /* CAMERA / PHOTO CIRCLE */
+    /* CAMERA CIRCLE */
     .profile-photo-circle { 
       width: 125px; 
       height: 125px; 
@@ -154,7 +154,7 @@
     .time-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; margin-bottom: 6px; }
     .time-row:last-child { margin-bottom: 0; }
 
-    /* BOTTOM APP FOOTER WITH ENHANCED LOGOUT BUTTON */
+    /* BOTTOM APP FOOTER */
     .app-footer {
       position: absolute;
       bottom: 0;
@@ -176,20 +176,20 @@
       color: var(--text-dark);
     }
 
-    /* UPDATED LOGOUT BUTTON STYLING */
+    /* CHOTA COMPACT LOGOUT BUTTON & POWER ICON */
     .btn-circle-logout {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 5px;
       background: #fee2e2;
-      border: 1.5px solid #fca5a5;
+      border: 1px solid #fca5a5;
       color: #b91c1c;
-      padding: 8px 14px;
-      border-radius: 20px;
-      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 14px;
+      font-size: 11px;
       font-weight: 800;
       cursor: pointer;
-      box-shadow: 0 2px 6px rgba(185, 28, 28, 0.15);
+      box-shadow: 0 2px 4px rgba(185, 28, 28, 0.1);
       transition: all 0.2s ease;
     }
     .btn-circle-logout:hover {
@@ -210,10 +210,47 @@
     .dash-grid-layout { display: grid; grid-template-columns: 2.5fr 1fr; gap: 16px; }
     @media (max-width: 900px) { .dash-grid-layout { grid-template-columns: 1fr; } }
 
-    /* CALENDAR GRID */
-    .cal-box { background: #fff; padding: 16px; border-radius: 18px; border: 2px solid var(--border-color); }
-    .cal-grid-view { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 12px; text-align: center; }
-    .cal-head { font-size: 12px; font-weight: 900; color: var(--text-dark); padding-bottom: 4px; }
+    /* CALENDAR BOX WITH DARK HEADER */
+    .cal-box { 
+      background: #fff; 
+      border-radius: 18px; 
+      border: 2px solid var(--border-color); 
+      overflow: hidden; 
+    }
+
+    .cal-header-bar {
+      background: var(--navy-bg);
+      color: #ffffff;
+      padding: 14px 16px 10px 16px;
+    }
+
+    .cal-header-bar h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    .cal-days-header-row {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      text-align: center;
+    }
+
+    .cal-head { 
+      font-size: 12px; 
+      font-weight: 800; 
+      color: #ffffff; 
+    }
+
+    .cal-grid-view { 
+      display: grid; 
+      grid-template-columns: repeat(7, 1fr); 
+      gap: 6px; 
+      padding: 12px 16px 16px 16px; 
+      text-align: center; 
+    }
     
     .cal-date-cell { 
       border-radius: 8px; 
@@ -239,7 +276,7 @@
     .summary-side-card, .chart-box { background: #fff; padding: 16px; border-radius: 18px; border: 2px solid var(--border-color); margin-bottom: 14px; }
     .summary-line { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; padding: 6px 0; border-bottom: 1px dashed var(--border-color); color: var(--text-dark); }
 
-    /* MODAL WINDOWS */
+    /* MODALS */
     .popup-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
     .modal-content-box { background: #fff; width: 100%; max-width: 380px; border-radius: 20px; padding: 20px; text-align: center; position: relative; border: 2px solid var(--border-color); }
     .close-modal-btn { position: absolute; top: 14px; right: 16px; border: none; background: none; font-size: 20px; cursor: pointer; font-weight: 900; color: var(--text-dark); }
@@ -326,17 +363,17 @@
         </div>
       </div>
 
-      <!-- FOOTER WITH UPDATED LOGOUT BUTTON -->
+      <!-- FOOTER WITH CHOTA LOGOUT BUTTON & POWER ICON -->
       <div class="app-footer">
         <div class="footer-left-info">
           <div>Rohit Kumar</div>
           <div style="font-size:10px; color:var(--text-muted);">Emp ID: ARC-8021</div>
         </div>
         <button class="btn-circle-logout" onclick="logoutUser()" title="Logout">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-            <polyline points="16 17 21 12 16 7"></polyline>
-            <line x1="21" y1="12" x2="9" y2="12"></line>
+          <!-- DARK STROKE POWER ICON -->
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#b91c1c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+            <line x1="12" y1="2" x2="12" y2="12"></line>
           </svg>
           <span>Logout</span>
         </button>
@@ -361,9 +398,20 @@
     </div>
 
     <div class="dash-grid-layout">
-      <!-- CALENDAR BOX -->
+      <!-- CALENDAR BOX WITH HEADER INTEGRATED WITH DAY NAMES -->
       <div class="cal-box">
-        <h3 style="font-size:16px; font-weight:900; color:var(--text-dark);" id="calMonthYear">August 2026</h3>
+        <div class="cal-header-bar">
+          <h3 id="calMonthYear">August 2026</h3>
+          <div class="cal-days-header-row">
+            <div class="cal-head">Sun</div>
+            <div class="cal-head">Mon</div>
+            <div class="cal-head">Tue</div>
+            <div class="cal-head">Wed</div>
+            <div class="cal-head">Thu</div>
+            <div class="cal-head">Fri</div>
+            <div class="cal-head">Sat</div>
+          </div>
+        </div>
         <div class="cal-grid-view" id="calGridView"></div>
       </div>
 
@@ -404,7 +452,7 @@
     </div>
   </div>
 
-  <!-- HELP & QUERY MODAL -->
+  <!-- HELP MODAL -->
   <div class="popup-modal" id="helpModal">
     <div class="modal-content-box">
       <button class="close-modal-btn" onclick="closeModal('helpModal')">✕</button>
@@ -528,9 +576,6 @@
       const shortMonth = monthNames[month];
 
       document.getElementById('calMonthYear').innerText = `${now.toLocaleString('en-US', { month: 'long' })} ${year}`;
-
-      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      days.forEach(d => calGrid.innerHTML += `<div class="cal-head">${d}</div>`);
 
       const firstDayIndex = new Date(year, month, 1).getDay();
       const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
