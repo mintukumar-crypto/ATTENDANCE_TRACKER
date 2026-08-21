@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ARCOS Attendance Portal</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -22,22 +22,60 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { background: var(--body-bg); color: var(--text-dark); min-height: 100vh; width: 100vw; overflow-x: hidden; }
+    html, body { width: 100%; height: 100%; overflow-x: hidden; background: var(--navy-bg); }
 
-    /* LOGIN SCREEN */
-    .login-container { display: flex; width: 100vw; height: 100vh; background: var(--navy-bg); }
-    .login-left { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 60px; color: #fff; }
-    .brand-logo-text { font-size: 48px; font-weight: 900; color: var(--yellow-accent); letter-spacing: 1px; margin-bottom: 12px; }
-    .login-right { width: 450px; background: var(--navy-bg); display: flex; align-items: center; justify-content: center; padding: 30px; }
-    .login-card { background: #ffffff; width: 100%; padding: 36px 28px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center; }
-    .login-card h2 { font-size: 24px; font-weight: 800; margin-bottom: 6px; color: var(--text-dark); }
-    .login-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; font-weight: 600; }
-    .form-group { text-align: left; margin-bottom: 18px; }
+    /* RESPONSIVE LOGIN CONTAINER */
+    .login-container { 
+      display: flex; 
+      width: 100vw; 
+      min-height: 100vh; 
+      background: var(--navy-bg); 
+    }
+
+    /* DESKTOP VIEW (LAPTOP PERFECT FIT) */
+    @media (min-width: 769px) {
+      .login-container { flex-direction: row; }
+      .login-left { 
+        flex: 1; 
+        display: flex; 
+        flex-direction: column; 
+        justify-content: center; 
+        padding: 60px; 
+        color: #fff; 
+      }
+      .brand-logo-text { font-size: 48px; font-weight: 900; color: var(--yellow-accent); letter-spacing: 1px; margin-bottom: 12px; }
+      .login-right { width: 450px; display: flex; align-items: center; justify-content: center; padding: 30px; }
+      .login-card { background: #ffffff; width: 100%; padding: 36px 28px; border-radius: 24px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); text-align: center; }
+    }
+
+    /* MOBILE VIEW FIX (VERTICAL STACK - NO SCROLL RIGHT) */
+    @media (max-width: 768px) {
+      .login-container { 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center; 
+        padding: 24px 16px; 
+      }
+      .login-left { 
+        width: 100%; 
+        text-align: center; 
+        padding: 10px 0 20px 0; 
+        color: #fff; 
+      }
+      .brand-logo-text { font-size: 34px; font-weight: 900; color: var(--yellow-accent); }
+      .login-left h1 { font-size: 22px !important; font-weight: 800; }
+      .login-right { width: 100%; max-width: 380px; padding: 0; }
+      .login-card { background: #ffffff; width: 100%; padding: 28px 20px; border-radius: 20px; text-align: center; }
+    }
+
+    .login-card h2 { font-size: 22px; font-weight: 800; margin-bottom: 4px; color: var(--text-dark); }
+    .login-card p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; font-weight: 600; }
+    .form-group { text-align: left; margin-bottom: 16px; }
     .form-group label { display: block; font-size: 12px; font-weight: 800; margin-bottom: 6px; color: var(--text-dark); }
     .form-group input { width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 12px; font-size: 14px; font-weight: 700; outline: none; }
     .btn-login { width: 100%; padding: 14px; background: var(--yellow-accent); color: var(--navy-bg); border: none; border-radius: 12px; font-size: 15px; font-weight: 900; cursor: pointer; }
 
-    /* MOBILE UI FIT TO PAGE PERFECTLY */
+    /* MOBILE STAFF PANEL SCREEN */
     .app-viewport { display: none; width: 100vw; height: 100vh; background: #cbd5e1; align-items: center; justify-content: center; padding: 0; }
     .mobile-frame { width: 100%; max-width: 420px; height: 100vh; max-height: 920px; background: #fff; position: relative; display: flex; flex-direction: column; overflow: hidden; }
 
@@ -45,121 +83,141 @@
       .mobile-frame { height: 95vh; border-radius: 28px; border: 2px solid var(--border-color); }
     }
 
-    .app-header { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 2px solid var(--border-color); background: #fff; }
-    .header-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-dark); font-weight: 900; }
-    .header-title { font-size: 18px; font-weight: 900; color: var(--text-dark); }
+    .app-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 2px solid var(--border-color); background: #fff; }
+    
+    /* LOGOUT / MENU BUTTON */
+    .btn-logout-header {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 1px solid #fca5a5;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .header-title { font-size: 16px; font-weight: 900; color: var(--text-dark); }
+    .help-support-icon { width: 32px; height: 32px; cursor: pointer; }
 
-    .help-support-icon { width: 34px; height: 34px; cursor: pointer; }
+    /* STAFF SCREEN CONTENT - SPACINGS ADJUSTED */
+    .status-content { 
+      padding: 16px 20px; 
+      display: flex; 
+      flex-direction: column; 
+      align-items: center; 
+      flex: 1; 
+      text-align: center; 
+    }
+    .today-date-text { font-size: 20px; font-weight: 900; color: var(--text-dark); }
+    .today-day-text { font-size: 12px; color: var(--text-muted); font-weight: 700; margin-bottom: 8px; }
 
-    .status-content { padding: 20px 20px; display: flex; flex-direction: column; align-items: center; flex: 1; text-align: center; justify-content: space-between; }
-    .today-date-text { font-size: 22px; font-weight: 900; color: var(--text-dark); }
-    .today-day-text { font-size: 13px; color: var(--text-muted); font-weight: 700; margin-bottom: 10px; }
-
-    /* BLACK BORDER CAMERA CIRCLE */
+    /* CAMERA / PHOTO CIRCLE */
     .profile-photo-circle { 
-      width: 140px; 
-      height: 140px; 
+      width: 125px; 
+      height: 125px; 
       border-radius: 50%; 
-      border: 5px solid #0f172a; 
+      border: 4px solid #0f172a; 
       overflow: hidden; 
-      margin-bottom: 12px; 
+      margin-bottom: 8px; 
       position: relative; 
       background: #000; 
       display: flex; 
       align-items: center; 
       justify-content: center; 
-      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     .profile-photo-circle video, .profile-photo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-    .status-badge { padding: 6px 18px; border-radius: 20px; font-size: 12px; font-weight: 900; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status-badge { padding: 5px 16px; border-radius: 20px; font-size: 11px; font-weight: 900; margin-bottom: 16px; text-transform: uppercase; }
     .badge-absent { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
     .badge-present { background: #d1fae5; color: #047857; border: 1px solid #6ee7b7; }
 
-    .check-times-box { width: 100%; background: #f8fafc; border-radius: 16px; padding: 16px; margin-bottom: 14px; border: 2px solid var(--border-color); }
-    .time-row { display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; margin-bottom: 6px; }
+    /* CHECK IN/OUT TIME CARD - MOVED SLIGHTLY DOWN */
+    .check-times-box { 
+      width: 100%; 
+      background: #f8fafc; 
+      border-radius: 16px; 
+      padding: 14px 16px; 
+      margin-top: 10px; /* Shifted Down */
+      margin-bottom: 16px; 
+      border: 2px solid var(--border-color); 
+    }
+    .time-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; margin-bottom: 6px; }
+    .time-row:last-child { margin-bottom: 0; }
 
-    .btn-punch-action { width: 100%; padding: 16px; border: none; border-radius: 14px; font-size: 16px; font-weight: 900; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: auto; }
+    /* PUNCH IN BUTTON - MOVED SLIGHTLY UP */
+    .btn-punch-action { 
+      width: 100%; 
+      padding: 14px; 
+      border: none; 
+      border-radius: 14px; 
+      font-size: 15px; 
+      font-weight: 900; 
+      color: #fff; 
+      cursor: pointer; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center; 
+      gap: 8px; 
+      margin-top: 0; /* Shifted Up */
+    }
     .btn-green { background: var(--solid-green); }
     .btn-red { background: var(--solid-red); }
     .btn-disabled { background: #94a3b8; cursor: not-allowed; color: #f1f5f9; }
 
-    /* DASHBOARD */
-    .dashboard-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #f8fafc; z-index: 300; overflow-y: auto; padding: 24px; }
-    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 20px; }
-    .m-card { background: #fff; padding: 16px; border-radius: 16px; border: 2px solid var(--border-color); }
-    .m-card span { font-size: 12px; font-weight: 800; color: var(--text-muted); }
-    .m-card h3 { font-size: 26px; font-weight: 900; margin-top: 4px; }
+    /* DASHBOARD VIEW */
+    .dashboard-view { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #f8fafc; z-index: 300; overflow-y: auto; padding: 20px; }
+    .dash-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .metrics-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 16px; }
+    .m-card { background: #fff; padding: 14px; border-radius: 14px; border: 2px solid var(--border-color); }
+    .m-card span { font-size: 11px; font-weight: 800; color: var(--text-muted); }
+    .m-card h3 { font-size: 22px; font-weight: 900; margin-top: 2px; }
 
-    .dash-grid-layout { display: grid; grid-template-columns: 2.5fr 1fr; gap: 20px; }
+    .dash-grid-layout { display: grid; grid-template-columns: 2.5fr 1fr; gap: 16px; }
     @media (max-width: 900px) { .dash-grid-layout { grid-template-columns: 1fr; } }
 
-    /* CALENDAR CONTAINER & GRID */
-    .cal-box { background: #fff; padding: 20px; border-radius: 20px; border: 2px solid var(--border-color); }
-    .cal-grid-view { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 14px; text-align: center; }
-    .cal-head { font-size: 13px; font-weight: 900; color: var(--text-dark); text-align: center; padding-bottom: 6px; }
+    /* CALENDAR GRID */
+    .cal-box { background: #fff; padding: 16px; border-radius: 18px; border: 2px solid var(--border-color); }
+    .cal-grid-view { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 12px; text-align: center; }
+    .cal-head { font-size: 12px; font-weight: 900; color: var(--text-dark); padding-bottom: 4px; }
     
-    /* CELL STYLES - SOLID COLOR BLOCKS */
     .cal-date-cell { 
-      border-radius: 10px; 
-      padding: 10px 2px; 
-      min-height: 60px; 
-      font-size: 12px; 
+      border-radius: 8px; 
+      padding: 8px 2px; 
+      min-height: 52px; 
+      font-size: 11px; 
       font-weight: 800; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       justify-content: center; 
       gap: 2px; 
-      transition: transform 0.15s ease;
     }
 
-    /* SOLID DARK GREEN BLOCK FOR PRESENT */
-    .cell-present-block { 
-      background-color: var(--solid-green) !important; 
-      color: #ffffff !important; 
-      border: 1.5px solid #065f46;
-      cursor: pointer;
-    }
-    .cell-present-block strong { color: #ffffff !important; font-size: 14px; font-weight: 900; }
-    .cell-present-block:hover { transform: scale(1.05); }
+    .cell-present-block { background-color: var(--solid-green) !important; color: #ffffff !important; border: 1.5px solid #065f46; cursor: pointer; }
+    .cell-present-block strong { color: #ffffff !important; font-size: 13px; font-weight: 900; }
 
-    /* SOLID DARK RED BLOCK FOR ABSENT */
-    .cell-absent-block { 
-      background-color: var(--solid-red) !important; 
-      color: #ffffff !important; 
-      border: 1.5px solid #991b1b;
-      cursor: pointer;
-    }
-    .cell-absent-block strong { color: #ffffff !important; font-size: 14px; font-weight: 900; }
-    .cell-absent-block:hover { transform: scale(1.05); }
+    .cell-absent-block { background-color: var(--solid-red) !important; color: #ffffff !important; border: 1.5px solid #991b1b; cursor: pointer; }
+    .cell-absent-block strong { color: #ffffff !important; font-size: 13px; font-weight: 900; }
 
-    /* DISABLED / NO RECORD CELL BLOCK */
-    .cell-disabled-block { 
-      background-color: var(--disabled-bg) !important; 
-      color: var(--disabled-text) !important; 
-      border: 1px solid var(--border-color); 
-      cursor: not-allowed; 
-      opacity: 0.7;
-    }
+    .cell-disabled-block { background-color: var(--disabled-bg) !important; color: var(--disabled-text) !important; border: 1px solid var(--border-color); cursor: not-allowed; opacity: 0.7; }
 
-    .summary-side-card, .chart-box { background: #fff; padding: 18px; border-radius: 20px; border: 2px solid var(--border-color); margin-bottom: 16px; }
-    .summary-line { display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; padding: 8px 0; border-bottom: 1px dashed var(--border-color); color: var(--text-dark); }
+    .summary-side-card, .chart-box { background: #fff; padding: 16px; border-radius: 18px; border: 2px solid var(--border-color); margin-bottom: 14px; }
+    .summary-line { display: flex; justify-content: space-between; font-size: 13px; font-weight: 800; padding: 6px 0; border-bottom: 1px dashed var(--border-color); color: var(--text-dark); }
 
     /* MODAL WINDOWS */
     .popup-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.6); z-index: 400; align-items: center; justify-content: center; padding: 20px; }
-    .modal-content-box { background: #fff; width: 100%; max-width: 420px; border-radius: 24px; padding: 24px; text-align: center; position: relative; border: 2px solid var(--border-color); }
-    .close-modal-btn { position: absolute; top: 16px; right: 18px; border: none; background: none; font-size: 22px; cursor: pointer; font-weight: 900; color: var(--text-dark); }
+    .modal-content-box { background: #fff; width: 100%; max-width: 380px; border-radius: 20px; padding: 20px; text-align: center; position: relative; border: 2px solid var(--border-color); }
+    .close-modal-btn { position: absolute; top: 14px; right: 16px; border: none; background: none; font-size: 20px; cursor: pointer; font-weight: 900; color: var(--text-dark); }
   </style>
 </head>
 <body>
 
-  <!-- LOGIN SCREEN -->
+  <!-- LOGIN SCREEN (RESPONSIVE STACK) -->
   <div class="login-container" id="loginScreen">
     <div class="login-left">
       <div class="brand-logo-text">ARCOS</div>
-      <h1 style="font-size:38px; font-weight:900; line-height:1.2;">Attendance Portal</h1>
+      <h1 style="line-height:1.2;">Attendance Portal</h1>
     </div>
     <div class="login-right">
       <div class="login-card">
@@ -178,14 +236,14 @@
     </div>
   </div>
 
-  <!-- MAIN MOBILE VIEW -->
+  <!-- MAIN MOBILE STAFF VIEW -->
   <div class="app-viewport" id="appScreen">
     <div class="mobile-frame">
       <div class="app-header">
-        <button class="header-btn" onclick="openDashboardView()">☰</button>
-        <span class="header-title">Today's Status</span>
+        <button class="btn-logout-header" onclick="logoutUser()">🚪 Logout</button>
+        <span class="header-title" onclick="openDashboardView()" style="cursor:pointer;" title="Click for Dashboard">Today's Status 📊</span>
         
-        <!-- SUPPORT ICON -->
+        <!-- HELP ICON -->
         <div onclick="openHelpModal()" class="help-support-icon">
           <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="32" cy="32" r="30" fill="#2563EB"/>
@@ -205,16 +263,22 @@
           <div class="today-day-text" id="todayDayTxt">Friday</div>
         </div>
 
-        <!-- BLACK BORDER CIRCLE -->
+        <!-- CAMERA CIRCLE -->
         <div class="profile-photo-circle">
           <video id="liveFeed" autoplay playsinline muted></video>
           <img id="capturedImgView" style="display:none;" alt="Captured">
         </div>
 
         <div style="width:100%;">
-          <div style="font-size:12px; font-weight:800; color:var(--text-muted); margin-bottom:4px;">Status</div>
+          <div style="font-size:11px; font-weight:800; color:var(--text-muted); margin-bottom:2px;">Status</div>
           <div id="statusBadge" class="status-badge badge-absent">Absent</div>
 
+          <!-- PUNCH ACTION BUTTON (MOVED UP) -->
+          <button id="mainPunchBtn" class="btn-punch-action btn-green" onclick="triggerPunchAction()">
+            <span>📍</span> <span id="btnPunchText">Punch In</span>
+          </button>
+
+          <!-- CHECK TIMES CARD (MOVED DOWN) -->
           <div class="check-times-box">
             <div class="time-row">
               <span style="color:var(--text-muted);">Check In</span>
@@ -226,10 +290,6 @@
             </div>
           </div>
         </div>
-
-        <button id="mainPunchBtn" class="btn-punch-action btn-green" onclick="triggerPunchAction()">
-          <span>📍</span> <span id="btnPunchText">Punch In</span>
-        </button>
       </div>
     </div>
   </div>
@@ -238,36 +298,36 @@
   <div class="dashboard-view" id="dashboardView">
     <div class="dash-header">
       <div>
-        <h2 style="font-size:24px; font-weight:900; color:var(--text-dark);">Dashboard</h2>
-        <p style="font-size:13px; color:var(--text-muted); font-weight:800;">Good Day, Rohit Kumar 👋</p>
+        <h2 style="font-size:20px; font-weight:900; color:var(--text-dark);">Dashboard Overview</h2>
+        <p style="font-size:12px; color:var(--text-muted); font-weight:800;">Rohit Kumar 👋</p>
       </div>
-      <button onclick="closeDashboardView()" style="background:var(--navy-bg); color:#fff; border:none; padding:10px 20px; border-radius:12px; font-weight:900; cursor:pointer;">Close ✕</button>
+      <button onclick="closeDashboardView()" style="background:var(--navy-bg); color:#fff; border:none; padding:8px 16px; border-radius:10px; font-weight:900; cursor:pointer;">Close ✕</button>
     </div>
 
     <div class="metrics-row">
       <div class="m-card"><span>Present Days</span><h3 style="color:var(--solid-green);" id="mPresent">0</h3></div>
       <div class="m-card"><span>Absent Days</span><h3 style="color:var(--solid-red);" id="mAbsent">0</h3></div>
-      <div class="m-card"><span>No Record / Disabled</span><h3 style="color:var(--disabled-text);" id="mBlank">0</h3></div>
+      <div class="m-card"><span>No Record</span><h3 style="color:var(--disabled-text);" id="mBlank">0</h3></div>
     </div>
 
     <div class="dash-grid-layout">
       <!-- CALENDAR BOX -->
       <div class="cal-box">
-        <h3 style="font-size:18px; font-weight:900; color:var(--text-dark);" id="calMonthYear">August 2026</h3>
+        <h3 style="font-size:16px; font-weight:900; color:var(--text-dark);" id="calMonthYear">August 2026</h3>
         <div class="cal-grid-view" id="calGridView"></div>
       </div>
 
       <!-- SUMMARY & CHART -->
       <div>
         <div class="summary-side-card">
-          <h4 style="font-size:16px; font-weight:900; margin-bottom:12px; color:var(--text-dark);">Monthly Summary</h4>
+          <h4 style="font-size:14px; font-weight:900; margin-bottom:10px; color:var(--text-dark);">Monthly Breakdown</h4>
           <div class="summary-line"><span>🟩 Solid Present</span><strong style="color:var(--solid-green);" id="sPresent">0</strong></div>
           <div class="summary-line"><span>🟥 Solid Absent</span><strong style="color:var(--solid-red);" id="sAbsent">0</strong></div>
           <div class="summary-line"><span>⬜ No Record</span><strong style="color:var(--disabled-text);" id="sBlank">0</strong></div>
         </div>
 
         <div class="chart-box">
-          <h4 style="font-size:15px; font-weight:900; margin-bottom:10px; color:var(--text-dark);">Attendance Status</h4>
+          <h4 style="font-size:14px; font-weight:900; margin-bottom:8px; color:var(--text-dark);">Attendance Status</h4>
           <canvas id="miniBarChart" height="180"></canvas>
         </div>
       </div>
@@ -278,14 +338,14 @@
   <div class="popup-modal" id="dateDetailModal">
     <div class="modal-content-box">
       <button class="close-modal-btn" onclick="closeModal('dateDetailModal')">✕</button>
-      <h3 id="modalDateTitle" style="font-size:18px; font-weight:900; margin-bottom:14px; color:var(--text-dark);">Details</h3>
+      <h3 id="modalDateTitle" style="font-size:16px; font-weight:900; margin-bottom:12px; color:var(--text-dark);">Details</h3>
       
-      <div style="width:110px; height:110px; border-radius:50%; margin:0 auto 16px auto; overflow:hidden; border:4px solid #0f172a; background:#e2e8f0; display:flex; align-items:center; justify-content:center;">
+      <div style="width:100px; height:100px; border-radius:50%; margin:0 auto 14px auto; overflow:hidden; border:4px solid #0f172a; background:#e2e8f0; display:flex; align-items:center; justify-content:center;">
         <img id="modalCapturedPhoto" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
-        <span id="noPhotoText" style="font-size:11px; font-weight:800; color:var(--text-muted); padding:8px;">No Photo</span>
+        <span id="noPhotoText" style="font-size:11px; font-weight:800; color:var(--text-muted);">No Photo</span>
       </div>
 
-      <div style="text-align:left; background:#f8fafc; padding:16px; border-radius:14px; font-weight:800; font-size:13px; line-height:2; border:1px solid var(--border-color);">
+      <div style="text-align:left; background:#f8fafc; padding:14px; border-radius:12px; font-weight:800; font-size:12px; line-height:2; border:1px solid var(--border-color);">
         <div>Status: <span id="modalStatus" style="font-weight:900;">--</span></div>
         <div>Check In: <span id="modalInTime" style="color:var(--solid-green);">--</span></div>
         <div>Check Out: <span id="modalOutTime" style="color:var(--solid-red);">--</span></div>
@@ -298,12 +358,12 @@
   <div class="popup-modal" id="helpModal">
     <div class="modal-content-box">
       <button class="close-modal-btn" onclick="closeModal('helpModal')">✕</button>
-      <h3 style="font-size:18px; font-weight:900; margin-bottom:8px; color:var(--text-dark);">Help & Support</h3>
-      <p style="font-size:12px; color:var(--text-muted); margin-bottom:14px; font-weight:700;">Send your query directly to Admin</p>
-      <textarea id="queryText" style="width:100%; height:90px; border:2px solid var(--border-color); border-radius:12px; padding:10px; font-size:13px; font-weight:700; outline:none; margin-bottom:12px;" placeholder="Describe your issue..."></textarea>
-      <button class="btn-login" style="padding:12px;" onclick="submitAdminQuery()">Submit Query</button>
+      <h3 style="font-size:16px; font-weight:900; margin-bottom:6px; color:var(--text-dark);">Help & Support</h3>
+      <p style="font-size:11px; color:var(--text-muted); margin-bottom:12px; font-weight:700;">Send query to Admin</p>
+      <textarea id="queryText" style="width:100%; height:80px; border:2px solid var(--border-color); border-radius:10px; padding:8px; font-size:12px; font-weight:700; outline:none; margin-bottom:10px;" placeholder="Describe issue..."></textarea>
+      <button class="btn-login" style="padding:10px;" onclick="submitAdminQuery()">Submit Query</button>
       
-      <div id="adminReplyBox" style="margin-top:14px; text-align:left; font-size:12px; background:#f1f5f9; padding:12px; border-radius:12px; font-weight:800; display:none; border:1px solid var(--border-color);">
+      <div id="adminReplyBox" style="margin-top:10px; text-align:left; font-size:11px; background:#f1f5f9; padding:10px; border-radius:10px; font-weight:800; display:none; border:1px solid var(--border-color);">
         <strong>Admin Status:</strong> <span style="color:#1d4ed8;">Pending Review</span>
       </div>
     </div>
@@ -315,8 +375,7 @@
     let isPunchedIn = false;
     let isPunchedOut = false;
     let capturedPhotoData = '';
-    
-    // ATTENDANCE DATABASE - ONLY ACTIVE FOR 21 AUG
+    let videoStream = null;
     let attendanceDatabase = {};
 
     function updateTodayHeader() {
@@ -329,8 +388,17 @@
     function startLiveCamera() {
       const video = document.getElementById('liveFeed');
       navigator.mediaDevices.getUserMedia({ video: true })
-        .then(stream => { video.srcObject = stream; })
+        .then(stream => { 
+          videoStream = stream;
+          video.srcObject = stream; 
+        })
         .catch(err => console.error("Camera error: ", err));
+    }
+
+    function stopLiveCamera() {
+      if (videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+      }
     }
 
     function captureFrame() {
@@ -346,6 +414,13 @@
       document.getElementById('appScreen').style.display = 'flex';
       startLiveCamera();
       renderCurrentMonthCalendar();
+    }
+
+    function logoutUser() {
+      stopLiveCamera();
+      document.getElementById('appScreen').style.display = 'none';
+      document.getElementById('loginScreen').style.display = 'flex';
+      closeDashboardView();
     }
 
     function triggerPunchAction() {
@@ -365,7 +440,6 @@
         btn.className = 'btn-punch-action btn-red';
         document.getElementById('btnPunchText').innerText = 'Punch Out';
 
-        // SET RECORD ONLY FOR 21 AUG
         attendanceDatabase[dateKey] = { status: 'P', in: timeStr, out: '--', photo: capturedPhotoData };
         alert('Punched In Successfully!');
       } else if (!isPunchedOut) {
@@ -393,7 +467,6 @@
       renderCurrentMonthCalendar();
     }
 
-    /* RENDER DYNAMIC AUGUST 2026 CALENDAR WITH ONLY 21 AUG ACTIVE */
     function renderCurrentMonthCalendar() {
       const calGrid = document.getElementById('calGridView');
       calGrid.innerHTML = '';
@@ -409,7 +482,7 @@
       const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       days.forEach(d => calGrid.innerHTML += `<div class="cal-head">${d}</div>`);
 
-      const firstDayIndex = new Date(year, month, 1).getDay(); // Saturday = 6
+      const firstDayIndex = new Date(year, month, 1).getDay();
       const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
 
       for (let i = 0; i < firstDayIndex; i++) {
