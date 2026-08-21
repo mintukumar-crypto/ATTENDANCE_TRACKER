@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Admin Console</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+    body { background: #f8fafc; color: #0f172a; padding: 25px; }
+    .header { margin-bottom: 25px; }
+    .header h2 { font-size: 24px; font-weight: 800; color: #0f172a; }
+    .card { background: #ffffff; padding: 20px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; margin-bottom: 20px; }
+    .filter-bar { display: flex; gap: 15px; align-items: center; }
+    select, button { padding: 12px 18px; border-radius: 10px; border: 1px solid #cbd5e1; font-size: 14px; outline: none; }
+    select { background: #f8fafc; min-width: 240px; }
+    button { background: #2563eb; color: white; font-weight: 600; border: none; cursor: pointer; transition: 0.2s; }
+    button:hover { background: #1d4ed8; }
+    
+    .grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; }
+    @media (max-width: 1024px) { .grid { grid-template-columns: 1fr; } }
+    
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { padding: 12px; font-size: 11px; color: #64748b; text-transform: uppercase; border-bottom: 2px solid #f1f5f9; }
+    td { padding: 12px; font-size: 13px; color: #334155; border-bottom: 1px solid #f1f5f9; }
+    .thumb { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; border: 1px solid #2563eb; display: block; margin-top: 5px; }
+    .btn-map { background: #eff6ff; color: #2563eb; padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; border: none; cursor: pointer; }
+    .btn-map:hover { background: #dbeafe; }
+    #map { height: 450px; border-radius: 16px; border: 1px solid #cbd5e1; }
+  </style>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+
+  <div class="header">
+    <h2>Enterprise Attendance & Track Control</h2>
+  </div>
+
+  <div class="card filter-bar">
+    <select id="empSelect"><option value="ALL">All Employees</option></select>
+    <button onclick="fetchRecords()">Search Records</button>
+  </div>
+
+  <div class="grid">
+    <div class="card" style="overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Emp ID</th>
+            <th>Punch In</th>
+            <th>Punch Out</th>
+            <th>Route Line</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="5" style="text-align:center;">Click Search Records to view data</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h3 style="color:#0f172a; margin-bottom:15px; font-size:16px;">Route Track Map</h3>
+      <div id="map"></div>
+    </div>
+  </div>
+
+  <script>
+    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyXtBaxacajp-ETxTvgx6UgtMeqwnWWtNmUvL78xQ6TziRjpiOsL6zyVqOsBRdzR2vn/exec';
+    let map = null, routeLine = null, markerGroup = null;
+
+    // Classic Red & Green Marker Icons
+    const redIcon = L.icon({
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+    });
+
+    const greenIcon = L.icon({
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34], shadowSize: [41, 41]
+    });
+
+    async function loadEmployees() {
+      const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAllEmployees`);
+      const data = await res.json();
+      if (data.success) {
+        const select = document.getElementById('empSelect');
+        data.employees.forEach(e => select.innerHTML += `<option value="${e.id}">${e.name} (${e.id})</option>`);
+      }
+    }
+
+    async function fetchRecords() {
+      const empId = document.getElementById('empSelect').value;
+      const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAttendanceRecords&empId=${empId}`);
+      const data = await res.json();
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = '';
+
+      if (data.success && data.records.length > 0) {
+        data.records.forEach(r => {
+          let inImg = r.inPhoto && r.inPhoto.startsWith('http') ? `<br><a href="${r.inPhoto}" target="_blank"><img src="${r.inPhoto}" class="thumb"></a>` : '<br><span style="font-size:11px;color:#94a3b8;">No Photo</span>';
+          let outImg = r.outPhoto && r.outPhoto.startsWith('http') ? `<br><a href="${r.outPhoto}" target="_blank"><img src="${r.outPhoto}" class="thumb"></a>` : '<br><span style="font-size:11px;color:#94a3b8;">No Photo</span>';
+
+          tbody.innerHTML += `
+            <tr>
+              <td><b>${r.date}</b></td>
+              <td><b>${r.empId}</b></td>
+              <td>${r.inTime || '-'}${inImg}</td>
+              <td>${r.outTime || '-'}${outImg}</td>
+              <td><button class="btn-map" onclick="viewRoute('${r.empId}')">View Map</button></td>
+            </tr>
+          `;
+        });
+      } else { tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No records found</td></tr>'; }
+    }
+
+    async function viewRoute(empId) {
+      const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=getEmployeeRoute&empId=${empId}`);
+      const data = await res.json();
+
+      if (data.success && data.points.length > 0) {
+        const latLngs = data.points.map(p => [p.lat, p.lng]);
+        
+        if (!map) {
+          map = L.map('map').setView(latLngs[0], 14);
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+          markerGroup = L.layerGroup().addTo(map);
+        } else {
+          markerGroup.clearLayers();
+        }
+
+        if (routeLine) map.removeLayer(routeLine);
+        routeLine = L.polyline(latLngs, { color: '#2563eb', weight: 5, opacity: 0.8 }).addTo(map);
+
+        // Start Point (Green Cone Marker)
+        L.marker(latLngs[0], { icon: greenIcon }).addTo(markerGroup).bindPopup('<b>Punch IN Location</b>');
+        
+        // End Point (Red Cone Marker)
+        L.marker(latLngs[latLngs.length - 1], { icon: redIcon }).addTo(markerGroup).bindPopup('<b>Current / Punch OUT Location</b>');
+
+        map.fitBounds(routeLine.getBounds());
+      } else { alert('GPS Location points nahi mile!'); }
+    }
+
+    window.onload = loadEmployees;
+  </script>
+</body>
+</html>

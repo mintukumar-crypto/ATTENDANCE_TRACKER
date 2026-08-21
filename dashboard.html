@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin GPS Route Map</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #map { height: 500px; width: 100%; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+  </style>
+</head>
+<body>
+  <h2>Live Employee Tracking Map</h2>
+  <div id="map"></div>
+
+  <script>
+    const SUPABASE_URL = 'https://bfroxnygndutbctpdkwc.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_iYGePiDsNmY7ni8WwXvcsQ_WSMeRJP_';
+    const dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    const map = L.map('map').setView([28.6139, 77.2090], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+    async function loadRoute() {
+      const { data, error } = await dbClient.from('location_logs').select('*').order('recorded_at', { ascending: true });
+      
+      if (data && data.length > 0) {
+        const latLngs = data.map(log => [log.latitude, log.longitude]);
+        L.polyline(latLngs, { color: 'blue', weight: 4 }).addTo(map);
+        map.fitBounds(latLngs);
+        
+        data.forEach(log => {
+          L.marker([log.latitude, log.longitude]).addTo(map)
+            .bindPopup(`User: ${log.user_id}<br>Time: ${new Date(log.recorded_at).toLocaleTimeString()}`);
+        });
+      }
+    }
+
+    loadRoute();
+    setInterval(loadRoute, 30000);
+  </script>
+</body>
+</html>
