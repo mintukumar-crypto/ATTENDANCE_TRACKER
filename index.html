@@ -10,17 +10,15 @@
     :root {
       --navy-bg: #0b1329;
       --yellow-accent: #ffb703;
-      --body-bg: #e2e8f0;
+      --body-bg: #cbd5e1;
       --card-bg: #ffffff;
       --text-dark: #0f172a;
-      --text-muted: #475569;
+      --text-muted: #64748b;
       --border-color: #cbd5e1;
-      --success-green: #047857;
-      --success-bg: #d1fae5;
-      --danger-red: #b91c1c;
-      --danger-bg: #fee2e2;
-      --warning-orange: #d97706;
-      --primary-blue: #1d4ed8;
+      --solid-green: #047857;
+      --solid-red: #b91c1c;
+      --disabled-bg: #f1f5f9;
+      --disabled-text: #94a3b8;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
@@ -41,7 +39,7 @@
 
     /* MOBILE UI FIT TO PAGE PERFECTLY */
     .app-viewport { display: none; width: 100vw; height: 100vh; background: #cbd5e1; align-items: center; justify-content: center; padding: 0; }
-    .mobile-frame { width: 100%; max-width: 420px; height: 100vh; max-height: 920px; background: #fff; border-radius: 0px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); position: relative; display: flex; flex-direction: column; overflow: hidden; }
+    .mobile-frame { width: 100%; max-width: 420px; height: 100vh; max-height: 920px; background: #fff; position: relative; display: flex; flex-direction: column; overflow: hidden; }
 
     @media (min-width: 500px) {
       .mobile-frame { height: 95vh; border-radius: 28px; border: 2px solid var(--border-color); }
@@ -57,7 +55,7 @@
     .today-date-text { font-size: 22px; font-weight: 900; color: var(--text-dark); }
     .today-day-text { font-size: 13px; color: var(--text-muted); font-weight: 700; margin-bottom: 10px; }
 
-    /* BLACK CAMERA CIRCLE */
+    /* BLACK BORDER CAMERA CIRCLE */
     .profile-photo-circle { 
       width: 140px; 
       height: 140px; 
@@ -75,15 +73,15 @@
     .profile-photo-circle video, .profile-photo-circle img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .status-badge { padding: 6px 18px; border-radius: 20px; font-size: 12px; font-weight: 900; margin-bottom: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .badge-absent { background: var(--danger-bg); color: var(--danger-red); border: 1px solid #fca5a5; }
-    .badge-present { background: var(--success-bg); color: var(--success-green); border: 1px solid #6ee7b7; }
+    .badge-absent { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+    .badge-present { background: #d1fae5; color: #047857; border: 1px solid #6ee7b7; }
 
     .check-times-box { width: 100%; background: #f8fafc; border-radius: 16px; padding: 16px; margin-bottom: 14px; border: 2px solid var(--border-color); }
     .time-row { display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; margin-bottom: 6px; }
 
     .btn-punch-action { width: 100%; padding: 16px; border: none; border-radius: 14px; font-size: 16px; font-weight: 900; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: auto; }
-    .btn-green { background: #059669; }
-    .btn-red { background: #dc2626; }
+    .btn-green { background: var(--solid-green); }
+    .btn-red { background: var(--solid-red); }
     .btn-disabled { background: #94a3b8; cursor: not-allowed; color: #f1f5f9; }
 
     /* DASHBOARD */
@@ -97,35 +95,54 @@
     .dash-grid-layout { display: grid; grid-template-columns: 2.5fr 1fr; gap: 20px; }
     @media (max-width: 900px) { .dash-grid-layout { grid-template-columns: 1fr; } }
 
+    /* CALENDAR CONTAINER & GRID */
     .cal-box { background: #fff; padding: 20px; border-radius: 20px; border: 2px solid var(--border-color); }
     .cal-grid-view { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-top: 14px; text-align: center; }
     .cal-head { font-size: 13px; font-weight: 900; color: var(--text-dark); text-align: center; padding-bottom: 6px; }
     
-    /* CALENDAR CELLS */
+    /* CELL STYLES - SOLID COLOR BLOCKS */
     .cal-date-cell { 
-      border: 1.5px solid var(--border-color); 
-      border-radius: 12px; 
+      border-radius: 10px; 
       padding: 10px 2px; 
-      min-height: 64px; 
+      min-height: 60px; 
       font-size: 12px; 
       font-weight: 800; 
       display: flex; 
       flex-direction: column; 
       align-items: center; 
       justify-content: center; 
-      gap: 4px; 
-      cursor: pointer; 
+      gap: 2px; 
       transition: transform 0.15s ease;
     }
-    .cal-date-cell:hover { transform: scale(1.04); }
-    
-    .cell-present { background-color: var(--success-bg) !important; color: #064e3b !important; border-color: #6ee7b7 !important; }
-    .cell-present strong { color: #047857 !important; font-size: 14px; font-weight: 900; }
 
-    .cell-absent { background-color: var(--danger-bg) !important; color: #7f1d1d !important; border-color: #fca5a5 !important; }
-    .cell-absent strong { color: #b91c1c !important; font-size: 14px; font-weight: 900; }
+    /* SOLID DARK GREEN BLOCK FOR PRESENT */
+    .cell-present-block { 
+      background-color: var(--solid-green) !important; 
+      color: #ffffff !important; 
+      border: 1.5px solid #065f46;
+      cursor: pointer;
+    }
+    .cell-present-block strong { color: #ffffff !important; font-size: 14px; font-weight: 900; }
+    .cell-present-block:hover { transform: scale(1.05); }
 
-    .cell-blank { background-color: #ffffff; color: #0f172a !important; border-color: #e2e8f0; }
+    /* SOLID DARK RED BLOCK FOR ABSENT */
+    .cell-absent-block { 
+      background-color: var(--solid-red) !important; 
+      color: #ffffff !important; 
+      border: 1.5px solid #991b1b;
+      cursor: pointer;
+    }
+    .cell-absent-block strong { color: #ffffff !important; font-size: 14px; font-weight: 900; }
+    .cell-absent-block:hover { transform: scale(1.05); }
+
+    /* DISABLED / NO RECORD CELL BLOCK */
+    .cell-disabled-block { 
+      background-color: var(--disabled-bg) !important; 
+      color: var(--disabled-text) !important; 
+      border: 1px solid var(--border-color); 
+      cursor: not-allowed; 
+      opacity: 0.7;
+    }
 
     .summary-side-card, .chart-box { background: #fff; padding: 18px; border-radius: 20px; border: 2px solid var(--border-color); margin-bottom: 16px; }
     .summary-line { display: flex; justify-content: space-between; font-size: 14px; font-weight: 800; padding: 8px 0; border-bottom: 1px dashed var(--border-color); color: var(--text-dark); }
@@ -184,8 +201,8 @@
 
       <div class="status-content">
         <div>
-          <div class="today-date-text" id="todayDateTxt">--</div>
-          <div class="today-day-text" id="todayDayTxt">--</div>
+          <div class="today-date-text" id="todayDateTxt">21 Aug 2026</div>
+          <div class="today-day-text" id="todayDayTxt">Friday</div>
         </div>
 
         <!-- BLACK BORDER CIRCLE -->
@@ -201,11 +218,11 @@
           <div class="check-times-box">
             <div class="time-row">
               <span style="color:var(--text-muted);">Check In</span>
-              <span id="checkInVal" style="color:var(--success-green);">--</span>
+              <span id="checkInVal" style="color:var(--solid-green);">--</span>
             </div>
             <div class="time-row">
               <span style="color:var(--text-muted);">Check Out</span>
-              <span id="checkOutVal" style="color:var(--danger-red);">--</span>
+              <span id="checkOutVal" style="color:var(--solid-red);">--</span>
             </div>
           </div>
         </div>
@@ -228,15 +245,15 @@
     </div>
 
     <div class="metrics-row">
-      <div class="m-card"><span>Present Days</span><h3 style="color:var(--success-green);" id="mPresent">0</h3></div>
-      <div class="m-card"><span>Absent Days</span><h3 style="color:var(--danger-red);" id="mAbsent">0</h3></div>
-      <div class="m-card"><span>No Record / Blank</span><h3 style="color:var(--text-muted);" id="mBlank">0</h3></div>
+      <div class="m-card"><span>Present Days</span><h3 style="color:var(--solid-green);" id="mPresent">0</h3></div>
+      <div class="m-card"><span>Absent Days</span><h3 style="color:var(--solid-red);" id="mAbsent">0</h3></div>
+      <div class="m-card"><span>No Record / Disabled</span><h3 style="color:var(--disabled-text);" id="mBlank">0</h3></div>
     </div>
 
     <div class="dash-grid-layout">
-      <!-- DYNAMIC CALENDAR -->
+      <!-- CALENDAR BOX -->
       <div class="cal-box">
-        <h3 style="font-size:18px; font-weight:900; color:var(--text-dark);" id="calMonthYear">--</h3>
+        <h3 style="font-size:18px; font-weight:900; color:var(--text-dark);" id="calMonthYear">August 2026</h3>
         <div class="cal-grid-view" id="calGridView"></div>
       </div>
 
@@ -244,20 +261,20 @@
       <div>
         <div class="summary-side-card">
           <h4 style="font-size:16px; font-weight:900; margin-bottom:12px; color:var(--text-dark);">Monthly Summary</h4>
-          <div class="summary-line"><span>🟢 Present</span><strong style="color:var(--success-green);" id="sPresent">0</strong></div>
-          <div class="summary-line"><span>🔴 Absent</span><strong style="color:var(--danger-red);" id="sAbsent">0</strong></div>
-          <div class="summary-line"><span>⚪ No Record</span><strong style="color:var(--text-muted);" id="sBlank">0</strong></div>
+          <div class="summary-line"><span>🟩 Solid Present</span><strong style="color:var(--solid-green);" id="sPresent">0</strong></div>
+          <div class="summary-line"><span>🟥 Solid Absent</span><strong style="color:var(--solid-red);" id="sAbsent">0</strong></div>
+          <div class="summary-line"><span>⬜ No Record</span><strong style="color:var(--disabled-text);" id="sBlank">0</strong></div>
         </div>
 
         <div class="chart-box">
-          <h4 style="font-size:15px; font-weight:900; margin-bottom:10px; color:var(--text-dark);">Monthly Attendance</h4>
+          <h4 style="font-size:15px; font-weight:900; margin-bottom:10px; color:var(--text-dark);">Attendance Status</h4>
           <canvas id="miniBarChart" height="180"></canvas>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- DATE DETAILS MODAL (DYNAMIC DATA FIX) -->
+  <!-- DATE DETAILS MODAL -->
   <div class="popup-modal" id="dateDetailModal">
     <div class="modal-content-box">
       <button class="close-modal-btn" onclick="closeModal('dateDetailModal')">✕</button>
@@ -265,14 +282,14 @@
       
       <div style="width:110px; height:110px; border-radius:50%; margin:0 auto 16px auto; overflow:hidden; border:4px solid #0f172a; background:#e2e8f0; display:flex; align-items:center; justify-content:center;">
         <img id="modalCapturedPhoto" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
-        <span id="noPhotoText" style="font-size:11px; font-weight:800; color:var(--text-muted); padding:8px;">No Image</span>
+        <span id="noPhotoText" style="font-size:11px; font-weight:800; color:var(--text-muted); padding:8px;">No Photo</span>
       </div>
 
       <div style="text-align:left; background:#f8fafc; padding:16px; border-radius:14px; font-weight:800; font-size:13px; line-height:2; border:1px solid var(--border-color);">
         <div>Status: <span id="modalStatus" style="font-weight:900;">--</span></div>
-        <div>Check In: <span id="modalInTime" style="color:var(--success-green);">--</span></div>
-        <div>Check Out: <span id="modalOutTime" style="color:var(--danger-red);">--</span></div>
-        <div>Location: <span id="modalLoc" style="color:var(--text-dark);">Mohindergarh, Haryana</span></div>
+        <div>Check In: <span id="modalInTime" style="color:var(--solid-green);">--</span></div>
+        <div>Check Out: <span id="modalOutTime" style="color:var(--solid-red);">--</span></div>
+        <div>Location: <span style="color:var(--text-dark);">Mohindergarh, Haryana</span></div>
       </div>
     </div>
   </div>
@@ -287,7 +304,7 @@
       <button class="btn-login" style="padding:12px;" onclick="submitAdminQuery()">Submit Query</button>
       
       <div id="adminReplyBox" style="margin-top:14px; text-align:left; font-size:12px; background:#f1f5f9; padding:12px; border-radius:12px; font-weight:800; display:none; border:1px solid var(--border-color);">
-        <strong>Admin Status:</strong> <span style="color:var(--primary-blue);">Pending Review</span>
+        <strong>Admin Status:</strong> <span style="color:#1d4ed8;">Pending Review</span>
       </div>
     </div>
   </div>
@@ -299,7 +316,7 @@
     let isPunchedOut = false;
     let capturedPhotoData = '';
     
-    // ATTENDANCE DATABASE STORAGE FOR DATE-SPECIFIC DATA
+    // ATTENDANCE DATABASE - ONLY ACTIVE FOR 21 AUG
     let attendanceDatabase = {};
 
     function updateTodayHeader() {
@@ -328,31 +345,7 @@
       document.getElementById('loginScreen').style.display = 'none';
       document.getElementById('appScreen').style.display = 'flex';
       startLiveCamera();
-      initMonthlyMockData();
       renderCurrentMonthCalendar();
-    }
-
-    // INITIALIZE MOCK ATTENDANCE RECORDS FOR PAST DATES
-    function initMonthlyMockData() {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth();
-      const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      const shortMonth = monthNames[month];
-
-      for (let day = 1; day < now.getDate(); day++) {
-        const key = `${day} ${shortMonth}`;
-        if (day % 7 === 0) {
-          attendanceDatabase[key] = { status: 'A', in: '--', out: '--', photo: '' };
-        } else {
-          attendanceDatabase[key] = { 
-            status: 'P', 
-            in: '09:00 AM', 
-            out: '06:00 PM', 
-            photo: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150' 
-          };
-        }
-      }
     }
 
     function triggerPunchAction() {
@@ -372,7 +365,7 @@
         btn.className = 'btn-punch-action btn-red';
         document.getElementById('btnPunchText').innerText = 'Punch Out';
 
-        // UPDATE DATABASE FOR TODAY
+        // SET RECORD ONLY FOR 21 AUG
         attendanceDatabase[dateKey] = { status: 'P', in: timeStr, out: '--', photo: capturedPhotoData };
         alert('Punched In Successfully!');
       } else if (!isPunchedOut) {
@@ -390,7 +383,6 @@
         btn.disabled = true;
         document.getElementById('btnPunchText').innerText = 'Punch Completed';
 
-        // UPDATE DATABASE FOR TODAY
         if(attendanceDatabase[dateKey]) {
           attendanceDatabase[dateKey].out = timeStr;
           attendanceDatabase[dateKey].photo = capturedPhotoData;
@@ -401,12 +393,12 @@
       renderCurrentMonthCalendar();
     }
 
-    /* RENDER DYNAMIC CALENDAR WITH ACCURATE DATES */
+    /* RENDER DYNAMIC AUGUST 2026 CALENDAR WITH ONLY 21 AUG ACTIVE */
     function renderCurrentMonthCalendar() {
       const calGrid = document.getElementById('calGridView');
       calGrid.innerHTML = '';
 
-      const now = new Date();
+      const now = new Date(); // Aug 21, 2026
       const year = now.getFullYear();
       const month = now.getMonth();
       const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -417,7 +409,7 @@
       const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       days.forEach(d => calGrid.innerHTML += `<div class="cal-head">${d}</div>`);
 
-      const firstDayIndex = new Date(year, month, 1).getDay();
+      const firstDayIndex = new Date(year, month, 1).getDay(); // Saturday = 6
       const totalDaysInMonth = new Date(year, month + 1, 0).getDate();
 
       for (let i = 0; i < firstDayIndex; i++) {
@@ -430,32 +422,34 @@
         const dateKey = `${day} ${shortMonth}`;
         const record = attendanceDatabase[dateKey];
 
-        let classType = 'cell-blank';
-        let statusText = '';
+        let cellClass = 'cell-disabled-block';
+        let statusBadge = '';
+        let clickHandler = '';
 
         if (record) {
           if (record.status === 'P') {
-            classType = 'cell-present';
-            statusText = '<strong>P</strong>';
+            cellClass = 'cell-present-block';
+            statusBadge = '<strong>P</strong>';
             pCount++;
+            clickHandler = `onclick="openDateDetails('${dateKey}')"`;
           } else if (record.status === 'A') {
-            classType = 'cell-absent';
-            statusText = '<strong>A</strong>';
+            cellClass = 'cell-absent-block';
+            statusBadge = '<strong>A</strong>';
             aCount++;
+            clickHandler = `onclick="openDateDetails('${dateKey}')"`;
           }
         } else {
           bCount++;
         }
 
         calGrid.innerHTML += `
-          <div class="cal-date-cell ${classType}" onclick="openDateDetails('${dateKey}')">
+          <div class="cal-date-cell ${cellClass}" ${clickHandler}>
             <span>${dateKey}</span>
-            ${statusText}
+            ${statusBadge}
           </div>
         `;
       }
 
-      // UPDATE SUMMARY METRICS
       document.getElementById('mPresent').innerText = pCount;
       document.getElementById('mAbsent').innerText = aCount;
       document.getElementById('mBlank').innerText = bCount;
@@ -464,7 +458,6 @@
       document.getElementById('sBlank').innerText = bCount;
     }
 
-    /* SHOW EXACT DATA FOR SELECTED DATE (FIXED) */
     function openDateDetails(dateKey) {
       const modal = document.getElementById('dateDetailModal');
       document.getElementById('modalDateTitle').innerText = `Attendance: ${dateKey}`;
@@ -475,7 +468,7 @@
 
       if (record) {
         document.getElementById('modalStatus').innerText = record.status === 'P' ? 'PRESENT 🟢' : 'ABSENT 🔴';
-        document.getElementById('modalStatus').style.color = record.status === 'P' ? 'var(--success-green)' : 'var(--danger-red)';
+        document.getElementById('modalStatus').style.color = record.status === 'P' ? 'var(--solid-green)' : 'var(--solid-red)';
         document.getElementById('modalInTime').innerText = record.in;
         document.getElementById('modalOutTime').innerText = record.out;
 
@@ -487,17 +480,8 @@
           imgElem.style.display = 'none';
           noPhotoText.style.display = 'block';
         }
-      } else {
-        // IF NO RECORD EXISTS FOR DATE (BLANK / FUTURE DATES)
-        document.getElementById('modalStatus').innerText = 'NO RECORD ⚪';
-        document.getElementById('modalStatus').style.color = 'var(--text-muted)';
-        document.getElementById('modalInTime').innerText = '--';
-        document.getElementById('modalOutTime').innerText = '--';
-        imgElem.style.display = 'none';
-        noPhotoText.style.display = 'block';
+        modal.style.display = 'flex';
       }
-
-      modal.style.display = 'flex';
     }
 
     function openDashboardView() {
@@ -529,7 +513,7 @@
         type: 'bar',
         data: {
           labels: ['Present', 'Absent', 'No Record'],
-          datasets: [{ data: [p, a, b], backgroundColor: ['#059669', '#dc2626', '#64748b'], borderRadius: 6 }]
+          datasets: [{ data: [p, a, b], backgroundColor: ['#047857', '#b91c1c', '#cbd5e1'], borderRadius: 6 }]
         },
         options: { responsive: true, plugins: { legend: { display: false } } }
       });
